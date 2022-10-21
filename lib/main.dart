@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
 import 'package:eat_incredible_app/controller/category/category_bloc.dart';
 import 'package:eat_incredible_app/controller/login/login_bloc.dart';
 import 'package:eat_incredible_app/controller/product_details/product_details_bloc.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
                   create: (context) => ProductDetailsBloc()),
               BlocProvider<LoginBloc>(create: (context) => LoginBloc()),
               BlocProvider<VerifyBloc>(create: (context) => VerifyBloc()),
+              BlocProvider<CartBloc>(create: (context) => CartBloc()),
             ],
             child: GetMaterialApp(
               theme: ThemeData(useMaterial3: true),

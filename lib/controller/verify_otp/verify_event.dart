@@ -5,4 +5,6 @@ class VerifyEvent with _$VerifyEvent {
   const factory VerifyEvent.started() = _Started;
   const factory VerifyEvent.verify(
       {required String phone, required String otp}) = _Verify;
+  const factory VerifyEvent.verifyEmail(
+      {required String email, required String otp}) = _VerifyEmail;
 }

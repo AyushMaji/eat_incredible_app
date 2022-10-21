@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:eat_incredible_app/api/network_exception.dart';
 import 'package:eat_incredible_app/model/login/verify_otp_model.dart';
@@ -19,13 +21,31 @@ class VerifyBloc extends Bloc<VerifyEvent, VerifyState> {
         success: (data) {
           if (data['status'] == 1) {
             emit(_Loaded(verificationdata: VerifyModel.fromJson(data)));
-            prefs.setString('message', data['message']);
+            prefs.setString('token', data['token']);
           } else {
             emit(_Failure(message: data['message']));
           }
-          // data['status'] == 1
-          //      emit(_Loaded(verificationdata: VerifyModel.fromJson(data)))
-          //     : emit(_Failure(message: data['message']));
+        },
+        failure: (error) {
+          emit(_Failure(message: NetworkExceptions.getErrorMessage(error)));
+          emit(const _Initial());
+        },
+      );
+    });
+
+    on<_VerifyEmail>((event, emit) async {
+      emit(const _Loading());
+      var result = await LoginRepo().verifyemail(event.email, event.otp);
+      log(result.toString());
+      var prefs = await SharedPreferences.getInstance();
+      result.when(
+        success: (data) {
+          if (data['status'] == 1) {
+            emit(_Loaded(verificationdata: VerifyModel.fromJson(data)));
+            prefs.setString('token', data['token']);
+          } else {
+            emit(_Failure(message: data['message']));
+          }
         },
         failure: (error) {
           emit(_Failure(message: NetworkExceptions.getErrorMessage(error)));

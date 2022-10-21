@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:eat_incredible_app/utils/barrel.dart';
-import 'package:eat_incredible_app/views/signup_page/signup_page.dart';
+import 'package:eat_incredible_app/views/signup_page/signup_page_phone.dart';
 import 'package:video_player/video_player.dart';
 
 class SplashScreen extends StatefulWidget {

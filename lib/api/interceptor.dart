@@ -11,12 +11,25 @@ class Interceptors extends InterceptorsWrapper {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (options.path.contains(UrlRepo.logout)) {
-      String msg =
-          prefs.getString('message') ?? 'nothing data in  local Storage';
-      log(msg);
-      options.headers['Authorization'] = prefs.getString('token') ?? '';
+      String token = prefs.getString('token') ?? '';
+      log(token);
+      options.data = {
+        "token": token,
+      };
     }
 
+    if (options.path.contains(UrlRepo.productList) ||
+        options.path.contains('category_wise_product_list.php') ||
+        options.path.contains('each_product.php') ||
+        options.path.contains('add_to_cart.php')) {
+      String token = prefs.getString('token') ?? '';
+      String guestId = prefs.getString('guest_id') ?? '';
+      log("token $token");
+      log("guestId $guestId");
+      token != ''
+          ? options.data = {"token": token}
+          : options.data = {"guest_id": guestId};
+    }
     return super.onRequest(options, handler);
   }
 

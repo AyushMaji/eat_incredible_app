@@ -29,5 +29,24 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         },
       );
     });
+
+    on<_LoginWithEmail>((event, emit) async {
+      emit(const _Loading());
+      var result =
+          await LoginRepo().loginwithEmail(event.email, event.password);
+
+      result.when(
+        success: (data) {
+          log(data['message'].toString());
+          data['status'] == 1
+              ? emit(_Loaded(logindata: LoginModel.fromJson(data)))
+              : emit(_Failure(message: data['message']));
+        },
+        failure: (error) {
+          emit(_Failure(message: NetworkExceptions.getErrorMessage(error)));
+          emit(const _Initial());
+        },
+      );
+    });
   }
 }

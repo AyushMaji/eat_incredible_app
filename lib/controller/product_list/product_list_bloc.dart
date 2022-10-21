@@ -17,6 +17,7 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
 
       result.when(
         success: (data) {
+          productList.clear();
           for (var element in data) {
             productList.add(ProductlistModel.fromJson(element ?? {}));
           }

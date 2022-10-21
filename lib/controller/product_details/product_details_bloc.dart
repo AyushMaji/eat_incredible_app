@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:eat_incredible_app/api/network_exception.dart';
 import 'package:eat_incredible_app/model/product_details/product_details_model.dart';
@@ -21,7 +19,6 @@ class ProductDetailsBloc
           await ProductDetailsRepo().getProductDetailsData(event.productId);
       result.when(
         success: (data) {
-          log(data.toString());
           for (var element in data) {
             productDetails.add(ProductDeatilsModel.fromJson(element ?? {}));
           }

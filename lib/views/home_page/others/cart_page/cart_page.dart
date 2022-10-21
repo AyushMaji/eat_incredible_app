@@ -186,8 +186,12 @@ class _CartPageState extends State<CartPage> {
                         quantity: "200",
                         onChanged: (String value) {},
                         ontap: () {
-                          Get.to(() => const ProductDetails());
+                          Get.to(() => const ProductDetails(
+                                productId: '',
+                              ));
                         },
+                        addtocartTap: () {},
+                        isCart: true,
                       ),
                     );
                   }),

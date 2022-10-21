@@ -20,18 +20,21 @@ mixin _$LoginEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function(String phone, String countryCode) login,
+    required TResult Function(String email, String password) loginWithEmail,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(String phone, String countryCode)? login,
+    TResult Function(String email, String password)? loginWithEmail,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(String phone, String countryCode)? login,
+    TResult Function(String email, String password)? loginWithEmail,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -39,18 +42,21 @@ mixin _$LoginEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_Login value) login,
+    required TResult Function(_LoginWithEmail value) loginWithEmail,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_Login value)? login,
+    TResult Function(_LoginWithEmail value)? loginWithEmail,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_Login value)? login,
+    TResult Function(_LoginWithEmail value)? loginWithEmail,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -113,6 +119,7 @@ class _$_Started implements _Started {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function(String phone, String countryCode) login,
+    required TResult Function(String email, String password) loginWithEmail,
   }) {
     return started();
   }
@@ -122,6 +129,7 @@ class _$_Started implements _Started {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(String phone, String countryCode)? login,
+    TResult Function(String email, String password)? loginWithEmail,
   }) {
     return started?.call();
   }
@@ -131,6 +139,7 @@ class _$_Started implements _Started {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(String phone, String countryCode)? login,
+    TResult Function(String email, String password)? loginWithEmail,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -144,6 +153,7 @@ class _$_Started implements _Started {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_Login value) login,
+    required TResult Function(_LoginWithEmail value) loginWithEmail,
   }) {
     return started(this);
   }
@@ -153,6 +163,7 @@ class _$_Started implements _Started {
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_Login value)? login,
+    TResult Function(_LoginWithEmail value)? loginWithEmail,
   }) {
     return started?.call(this);
   }
@@ -162,6 +173,7 @@ class _$_Started implements _Started {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_Login value)? login,
+    TResult Function(_LoginWithEmail value)? loginWithEmail,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -250,6 +262,7 @@ class _$_Login implements _Login {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function(String phone, String countryCode) login,
+    required TResult Function(String email, String password) loginWithEmail,
   }) {
     return login(phone, countryCode);
   }
@@ -259,6 +272,7 @@ class _$_Login implements _Login {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(String phone, String countryCode)? login,
+    TResult Function(String email, String password)? loginWithEmail,
   }) {
     return login?.call(phone, countryCode);
   }
@@ -268,6 +282,7 @@ class _$_Login implements _Login {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(String phone, String countryCode)? login,
+    TResult Function(String email, String password)? loginWithEmail,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -281,6 +296,7 @@ class _$_Login implements _Login {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_Login value) login,
+    required TResult Function(_LoginWithEmail value) loginWithEmail,
   }) {
     return login(this);
   }
@@ -290,6 +306,7 @@ class _$_Login implements _Login {
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_Login value)? login,
+    TResult Function(_LoginWithEmail value)? loginWithEmail,
   }) {
     return login?.call(this);
   }
@@ -299,6 +316,7 @@ class _$_Login implements _Login {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_Login value)? login,
+    TResult Function(_LoginWithEmail value)? loginWithEmail,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -317,6 +335,159 @@ abstract class _Login implements LoginEvent {
   String get countryCode;
   @JsonKey(ignore: true)
   _$$_LoginCopyWith<_$_Login> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_LoginWithEmailCopyWith<$Res> {
+  factory _$$_LoginWithEmailCopyWith(
+          _$_LoginWithEmail value, $Res Function(_$_LoginWithEmail) then) =
+      __$$_LoginWithEmailCopyWithImpl<$Res>;
+  $Res call({String email, String password});
+}
+
+/// @nodoc
+class __$$_LoginWithEmailCopyWithImpl<$Res>
+    extends _$LoginEventCopyWithImpl<$Res>
+    implements _$$_LoginWithEmailCopyWith<$Res> {
+  __$$_LoginWithEmailCopyWithImpl(
+      _$_LoginWithEmail _value, $Res Function(_$_LoginWithEmail) _then)
+      : super(_value, (v) => _then(v as _$_LoginWithEmail));
+
+  @override
+  _$_LoginWithEmail get _value => super._value as _$_LoginWithEmail;
+
+  @override
+  $Res call({
+    Object? email = freezed,
+    Object? password = freezed,
+  }) {
+    return _then(_$_LoginWithEmail(
+      email: email == freezed
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: password == freezed
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_LoginWithEmail implements _LoginWithEmail {
+  const _$_LoginWithEmail({required this.email, required this.password});
+
+  @override
+  final String email;
+  @override
+  final String password;
+
+  @override
+  String toString() {
+    return 'LoginEvent.loginWithEmail(email: $email, password: $password)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_LoginWithEmail &&
+            const DeepCollectionEquality().equals(other.email, email) &&
+            const DeepCollectionEquality().equals(other.password, password));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(email),
+      const DeepCollectionEquality().hash(password));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_LoginWithEmailCopyWith<_$_LoginWithEmail> get copyWith =>
+      __$$_LoginWithEmailCopyWithImpl<_$_LoginWithEmail>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function(String phone, String countryCode) login,
+    required TResult Function(String email, String password) loginWithEmail,
+  }) {
+    return loginWithEmail(email, password);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(String phone, String countryCode)? login,
+    TResult Function(String email, String password)? loginWithEmail,
+  }) {
+    return loginWithEmail?.call(email, password);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(String phone, String countryCode)? login,
+    TResult Function(String email, String password)? loginWithEmail,
+    required TResult orElse(),
+  }) {
+    if (loginWithEmail != null) {
+      return loginWithEmail(email, password);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_Login value) login,
+    required TResult Function(_LoginWithEmail value) loginWithEmail,
+  }) {
+    return loginWithEmail(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_Login value)? login,
+    TResult Function(_LoginWithEmail value)? loginWithEmail,
+  }) {
+    return loginWithEmail?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_Login value)? login,
+    TResult Function(_LoginWithEmail value)? loginWithEmail,
+    required TResult orElse(),
+  }) {
+    if (loginWithEmail != null) {
+      return loginWithEmail(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _LoginWithEmail implements LoginEvent {
+  const factory _LoginWithEmail(
+      {required final String email,
+      required final String password}) = _$_LoginWithEmail;
+
+  String get email;
+  String get password;
+  @JsonKey(ignore: true)
+  _$$_LoginWithEmailCopyWith<_$_LoginWithEmail> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

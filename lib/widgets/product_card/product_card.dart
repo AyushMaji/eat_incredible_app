@@ -1,8 +1,10 @@
 import 'package:eat_incredible_app/utils/barrel.dart';
+import 'package:eat_incredible_app/views/home_page/others/cart_page/cart_page.dart';
 import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
 
 class ProductCard extends StatefulWidget {
   final String imageUrl;
+  final String? productId;
   final String percentage;
   final String title;
   final String disprice;
@@ -10,6 +12,8 @@ class ProductCard extends StatefulWidget {
   final String quantity;
   final ValueChanged<String>? onChanged;
   final GestureTapCallback? ontap;
+  final GestureTapCallback? addtocartTap;
+  final bool? isCart;
 
   const ProductCard({
     super.key,
@@ -21,6 +25,9 @@ class ProductCard extends StatefulWidget {
     required this.onChanged,
     required this.ontap,
     required this.percentage,
+    required this.addtocartTap,
+    this.isCart,
+    this.productId,
   });
 
   @override
@@ -28,7 +35,11 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  int addToCard = 0;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -74,7 +85,7 @@ class _ProductCardState extends State<ProductCard> {
                           width: 52.w,
                           child: Center(
                             child: Text(
-                              "${widget.percentage} OFF",
+                              "${widget.percentage}% OFF",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 10.sp,
@@ -116,7 +127,7 @@ class _ProductCardState extends State<ProductCard> {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(left: 4.sp, bottom: 5.sp, right: 4.sp),
+              padding: EdgeInsets.only(left: 4.sp, bottom: 7.sp, right: 5.sp),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -138,16 +149,133 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                     ],
                   ),
-                  addToCard == 0
+                  // addToCard == 0
+                  //     ? GestureDetector(
+                  //         onTap: (() {
+                  //           setState(() {
+                  //             addToCard = 1;
+                  //             widget.onChanged!(addToCard.toString());
+                  //           });
+                  //         }),
+                  //         child: Container(
+                  //           height: 22.h,
+                  //           width: 60.w,
+                  //           decoration: BoxDecoration(
+                  //             color: Colors.transparent,
+                  //             borderRadius: BorderRadius.circular(3),
+                  //             border: Border.all(
+                  //                 color: const Color.fromRGBO(2, 160, 8, 1)),
+                  //           ),
+                  //           child: Center(
+                  //             child: Text(
+                  //               "Add",
+                  //               overflow: TextOverflow.ellipsis,
+                  //               style: TextStyle(
+                  //                   fontFamily: 'Poppins',
+                  //                   fontSize: 10.sp,
+                  //                   color: const Color.fromRGBO(2, 160, 8, 1),
+                  //                   fontWeight: FontWeight.w600),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       )
+                  //     : Container(
+                  //         width: 60.w,
+                  //         decoration: BoxDecoration(
+                  //             color: Colors.green,
+                  //             borderRadius: BorderRadius.circular(3)),
+                  //         child: Center(
+                  //           child: Row(
+                  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //             children: [
+                  //               GestureDetector(
+                  //                 onTap: (() {
+                  //                   setState(() {
+                  //                     if (addToCard > 0) {
+                  //                       addToCard--;
+                  //                       widget.onChanged!(addToCard.toString());
+                  //                     }
+                  //                   });
+                  //                 }),
+                  //                 child: SizedBox(
+                  //                   width: 20.w,
+                  //                   height: 22.h,
+                  //                   child: Icon(
+                  //                     Icons.remove,
+                  //                     color: Colors.white,
+                  //                     size: 15.sp,
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //               SizedBox(
+                  //                 width: 20.w,
+                  //                 height: 22.h,
+                  //                 child: Center(
+                  //                   child: Text(
+                  //                     addToCard.toString(),
+                  //                     overflow: TextOverflow.ellipsis,
+                  //                     style: GoogleFonts.poppins(
+                  //                         fontSize: 12.sp,
+                  //                         color: Colors.white,
+                  //                         fontWeight: FontWeight.w400),
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //               GestureDetector(
+                  //                 onTap: (() {
+                  //                   setState(() {
+                  //                     addToCard++;
+                  //                     widget.onChanged!(addToCard.toString());
+                  //                   });
+                  //                 }),
+                  //                 child: SizedBox(
+                  //                   width: 20.w,
+                  //                   height: 22.h,
+                  //                   child: Center(
+                  //                     child: Icon(
+                  //                       Icons.add,
+                  //                       color: Colors.white,
+                  //                       size: 13.sp,
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ),
+                  widget.isCart == true
                       ? GestureDetector(
-                          onTap: (() {
-                            setState(() {
-                              addToCard = 1;
-                              widget.onChanged!(addToCard.toString());
-                            });
-                          }),
+                          onTap: () {
+                            Get.to(() => const CartPage());
+                          },
                           child: Container(
-                            height: 22.h,
+                            height: 24.h,
+                            width: 60.w,
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(2, 160, 8, 1),
+                              borderRadius: BorderRadius.circular(3),
+                              border: Border.all(
+                                  color: const Color.fromRGBO(2, 160, 8, 1)),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "View cart",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 10.sp,
+                                    color: const Color.fromARGB(
+                                        255, 255, 255, 255),
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                        )
+                      : GestureDetector(
+                          onTap: (() {}),
+                          child: Container(
+                            height: 24.h,
                             width: 60.w,
                             decoration: BoxDecoration(
                               color: Colors.transparent,
@@ -168,71 +296,6 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           ),
                         )
-                      : Container(
-                          width: 60.w,
-                          decoration: BoxDecoration(
-                              color: Colors.green,
-                              borderRadius: BorderRadius.circular(3)),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                GestureDetector(
-                                  onTap: (() {
-                                    setState(() {
-                                      if (addToCard > 0) {
-                                        addToCard--;
-                                        widget.onChanged!(addToCard.toString());
-                                      }
-                                    });
-                                  }),
-                                  child: SizedBox(
-                                    width: 20.w,
-                                    height: 22.h,
-                                    child: Icon(
-                                      Icons.remove,
-                                      color: Colors.white,
-                                      size: 15.sp,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 20.w,
-                                  height: 22.h,
-                                  child: Center(
-                                    child: Text(
-                                      addToCard.toString(),
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 12.sp,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: (() {
-                                    setState(() {
-                                      addToCard++;
-                                      widget.onChanged!(addToCard.toString());
-                                    });
-                                  }),
-                                  child: SizedBox(
-                                    width: 20.w,
-                                    height: 22.h,
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                        size: 13.sp,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
                 ],
               ),
             ),

@@ -34,6 +34,8 @@ class ProductDeatilsModel {
     required this.couponCode,
     required this.specialPrice,
     required this.locationId,
+    required this.iscart,
+    required this.discountPercentage,
   });
 
   String? id;
@@ -58,6 +60,8 @@ class ProductDeatilsModel {
   dynamic couponCode;
   dynamic specialPrice;
   dynamic locationId;
+  bool? iscart;
+  int? discountPercentage;
 
   factory ProductDeatilsModel.fromJson(Map<String, dynamic> json) =>
       ProductDeatilsModel(
@@ -83,6 +87,8 @@ class ProductDeatilsModel {
         couponCode: json["coupon_code"],
         specialPrice: json["special_price"],
         locationId: json["location_id"],
+        iscart: json["iscart"],
+        discountPercentage: json["discount_percentage"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -108,5 +114,7 @@ class ProductDeatilsModel {
         "coupon_code": couponCode,
         "special_price": specialPrice,
         "location_id": locationId,
+        "iscart": iscart,
+        "discount_percentage": discountPercentage,
       };
 }

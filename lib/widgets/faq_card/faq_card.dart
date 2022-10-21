@@ -2,8 +2,8 @@ import 'package:eat_incredible_app/utils/barrel.dart';
 
 class FaqCard extends StatelessWidget {
   final String title;
-  final GestureTapCallback onTap;
-  const FaqCard({super.key, required this.title, required this.onTap});
+  final String description;
+  const FaqCard({super.key, required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -11,18 +11,28 @@ class FaqCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 13.w),
       child: Column(
         children: [
-          ListTile(
-            title: Text(title,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xff3C3C3C),
-                )),
-            trailing: Icon(Icons.arrow_forward_ios, size: 15.sp),
-            onTap: onTap,
-          ),
-          const Divider(
-            thickness: 1.5,
+          ExpansionTile(
+            title: Text(
+              description,
+              style: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xff3C3C3C),
+              ),
+            ),
+            children: [
+              ListTile(
+                title: Text(
+                  title,
+                  style: GoogleFonts.poppins(
+                    color: const Color.fromRGBO(97, 97, 97, 1),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.h),
+            ],
           ),
         ],
       ),

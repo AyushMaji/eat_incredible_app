@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:eat_incredible_app/controller/category/category_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
@@ -7,7 +9,8 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class FilterBar extends StatefulWidget {
   final int categoryIndex;
-  const FilterBar({super.key, required this.categoryIndex});
+  final ValueChanged<String>? onChanged;
+  const FilterBar({super.key, required this.categoryIndex, this.onChanged});
   @override
   State<FilterBar> createState() => _FilterBarState();
 }
@@ -16,7 +19,7 @@ class _FilterBarState extends State<FilterBar> {
   final ItemScrollController itemScrollController = ItemScrollController();
 
   late int filterIteam;
-  int all_index = 98989;
+  int allIndex = 98989;
   @override
   void initState() {
     filterIteam = widget.categoryIndex;
@@ -43,22 +46,22 @@ class _FilterBarState extends State<FilterBar> {
             },
             loaded: (categoryData) {
               return SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     GestureDetector(
                       onTap: () {
                         context.read<ProductListBloc>().add(
                             ProductListEvent.fetchProductList(
-                                categoryId: all_index.toString()));
+                                categoryId: allIndex.toString()));
 
                         setState(() {
-                          filterIteam = all_index;
+                          filterIteam = allIndex;
+                          widget.onChanged!(allIndex.toString());
                         });
                       },
                       child: Container(
                           padding: EdgeInsets.only(bottom: 1.5.h),
-                          color: all_index == filterIteam
+                          color: allIndex == filterIteam
                               ? Colors.red
                               : Colors.white,
                           child: Column(
@@ -76,7 +79,7 @@ class _FilterBarState extends State<FilterBar> {
                               Text('All',
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.poppins(
-                                      color: all_index == filterIteam
+                                      color: allIndex == filterIteam
                                           ? Colors.white
                                           : const Color.fromRGBO(
                                               120, 120, 120, 1.0),
@@ -92,15 +95,18 @@ class _FilterBarState extends State<FilterBar> {
                       shrinkWrap: true,
                       itemCount: categoryData.length,
                       itemBuilder: (BuildContext context, int index) {
+                        log(categoryData.length.toString());
                         return GestureDetector(
                           onTap: () {
                             context.read<ProductListBloc>().add(
                                 ProductListEvent.fetchProductList(
                                     categoryId: categoryData[index]
-                                        .categoryId
+                                        .id
                                         .toString()));
                             setState(() {
                               filterIteam = index;
+                              widget.onChanged!(
+                                  categoryData[index].id.toString());
                             });
                           },
                           child: Container(
@@ -115,7 +121,7 @@ class _FilterBarState extends State<FilterBar> {
                                     padding: EdgeInsets.all(8.0.sp),
                                     child: CustomPic(
                                         imageUrl: categoryData[index]
-                                            .thumbnail
+                                            .categoryImg
                                             .toString(),
                                         height: 38.h,
                                         width: 40.w),

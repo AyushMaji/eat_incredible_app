@@ -58,26 +58,17 @@ class FaqsPage extends StatelessWidget {
                   style: GoogleFonts.poppins(
                       fontSize: 14.sp, fontWeight: FontWeight.bold)),
             ),
-            FaqCard(
-              title: "Safe & responsible ordering",
-              onTap: () {},
-            ),
-            FaqCard(
-              title: "Safe & responsible ordering",
-              onTap: () {},
-            ),
-            FaqCard(
-              title: "Safe & responsible ordering",
-              onTap: () {},
-            ),
-            FaqCard(
-              title: "Safe & responsible ordering",
-              onTap: () {},
-            ),
-            FaqCard(
-              title: "Safe & responsible ordering",
-              onTap: () {},
-            ),
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: 5,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return const FaqCard(
+                    title: "Safe & responsible ordering",
+                    description:
+                        "How do I know my order is safe and responsible?",
+                  );
+                }),
           ],
         ),
       ),

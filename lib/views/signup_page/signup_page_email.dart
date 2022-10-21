@@ -5,31 +5,23 @@ import 'package:eat_incredible_app/controller/login/login_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/views/home_page/navigation/navigation.dart';
 import 'package:country_calling_code_picker/picker.dart';
-import 'package:eat_incredible_app/views/verification_page/verification_page.dart';
+import 'package:eat_incredible_app/views/signup_page/signup_page_phone.dart';
+import 'package:eat_incredible_app/views/verification_page/verification_email_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class SignupPageWithEmail extends StatefulWidget {
+  const SignupPageWithEmail({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<SignupPageWithEmail> createState() => _SignupPageWithEmailState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignupPageWithEmailState extends State<SignupPageWithEmail> {
   Country? selectedCountry;
   String selectedCountryCode = '+91';
 
-  final TextEditingController _phoneController = TextEditingController();
-
-  // void _showCountryPicker() async {
-  //   final country = await showCountryPickerSheet(context, cornerRadius: 15);
-  //   if (country != null) {
-  //     setState(() {
-  //       selectedCountry = country;
-  //       selectedCountryCode = country.callingCode;
-  //     });
-  //   }
-  // }
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   ConstantData constantData = ConstantData();
   @override
@@ -79,7 +71,7 @@ class _SignupPageState extends State<SignupPage> {
           children: [
             CarouselSlider(
               options: CarouselOptions(
-                height: 390.h,
+                height: 350.h,
                 autoPlayCurve: Curves.easeInSine,
                 viewportFraction: 1,
                 autoPlay: true,
@@ -119,71 +111,76 @@ class _SignupPageState extends State<SignupPage> {
                     maxLines: 2,
                   ),
                   SizedBox(
-                    height: 13.h,
+                    height: 3.h,
                   ),
-                  Text(
-                    'Log in or Sign Up',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.normal,
+                  TextButton(
+                    onPressed: () {
+                      Get.off(() => const SignupPage());
+                    },
+                    child: Text(
+                      'Log in with phone number',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.normal,
+                        color: const Color.fromRGBO(4, 4, 4, 1),
+                      ),
+                      maxLines: 2,
                     ),
-                    maxLines: 2,
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              height: 15.h,
-            ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
-              child: Container(
-                height: 47.h,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: Colors.grey)),
-                margin: const EdgeInsets.all(0),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: (() {
-                        // _showCountryPicker();
-                      }),
-                      child: SizedBox(
-                        width: 60.w,
-                        child: Center(
-                            child: Text(selectedCountry?.callingCode ?? '+91')),
+              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+              child: SizedBox(
+                height: 46.h,
+                child: TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      // borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                        color: Colors.black,
                       ),
                     ),
-                    Container(
-                      color: Colors.blueGrey,
-                      height: 30,
-                      width: 1,
-                    ),
-                    Expanded(
-                      child: SizedBox(
-                        child: TextFormField(
-                          controller: _phoneController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                              // borderRadius: BorderRadius.circular(5),
-                              borderSide: BorderSide.none,
-                            ),
-                            hintText: '1234 567 7896',
-                          ),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Email can not be empty";
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
+                    hintText: 'Email',
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Email can not be empty";
+                    }
+                    return null;
+                  },
                 ),
               ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 0.h),
+              child: SizedBox(
+                height: 48.h,
+                child: TextFormField(
+                  controller: _passwordController,
+                  keyboardType: TextInputType.visiblePassword,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
+                      ),
+                    ),
+                    hintText: 'Password',
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Email can not be empty";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 15.h,
             ),
             //! Login Button =========================== >
             BlocConsumer<LoginBloc, LoginState>(
@@ -192,9 +189,9 @@ class _SignupPageState extends State<SignupPage> {
                     initial: () {},
                     loading: () {},
                     loaded: (lodedData) {
-                      Get.to(() => VerificationPage(
-                            phone: _phoneController.text,
-                            countryCode: selectedCountryCode,
+                      Get.to(() => VerificationWithPage(
+                            email: _emailController.text,
+                            password: _emailController.text,
                           ));
                     },
                     failure: (e) {
@@ -210,14 +207,14 @@ class _SignupPageState extends State<SignupPage> {
                 return state.maybeWhen(
                   initial: () {
                     return Loginbtn(
-                      phoneController: _phoneController,
-                      countryCode: selectedCountryCode,
+                      emailController: _emailController,
+                      passwordController: _passwordController,
                     );
                   },
                   orElse: () {
                     return Loginbtn(
-                      phoneController: _phoneController,
-                      countryCode: selectedCountryCode,
+                      emailController: _emailController,
+                      passwordController: _passwordController,
                     );
                   },
                   loading: (() {
@@ -228,8 +225,8 @@ class _SignupPageState extends State<SignupPage> {
                   }),
                   loaded: (logindata) {
                     return Loginbtn(
-                      phoneController: _phoneController,
-                      countryCode: selectedCountryCode,
+                      emailController: _emailController,
+                      passwordController: _passwordController,
                     );
                   },
                 );
@@ -260,15 +257,14 @@ class _SignupPageState extends State<SignupPage> {
 }
 
 class Loginbtn extends StatelessWidget {
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+
   const Loginbtn({
     Key? key,
-    required TextEditingController phoneController,
-    required this.countryCode,
-  })  : _phoneController = phoneController,
-        super(key: key);
-
-  final TextEditingController _phoneController;
-  final String countryCode;
+    required this.emailController,
+    required this.passwordController,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -286,18 +282,19 @@ class Loginbtn extends StatelessWidget {
           backgroundColor: const Color.fromRGBO(226, 10, 19, 1),
         ),
         onPressed: () {
-          log(_phoneController.text);
-          log(countryCode);
-          if (_phoneController.text.length != 10) {
+          log(emailController.text);
+          log(passwordController.text);
+          if (emailController.text.isEmpty || passwordController.text.isEmpty) {
             Get.snackbar(
               'Error',
-              'Please enter your Vaild phone number',
+              'Please enter your Vaild Email and Password',
               backgroundColor: const Color.fromARGB(255, 255, 17, 0),
               colorText: Colors.white,
             );
           } else {
-            context.read<LoginBloc>().add(LoginEvent.login(
-                phone: _phoneController.text, countryCode: countryCode));
+            context.read<LoginBloc>().add(LoginEvent.loginWithEmail(
+                email: emailController.text,
+                password: passwordController.text));
           }
         },
         child: Text(
