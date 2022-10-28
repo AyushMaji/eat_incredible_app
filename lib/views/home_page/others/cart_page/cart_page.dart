@@ -191,7 +191,7 @@ class _CartPageState extends State<CartPage> {
                               ));
                         },
                         addtocartTap: () {},
-                        isCart: true,
+                        isCart: true, productId: '',
                       ),
                     );
                   }),

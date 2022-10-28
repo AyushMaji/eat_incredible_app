@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:eat_incredible_app/controller/product_details/product_details_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
@@ -206,9 +204,7 @@ class _FilterPageState extends State<FilterPage> {
                                               percentage: productList[index]
                                                   .discountPercentage
                                                   .toString(),
-                                              addtocartTap: () {
-                                                log('add to cart');
-                                              },
+                                              addtocartTap: () {},
                                               productId: productList[index]
                                                   .id
                                                   .toString(),

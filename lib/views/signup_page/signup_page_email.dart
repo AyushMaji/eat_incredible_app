@@ -71,7 +71,7 @@ class _SignupPageWithEmailState extends State<SignupPageWithEmail> {
           children: [
             CarouselSlider(
               options: CarouselOptions(
-                height: 350.h,
+                height: 390.h,
                 autoPlayCurve: Curves.easeInSine,
                 viewportFraction: 1,
                 autoPlay: true,
@@ -155,30 +155,30 @@ class _SignupPageWithEmailState extends State<SignupPageWithEmail> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 0.h),
-              child: SizedBox(
-                height: 48.h,
-                child: TextFormField(
-                  controller: _passwordController,
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.black,
-                      ),
-                    ),
-                    hintText: 'Password',
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Email can not be empty";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 0.h),
+            //   child: SizedBox(
+            //     height: 48.h,
+            //     child: TextFormField(
+            //       controller: _passwordController,
+            //       keyboardType: TextInputType.visiblePassword,
+            //       decoration: const InputDecoration(
+            //         border: OutlineInputBorder(
+            //           borderSide: BorderSide(
+            //             color: Colors.black,
+            //           ),
+            //         ),
+            //         hintText: 'Password',
+            //       ),
+            //       validator: (value) {
+            //         if (value!.isEmpty) {
+            //           return "Email can not be empty";
+            //         }
+            //         return null;
+            //       },
+            //     ),
+            //   ),
+            // ),
             SizedBox(
               height: 15.h,
             ),
@@ -189,6 +189,7 @@ class _SignupPageWithEmailState extends State<SignupPageWithEmail> {
                     initial: () {},
                     loading: () {},
                     loaded: (lodedData) {
+                      log(lodedData.message);
                       Get.to(() => VerificationWithPage(
                             email: _emailController.text,
                             password: _emailController.text,
@@ -282,9 +283,7 @@ class Loginbtn extends StatelessWidget {
           backgroundColor: const Color.fromRGBO(226, 10, 19, 1),
         ),
         onPressed: () {
-          log(emailController.text);
-          log(passwordController.text);
-          if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+          if (emailController.text.isEmpty) {
             Get.snackbar(
               'Error',
               'Please enter your Vaild Email and Password',
@@ -293,8 +292,7 @@ class Loginbtn extends StatelessWidget {
             );
           } else {
             context.read<LoginBloc>().add(LoginEvent.loginWithEmail(
-                email: emailController.text,
-                password: passwordController.text));
+                email: emailController.text, password: 'Demo password'));
           }
         },
         child: Text(

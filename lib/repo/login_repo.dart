@@ -22,7 +22,6 @@ class LoginRepo {
   Future<ApiResult> loginwithEmail(String email, String password) async {
     try {
       var res = await network.postloginwithEmail(email, password);
-
       return ApiResult.success(data: res.data);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
@@ -39,17 +38,19 @@ class LoginRepo {
   }
 
   Future<ApiResult> verifyemail(String email, String otp) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String guestId = prefs.getString('guest_id') ?? '';
     try {
-      var res = await network.verifyemailOtp(email, otp);
+      var res = await network.verifyemailOtp(email, otp, guestId);
       return ApiResult.success(data: res.data);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
     }
   }
 
-  Future<ApiResult> logout(String phone) async {
+  Future<ApiResult> logout() async {
     try {
-      var res = await network.logout(phone);
+      var res = await network.logout();
       log(res.data.toString());
       if (res.data['status'] == 1) {
         var prefs = await SharedPreferences.getInstance();

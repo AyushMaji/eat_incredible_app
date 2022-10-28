@@ -22,6 +22,7 @@ class VerifyBloc extends Bloc<VerifyEvent, VerifyState> {
           if (data['status'] == 1) {
             emit(_Loaded(verificationdata: VerifyModel.fromJson(data)));
             prefs.setString('token', data['token']);
+            prefs.remove('guest_id');
           } else {
             emit(_Failure(message: data['message']));
           }
@@ -43,6 +44,7 @@ class VerifyBloc extends Bloc<VerifyEvent, VerifyState> {
           if (data['status'] == 1) {
             emit(_Loaded(verificationdata: VerifyModel.fromJson(data)));
             prefs.setString('token', data['token']);
+            prefs.remove('guest_id');
           } else {
             emit(_Failure(message: data['message']));
           }

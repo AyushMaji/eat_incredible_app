@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:eat_incredible_app/utils/barrel.dart';
+import 'package:eat_incredible_app/views/home_page/navigation/navigation.dart';
 import 'package:eat_incredible_app/views/signup_page/signup_page_phone.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -29,12 +31,25 @@ class _SplashScreenState extends State<SplashScreen> {
     //     Get.off(() => const SignupPage());
     //   }
     // });
-    log(_controller.value.position.inMilliseconds.toString());
+
     Timer(const Duration(milliseconds: 3300), () {
-      Get.off(() => const SignupPage());
+      checkRoute();
     });
 
     super.initState();
+  }
+
+  void checkRoute() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final String? guestId = prefs.getString('guest_id');
+    log('token: $token');
+    log('guestId: $guestId');
+    if (token != null || guestId != null) {
+      Get.off(() => const Navigation());
+    } else {
+      Get.off(() => const SignupPage());
+    }
   }
 
   @override

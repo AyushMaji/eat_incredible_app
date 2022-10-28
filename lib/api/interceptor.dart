@@ -10,9 +10,9 @@ class Interceptors extends InterceptorsWrapper {
       RequestOptions options, RequestInterceptorHandler handler) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (options.path.contains(UrlRepo.logout)) {
+    if (options.path.contains(UrlRepo.logout) ||
+        options.path.contains(UrlRepo.userInfo)) {
       String token = prefs.getString('token') ?? '';
-      log(token);
       options.data = {
         "token": token,
       };

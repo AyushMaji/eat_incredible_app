@@ -1,10 +1,15 @@
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:cherry_toast/resources/arrays.dart';
+import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/views/home_page/others/cart_page/cart_page.dart';
 import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductCard extends StatefulWidget {
   final String imageUrl;
-  final String? productId;
+  final String productId;
   final String percentage;
   final String title;
   final String disprice;
@@ -27,7 +32,7 @@ class ProductCard extends StatefulWidget {
     required this.percentage,
     required this.addtocartTap,
     this.isCart,
-    this.productId,
+    required this.productId,
   });
 
   @override
@@ -35,8 +40,12 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
+  bool isAddtocart = true;
+  String productId = '';
   @override
   void initState() {
+    isAddtocart = widget.isCart!;
+    productId = widget.productId;
     super.initState();
   }
 
@@ -149,102 +158,7 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                     ],
                   ),
-                  // addToCard == 0
-                  //     ? GestureDetector(
-                  //         onTap: (() {
-                  //           setState(() {
-                  //             addToCard = 1;
-                  //             widget.onChanged!(addToCard.toString());
-                  //           });
-                  //         }),
-                  //         child: Container(
-                  //           height: 22.h,
-                  //           width: 60.w,
-                  //           decoration: BoxDecoration(
-                  //             color: Colors.transparent,
-                  //             borderRadius: BorderRadius.circular(3),
-                  //             border: Border.all(
-                  //                 color: const Color.fromRGBO(2, 160, 8, 1)),
-                  //           ),
-                  //           child: Center(
-                  //             child: Text(
-                  //               "Add",
-                  //               overflow: TextOverflow.ellipsis,
-                  //               style: TextStyle(
-                  //                   fontFamily: 'Poppins',
-                  //                   fontSize: 10.sp,
-                  //                   color: const Color.fromRGBO(2, 160, 8, 1),
-                  //                   fontWeight: FontWeight.w600),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       )
-                  //     : Container(
-                  //         width: 60.w,
-                  //         decoration: BoxDecoration(
-                  //             color: Colors.green,
-                  //             borderRadius: BorderRadius.circular(3)),
-                  //         child: Center(
-                  //           child: Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //             children: [
-                  //               GestureDetector(
-                  //                 onTap: (() {
-                  //                   setState(() {
-                  //                     if (addToCard > 0) {
-                  //                       addToCard--;
-                  //                       widget.onChanged!(addToCard.toString());
-                  //                     }
-                  //                   });
-                  //                 }),
-                  //                 child: SizedBox(
-                  //                   width: 20.w,
-                  //                   height: 22.h,
-                  //                   child: Icon(
-                  //                     Icons.remove,
-                  //                     color: Colors.white,
-                  //                     size: 15.sp,
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //               SizedBox(
-                  //                 width: 20.w,
-                  //                 height: 22.h,
-                  //                 child: Center(
-                  //                   child: Text(
-                  //                     addToCard.toString(),
-                  //                     overflow: TextOverflow.ellipsis,
-                  //                     style: GoogleFonts.poppins(
-                  //                         fontSize: 12.sp,
-                  //                         color: Colors.white,
-                  //                         fontWeight: FontWeight.w400),
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //               GestureDetector(
-                  //                 onTap: (() {
-                  //                   setState(() {
-                  //                     addToCard++;
-                  //                     widget.onChanged!(addToCard.toString());
-                  //                   });
-                  //                 }),
-                  //                 child: SizedBox(
-                  //                   width: 20.w,
-                  //                   height: 22.h,
-                  //                   child: Center(
-                  //                     child: Icon(
-                  //                       Icons.add,
-                  //                       color: Colors.white,
-                  //                       size: 13.sp,
-                  //                     ),
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       ),
-                  widget.isCart == true
+                  (isAddtocart == true)
                       ? GestureDetector(
                           onTap: () {
                             Get.to(() => const CartPage());
@@ -272,29 +186,190 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           ),
                         )
-                      : GestureDetector(
-                          onTap: (() {}),
-                          child: Container(
-                            height: 24.h,
-                            width: 60.w,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(3),
-                              border: Border.all(
-                                  color: const Color.fromRGBO(2, 160, 8, 1)),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Add",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 10.sp,
-                                    color: const Color.fromRGBO(2, 160, 8, 1),
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ),
+                      : BlocConsumer<CartBloc, CartState>(
+                          listener: (context, state) {
+                            state.when(
+                                initial: () {},
+                                loading: (productId) {},
+                                success: (msg, producId) {},
+                                failure: (error) {});
+                          },
+                          builder: (context, state) {
+                            return state.maybeWhen(
+                              orElse: () {
+                                return GestureDetector(
+                                  onTap: (() {
+                                    context.read<CartBloc>().add(
+                                        CartEvent.addToCart(
+                                            widget.productId.toString()));
+                                    CherryToast.success(
+                                      title: const Text(
+                                          "The simplest cherry toast"),
+                                      toastPosition: Position.bottom,
+                                      animationType: AnimationType.fromTop,
+                                    ).show(context);
+                                  }),
+                                  child: Container(
+                                    height: 24.h,
+                                    width: 60.w,
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(3),
+                                      border: Border.all(
+                                          color: const Color.fromRGBO(
+                                              2, 160, 8, 1)),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "Add",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 10.sp,
+                                            color: const Color.fromRGBO(
+                                                2, 160, 8, 1),
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              success: (message, productId) {
+                                return productId == widget.productId ||
+                                        widget.isCart == true
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          Get.to(() => const CartPage());
+                                        },
+                                        child: Container(
+                                          height: 24.h,
+                                          width: 60.w,
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromRGBO(
+                                                2, 160, 8, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(3),
+                                            border: Border.all(
+                                                color: const Color.fromRGBO(
+                                                    2, 160, 8, 1)),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "View cart",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 10.sp,
+                                                  color: const Color.fromARGB(
+                                                      255, 255, 255, 255),
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : GestureDetector(
+                                        onTap: (() {
+                                          context.read<CartBloc>().add(
+                                              CartEvent.addToCart(
+                                                  widget.productId.toString()));
+                                          CherryToast.success(
+                                            title: const Text(
+                                                "The simplest cherry toast"),
+                                            toastPosition: Position.bottom,
+                                            animationType:
+                                                AnimationType.fromLeft,
+                                          ).show(context);
+                                        }),
+                                        child: Container(
+                                          height: 24.h,
+                                          width: 60.w,
+                                          decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius:
+                                                BorderRadius.circular(3),
+                                            border: Border.all(
+                                                color: const Color.fromRGBO(
+                                                    2, 160, 8, 1)),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "Add",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 10.sp,
+                                                  color: const Color.fromRGBO(
+                                                      2, 160, 8, 1),
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                              },
+                              loading: (productId) {
+                                return productId == widget.productId
+                                    ? Center(
+                                        child: Container(
+                                          height: 24.h,
+                                          width: 60.w,
+                                          decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius:
+                                                BorderRadius.circular(3),
+                                            border: Border.all(
+                                                color: const Color.fromRGBO(
+                                                    2, 160, 8, 1)),
+                                          ),
+                                          child: Center(
+                                            child: CupertinoActivityIndicator(
+                                              radius: 8.sp,
+                                              color: const Color.fromARGB(
+                                                  162, 2, 160, 7),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : GestureDetector(
+                                        onTap: (() {
+                                          context.read<CartBloc>().add(
+                                              CartEvent.addToCart(
+                                                  widget.productId.toString()));
+                                          CherryToast.success(
+                                            title: const Text(
+                                                "The simplest cherry toast"),
+                                            toastPosition: Position.bottom,
+                                            animationType:
+                                                AnimationType.fromLeft,
+                                          ).show(context);
+                                        }),
+                                        child: Container(
+                                          height: 24.h,
+                                          width: 60.w,
+                                          decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius:
+                                                BorderRadius.circular(3),
+                                            border: Border.all(
+                                                color: const Color.fromRGBO(
+                                                    2, 160, 8, 1)),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "Add",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 10.sp,
+                                                  color: const Color.fromRGBO(
+                                                      2, 160, 8, 1),
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                              },
+                            );
+                          },
                         )
                 ],
               ),

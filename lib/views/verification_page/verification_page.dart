@@ -6,6 +6,7 @@ import 'package:eat_incredible_app/views/home_page/navigation/navigation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VerificationPage extends StatefulWidget {
   final String? phone;
@@ -21,10 +22,22 @@ class _VerificationPageState extends State<VerificationPage> {
   final TextEditingController _codeController = TextEditingController();
   bool isResendOtp = false;
   int timeCount = 30;
+  bool isNewUser = true;
 
   @override
   void initState() {
     super.initState();
+    checkNewUser();
+  }
+
+  Future<void> checkNewUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? newUser = prefs.getString('isNewUser');
+    if (newUser == "false") {
+      setState(() {
+        isNewUser = false;
+      });
+    }
   }
 
   @override
@@ -199,7 +212,9 @@ class _VerificationPageState extends State<VerificationPage> {
                     initial: () {},
                     loading: () {},
                     loaded: (lodedData) {
-                      Get.offAll(() => const Navigation());
+                      isNewUser
+                          ? Get.offAll(() => const Navigation())
+                          : Get.offAll(() => const Navigation());
                     },
                     failure: (e) {
                       Get.snackbar(

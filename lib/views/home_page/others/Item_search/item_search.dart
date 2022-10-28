@@ -104,6 +104,7 @@ class ItemSearch extends StatelessWidget {
                         },
                         percentage: '20%',
                         addtocartTap: () {},
+                        productId: '',
                       ),
                     );
                   }),
@@ -183,7 +184,7 @@ class ItemSearch extends StatelessWidget {
                         },
                         percentage: '20%',
                         addtocartTap: () {},
-                        isCart: true,
+                        isCart: true, productId: '',
                       ),
                     );
                   }),

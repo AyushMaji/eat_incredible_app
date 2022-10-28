@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
 import 'package:eat_incredible_app/controller/product_details/product_details_bloc.dart';
@@ -9,6 +7,7 @@ import 'package:eat_incredible_app/views/home_page/others/cart_page/cart_page.da
 import 'package:eat_incredible_app/widgets/addtocart/addtocart_bar.dart';
 import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
 import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
@@ -99,7 +98,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                     );
                   },
                   loaded: (productdetails) {
-                    log(productdetails.toString());
                     return SingleChildScrollView(
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,11 +224,140 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       ),
                                     ],
                                   ),
-                                  productdetails[0].iscart == true
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            Get.to(() => const CartPage());
+                                  productdetails[0].iscart == false
+                                      ? BlocConsumer<CartBloc, CartState>(
+                                          listener: (context, state) {
+                                            state.when(
+                                                initial: () {},
+                                                loading: (productId) {},
+                                                success: (msg, producId) {},
+                                                failure: (error) {});
                                           },
+                                          builder: (context, state) {
+                                            return state.maybeWhen(
+                                              orElse: () {
+                                                return Container();
+                                              },
+                                              initial: () {
+                                                return GestureDetector(
+                                                  onTap: (() {
+                                                    context.read<CartBloc>().add(
+                                                        CartEvent.addToCart(
+                                                            productdetails[0]
+                                                                .id
+                                                                .toString()));
+                                                  }),
+                                                  child: Container(
+                                                    height: 24.h,
+                                                    width: 60.w,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.transparent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              3),
+                                                      border: Border.all(
+                                                          color: const Color
+                                                                  .fromRGBO(
+                                                              2, 160, 8, 1)),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Add",
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontSize: 10.sp,
+                                                            color: const Color
+                                                                    .fromRGBO(
+                                                                2, 160, 8, 1),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              loading: (productId) {
+                                                return Center(
+                                                  child: Container(
+                                                    height: 24.h,
+                                                    width: 60.w,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.transparent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              3),
+                                                      border: Border.all(
+                                                          color: const Color
+                                                                  .fromRGBO(
+                                                              2, 160, 8, 1)),
+                                                    ),
+                                                    child: Center(
+                                                      child:
+                                                          CupertinoActivityIndicator(
+                                                        radius: 8.sp,
+                                                        color: const Color
+                                                                .fromARGB(
+                                                            162, 2, 160, 7),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              success: (msg, producId) {
+                                                return GestureDetector(
+                                                  onTap: (() {
+                                                    Get.to(
+                                                        () => const CartPage());
+                                                  }),
+                                                  child: Container(
+                                                    height: 24.h,
+                                                    width: 60.w,
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          const Color.fromRGBO(
+                                                              2, 160, 8, 1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              3),
+                                                      border: Border.all(
+                                                          color: const Color
+                                                                  .fromRGBO(
+                                                              2, 160, 8, 1)),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "View cart",
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontSize: 10.sp,
+                                                            color: const Color
+                                                                    .fromARGB(
+                                                                255,
+                                                                255,
+                                                                255,
+                                                                255),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                        )
+                                      : GestureDetector(
+                                          onTap: (() {
+                                            Get.to(() => const CartPage());
+                                          }),
                                           child: Container(
                                             height: 24.h,
                                             width: 60.w,
@@ -257,41 +384,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               ),
                                             ),
                                           ),
-                                        )
-                                      : GestureDetector(
-                                          onTap: (() {
-                                            context.read<CartBloc>().add(
-                                                CartEvent.addToCart(
-                                                    productdetails[0]
-                                                        .id
-                                                        .toString()));
-                                          }),
-                                          child: Container(
-                                            height: 24.h,
-                                            width: 60.w,
-                                            decoration: BoxDecoration(
-                                              color: Colors.transparent,
-                                              borderRadius:
-                                                  BorderRadius.circular(3),
-                                              border: Border.all(
-                                                  color: const Color.fromRGBO(
-                                                      2, 160, 8, 1)),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                "Add",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontFamily: 'Poppins',
-                                                    fontSize: 10.sp,
-                                                    color: const Color.fromRGBO(
-                                                        2, 160, 8, 1),
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                            ),
-                                          ),
-                                        )
+                                        ),
                                 ],
                               ),
                             ),
@@ -357,6 +450,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               ),
                             ),
                             BlocConsumer<ProductListBloc, ProductListState>(
+                              bloc: context.read<ProductListBloc>(),
                               listener: (context, state) {
                                 state.when(
                                     initial: () {},
@@ -443,6 +537,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                   .discountPercentage
                                                   .toString(),
                                               addtocartTap: () {},
+                                              productId: productList[index]
+                                                  .id
+                                                  .toString(),
                                             ),
                                           );
                                         }),

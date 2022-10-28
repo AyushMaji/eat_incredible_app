@@ -4,6 +4,9 @@ import 'package:eat_incredible_app/controller/category/category_bloc.dart';
 import 'package:eat_incredible_app/controller/login/login_bloc.dart';
 import 'package:eat_incredible_app/controller/product_details/product_details_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
+import 'package:eat_incredible_app/controller/update_userdata/update_user_data/update_user_bloc.dart';
+import 'package:eat_incredible_app/controller/update_userdata/verify_user_data/up_verrify_data_bloc.dart';
+import 'package:eat_incredible_app/controller/user_info/user_info_bloc.dart';
 import 'package:eat_incredible_app/controller/verify_otp/verify_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/views/splash_screen/splash_screen.dart';
@@ -33,6 +36,11 @@ class MyApp extends StatelessWidget {
               BlocProvider<LoginBloc>(create: (context) => LoginBloc()),
               BlocProvider<VerifyBloc>(create: (context) => VerifyBloc()),
               BlocProvider<CartBloc>(create: (context) => CartBloc()),
+              BlocProvider<UserInfoBloc>(create: (context) => UserInfoBloc()),
+              BlocProvider<UpdateUserBloc>(
+                  create: (context) => UpdateUserBloc()),
+              BlocProvider<UpVerrifyDataBloc>(
+                  create: (context) => UpVerrifyDataBloc()),
             ],
             child: GetMaterialApp(
               theme: ThemeData(useMaterial3: true),

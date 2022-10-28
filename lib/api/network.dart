@@ -4,7 +4,6 @@ import 'package:eat_incredible_app/repo/url_repo.dart';
 
 class Network {
   final client = ApiHelper();
-  // sharefrefarance
 
   Future<Response> postlogin(String phone, String countryCode) async {
     return await client.postRequest(UrlRepo.loginwithOtp, data: {
@@ -26,14 +25,16 @@ class Network {
     });
   }
 
-  Future<Response> verifyemailOtp(String email, String otp) async {
+  Future<Response> verifyemailOtp(
+      String email, String otp, String guestId) async {
     return await client.postRequest(UrlRepo.verifyemailOtp, data: {
       "email": email,
       "otp": otp,
+      "guest_id": guestId,
     });
   }
 
-  Future<Response> logout(String phone) async {
+  Future<Response> logout() async {
     return await client.postRequest(UrlRepo.logout, data: {});
   }
 
@@ -56,5 +57,17 @@ class Network {
 
   Future<Response> addToCart(String productid) async {
     return await client.postRequest(UrlRepo.addTocart(productid), data: {});
+  }
+
+  Future<Response> getuserInfo() async {
+    return await client.postRequest(UrlRepo.userInfo, data: {});
+  }
+
+  Future<Response> updateUserEmail(String email) async {
+    return await client.postRequest(UrlRepo.editEmail(email), data: {});
+  }
+
+  Future<Response> updateUserPhone(String phone) async {
+    return await client.postRequest(UrlRepo.editPhone(phone), data: {});
   }
 }

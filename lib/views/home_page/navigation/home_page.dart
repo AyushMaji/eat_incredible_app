@@ -229,6 +229,7 @@ class _HomePageState extends State<HomePage> {
                           },
                           percentage: '20%',
                           addtocartTap: () {},
+                          productId: '',
                         ),
                       );
                     }),

@@ -176,6 +176,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  cherry_toast:
+    dependency: "direct main"
+    description:
+      name: cherry_toast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.8"
   clock:
     dependency: transitive
     description:

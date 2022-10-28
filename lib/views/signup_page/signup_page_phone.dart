@@ -19,7 +19,6 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   Country? selectedCountry;
   String selectedCountryCode = '+91';
-
   final TextEditingController _phoneController = TextEditingController();
 
   void _showCountryPicker() async {

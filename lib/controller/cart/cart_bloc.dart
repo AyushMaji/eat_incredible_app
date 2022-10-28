@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:eat_incredible_app/repo/cart_repo.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,14 +10,14 @@ part 'cart_bloc.freezed.dart';
 class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc() : super(const _Initial()) {
     on<_AddToCart>((event, emit) async {
-      emit(const _Loading());
+      emit(_Loading(productId: event.productid));
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       var result = await CartRepo.addToCart(event.productid);
-      log(result.toString());
-      if (result.data['guest'] !=null) {
-        log("${result.data['guest']}guest");
+      if (result.data['guest'] != null) {
         prefs.setString('guest_id', result.data['guest'].toString());
       }
+      emit(_Success(
+          message: result.data['message'], productId: event.productid));
     });
   }
 }
