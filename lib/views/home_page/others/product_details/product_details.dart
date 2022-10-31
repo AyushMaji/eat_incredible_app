@@ -14,7 +14,9 @@ import 'package:shimmer/shimmer.dart';
 
 class ProductDetails extends StatefulWidget {
   final String productId;
-  const ProductDetails({super.key, required this.productId});
+  final String catId;
+  const ProductDetails(
+      {super.key, required this.productId, required this.catId});
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -23,6 +25,16 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   int current = 0;
   final CarouselController controller = CarouselController();
+  @override
+  void initState() {
+    context
+        .read<ProductListBloc>()
+        .add(ProductListEvent.fetchProductList(categoryId: widget.catId));
+    context.read<ProductDetailsBloc>().add(
+        ProductDetailsEvent.getproductdetails(productId: widget.productId));
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +58,10 @@ class _ProductDetailsState extends State<ProductDetails> {
           context.read<ProductDetailsBloc>().add(
               ProductDetailsEvent.getproductdetails(
                   productId: widget.productId));
+          context
+              .read<ProductListBloc>()
+              .add(ProductListEvent.fetchProductList(categoryId: widget.catId));
+
           return Future.value();
         },
         child: Stack(
@@ -230,22 +246,37 @@ class _ProductDetailsState extends State<ProductDetails> {
                                             state.when(
                                                 initial: () {},
                                                 loading: (productId) {},
-                                                success: (msg, producId) {},
+                                                success: (msg, producId) {
+                                                  context
+                                                      .read<ProductListBloc>()
+                                                      .add(ProductListEvent
+                                                          .fetchProductList(
+                                                              categoryId: widget
+                                                                  .catId));
+                                                  context
+                                                      .read<
+                                                          ProductDetailsBloc>()
+                                                      .add(ProductDetailsEvent
+                                                          .getproductdetails(
+                                                              productId: widget
+                                                                  .productId));
+                                                },
                                                 failure: (error) {});
                                           },
                                           builder: (context, state) {
                                             return state.maybeWhen(
                                               orElse: () {
-                                                return Container();
-                                              },
-                                              initial: () {
                                                 return GestureDetector(
                                                   onTap: (() {
-                                                    context.read<CartBloc>().add(
-                                                        CartEvent.addToCart(
-                                                            productdetails[0]
-                                                                .id
-                                                                .toString()));
+                                                    context
+                                                        .read<CartBloc>()
+                                                        .add(
+                                                            CartEvent.addToCart(
+                                                          productid:
+                                                              productdetails[0]
+                                                                  .id
+                                                                  .toString(),
+                                                        ));
                                                   }),
                                                   child: Container(
                                                     height: 24.h,
@@ -302,50 +333,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                         color: const Color
                                                                 .fromARGB(
                                                             162, 2, 160, 7),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              success: (msg, producId) {
-                                                return GestureDetector(
-                                                  onTap: (() {
-                                                    Get.to(
-                                                        () => const CartPage());
-                                                  }),
-                                                  child: Container(
-                                                    height: 24.h,
-                                                    width: 60.w,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          const Color.fromRGBO(
-                                                              2, 160, 8, 1),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              3),
-                                                      border: Border.all(
-                                                          color: const Color
-                                                                  .fromRGBO(
-                                                              2, 160, 8, 1)),
-                                                    ),
-                                                    child: Center(
-                                                      child: Text(
-                                                        "View cart",
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Poppins',
-                                                            fontSize: 10.sp,
-                                                            color: const Color
-                                                                    .fromARGB(
-                                                                255,
-                                                                255,
-                                                                255,
-                                                                255),
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
                                                       ),
                                                     ),
                                                   ),
@@ -486,7 +473,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                               },
                               builder: (context, state) {
                                 return state.maybeWhen(orElse: () {
-                                  return Container();
+                                  return SizedBox(
+                                    child: Shimmer.fromColors(
+                                      baseColor: const Color.fromARGB(
+                                          44, 222, 220, 220),
+                                      highlightColor: Colors.grey[100]!,
+                                      child: Image.asset(
+                                        "assets/images/itemList.png",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  );
                                 }, loaded: (productList) {
                                   return SizedBox(
                                     height: 165.h,
@@ -516,7 +513,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               quantity: productList[index]
                                                   .weight
                                                   .toString(),
-                                              onChanged: (String value) {},
+                                              cartId: productList[index]
+                                                  .categoryId
+                                                  .toString(),
+                                              percentage: productList[index]
+                                                  .discountPercentage
+                                                  .toString(),
+                                              productId: productList[index]
+                                                  .id
+                                                  .toString(),
+                                              addtocartTap: () {},
                                               ontap: () {
                                                 context
                                                     .read<ProductDetailsBloc>()
@@ -528,18 +534,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                                     .id
                                                                     .toString()));
                                                 Get.to(ProductDetails(
-                                                    productId:
-                                                        productList[index]
-                                                            .id
-                                                            .toString()));
+                                                  productId: productList[index]
+                                                      .id
+                                                      .toString(),
+                                                  catId: productList[index]
+                                                      .categoryId
+                                                      .toString(),
+                                                ));
                                               },
-                                              percentage: productList[index]
-                                                  .discountPercentage
-                                                  .toString(),
-                                              addtocartTap: () {},
-                                              productId: productList[index]
-                                                  .id
-                                                  .toString(),
                                             ),
                                           );
                                         }),

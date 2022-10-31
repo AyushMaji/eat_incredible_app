@@ -96,15 +96,16 @@ class ItemSearch extends StatelessWidget {
                         disprice: "200",
                         price: "200",
                         quantity: "200",
-                        onChanged: (String value) {},
-                        ontap: () {
-                          Get.to(() => const ProductDetails(
-                                productId: '',
-                              ));
-                        },
                         percentage: '20%',
                         addtocartTap: () {},
                         productId: '',
+                        cartId: '',
+                        ontap: () {
+                          Get.to(() => const ProductDetails(
+                                productId: '',
+                                catId: '',
+                              ));
+                        },
                       ),
                     );
                   }),
@@ -176,15 +177,17 @@ class ItemSearch extends StatelessWidget {
                         disprice: "200",
                         price: "200",
                         quantity: "200",
-                        onChanged: (String value) {},
                         ontap: () {
                           Get.to(() => const ProductDetails(
                                 productId: '',
+                                catId: '',
                               ));
                         },
                         percentage: '20%',
                         addtocartTap: () {},
-                        isCart: true, productId: '',
+                        isCart: true,
+                        productId: '',
+                        cartId: '',
                       ),
                     );
                   }),

@@ -59,6 +59,14 @@ class Network {
     return await client.postRequest(UrlRepo.addTocart(productid), data: {});
   }
 
+  Future<Response> getCartDetails() async {
+    return await client.postRequest(UrlRepo.cartDetails, data: {});
+  }
+
+  Future<Response> getCartIteam() async {
+    return await client.postRequest(UrlRepo.cartIteam, data: {});
+  }
+
   Future<Response> getuserInfo() async {
     return await client.postRequest(UrlRepo.userInfo, data: {});
   }

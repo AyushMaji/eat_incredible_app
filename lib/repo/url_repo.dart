@@ -12,12 +12,10 @@ class UrlRepo {
       'each_product.php?id=$productid';
 
   static String addTocart(String productid) => 'add_to_cart.php?id=$productid';
-  static const userInfo = 'account_info.php';
+  static const cartDetails = 'cart_details.php';
+  static const cartIteam = 'cart_items.php';
 
+  static const userInfo = 'account_info.php';
   static String editEmail(String email) => 'send_email_otp.php?id=$email';
   static String editPhone(String phone) => 'send_phone_otp.php?id=$phone';
-
-  //! made all demo url for testing and development
-  static const removeCart = 'remove_cart.php';
-  static const getCartDetails = 'cart_details.php';
 }

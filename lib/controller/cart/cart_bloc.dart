@@ -16,6 +16,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       if (result.data['guest'] != null) {
         prefs.setString('guest_id', result.data['guest'].toString());
       }
+
       emit(_Success(
           message: result.data['message'], productId: event.productid));
     });

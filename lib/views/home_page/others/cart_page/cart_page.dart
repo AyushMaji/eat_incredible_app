@@ -184,14 +184,16 @@ class _CartPageState extends State<CartPage> {
                         disprice: "200",
                         price: "200",
                         quantity: "200",
-                        onChanged: (String value) {},
+                        isCart: true,
+                        productId: '',
+                        cartId: '',
                         ontap: () {
                           Get.to(() => const ProductDetails(
                                 productId: '',
+                                catId: '',
                               ));
                         },
                         addtocartTap: () {},
-                        isCart: true, productId: '',
                       ),
                     );
                   }),

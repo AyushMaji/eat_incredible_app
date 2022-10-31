@@ -1,5 +1,5 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:eat_incredible_app/controller/product_details/product_details_bloc.dart';
+import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/views/home_page/others/Item_search/item_search.dart';
@@ -167,47 +167,99 @@ class _FilterPageState extends State<FilterPage> {
                                           (BuildContext context, int index) {
                                         return FadeInUp(
                                             from: 3,
-                                            child: ProductCard(
-                                              isCart: productList[index].iscart,
-                                              imageUrl: productList[index]
-                                                  .thumbnail
-                                                  .toString(),
-                                              title: productList[index]
-                                                  .productName
-                                                  .toString(),
-                                              disprice: productList[index]
-                                                  .originalPrice
-                                                  .toString(),
-                                              price: productList[index]
-                                                  .salePrice
-                                                  .toString(),
-                                              quantity: productList[index]
-                                                  .weight
-                                                  .toString(),
-                                              onChanged: (value) {},
-                                              ontap: () {
-                                                context
-                                                    .read<ProductDetailsBloc>()
-                                                    .add(ProductDetailsEvent
-                                                        .getproductdetails(
-                                                            productId:
+                                            child: BlocConsumer<CartBloc,
+                                                CartState>(
+                                              listener: (context, state) {
+                                                state.when(
+                                                    initial: () {},
+                                                    loading: (data) {},
+                                                    success: (msg, pid) {
+                                                      if (pid ==
+                                                          productList[index]
+                                                              .id) {
+                                                        context
+                                                            .read<
+                                                                ProductListBloc>()
+                                                            .add(ProductListEvent
+                                                                .fetchProductList(
+                                                                    categoryId:
+                                                                        filterIteamId));
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(msg),
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    vertical:
+                                                                        16.h,
+                                                                    horizontal:
+                                                                        20.w),
+                                                            backgroundColor:
+                                                                const Color
+                                                                        .fromARGB(
+                                                                    255,
+                                                                    29,
+                                                                    30,
+                                                                    29),
+                                                            behavior:
+                                                                SnackBarBehavior
+                                                                    .fixed,
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                    failure: (e) {});
+                                              },
+                                              builder: (context, state) {
+                                                return ProductCard(
+                                                  isCart:
+                                                      productList[index].iscart,
+                                                  imageUrl: productList[index]
+                                                      .thumbnail
+                                                      .toString(),
+                                                  title: productList[index]
+                                                      .productName
+                                                      .toString(),
+                                                  disprice: productList[index]
+                                                      .originalPrice
+                                                      .toString(),
+                                                  price: productList[index]
+                                                      .salePrice
+                                                      .toString(),
+                                                  quantity: productList[index]
+                                                      .weight
+                                                      .toString(),
+                                                  percentage: productList[index]
+                                                      .discountPercentage
+                                                      .toString(),
+                                                  productId: productList[index]
+                                                      .id
+                                                      .toString(),
+                                                  cartId: filterIteamId,
+                                                  ontap: () {
+                                                    Get.to(() => ProductDetails(
+                                                          productId:
+                                                              productList[index]
+                                                                  .id
+                                                                  .toString(),
+                                                          catId:
+                                                              productList[index]
+                                                                  .categoryId
+                                                                  .toString(),
+                                                        ));
+                                                  },
+                                                  addtocartTap: () {
+                                                    context.read<CartBloc>().add(
+                                                        CartEvent.addToCart(
+                                                            productid:
                                                                 productList[
                                                                         index]
                                                                     .id
                                                                     .toString()));
-                                                Get.to(() => ProductDetails(
-                                                    productId:
-                                                        productList[index]
-                                                            .id
-                                                            .toString()));
+                                                  },
+                                                );
                                               },
-                                              percentage: productList[index]
-                                                  .discountPercentage
-                                                  .toString(),
-                                              addtocartTap: () {},
-                                              productId: productList[index]
-                                                  .id
-                                                  .toString(),
                                             ));
                                       });
                             },

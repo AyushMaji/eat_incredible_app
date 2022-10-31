@@ -209,7 +209,7 @@ class __$$_AddToCartCopyWithImpl<$Res> extends _$CartEventCopyWithImpl<$Res>
     Object? productid = freezed,
   }) {
     return _then(_$_AddToCart(
-      productid == freezed
+      productid: productid == freezed
           ? _value.productid
           : productid // ignore: cast_nullable_to_non_nullable
               as String,
@@ -220,7 +220,7 @@ class __$$_AddToCartCopyWithImpl<$Res> extends _$CartEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_AddToCart implements _AddToCart {
-  const _$_AddToCart(this.productid);
+  const _$_AddToCart({required this.productid});
 
   @override
   final String productid;
@@ -317,7 +317,7 @@ class _$_AddToCart implements _AddToCart {
 }
 
 abstract class _AddToCart implements CartEvent {
-  const factory _AddToCart(final String productid) = _$_AddToCart;
+  const factory _AddToCart({required final String productid}) = _$_AddToCart;
 
   String get productid;
   @JsonKey(ignore: true)
@@ -348,7 +348,7 @@ class __$$_RemoveCartCopyWithImpl<$Res> extends _$CartEventCopyWithImpl<$Res>
     Object? productid = freezed,
   }) {
     return _then(_$_RemoveCart(
-      productid == freezed
+      productid: productid == freezed
           ? _value.productid
           : productid // ignore: cast_nullable_to_non_nullable
               as String,
@@ -359,7 +359,7 @@ class __$$_RemoveCartCopyWithImpl<$Res> extends _$CartEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_RemoveCart implements _RemoveCart {
-  const _$_RemoveCart(this.productid);
+  const _$_RemoveCart({required this.productid});
 
   @override
   final String productid;
@@ -456,7 +456,7 @@ class _$_RemoveCart implements _RemoveCart {
 }
 
 abstract class _RemoveCart implements CartEvent {
-  const factory _RemoveCart(final String productid) = _$_RemoveCart;
+  const factory _RemoveCart({required final String productid}) = _$_RemoveCart;
 
   String get productid;
   @JsonKey(ignore: true)

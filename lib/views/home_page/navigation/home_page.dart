@@ -221,15 +221,16 @@ class _HomePageState extends State<HomePage> {
                           disprice: "300",
                           price: "200",
                           quantity: "200",
-                          onChanged: (String value) {},
+                          productId: '',
+                          cartId: '',
+                          percentage: '20%',
+                          addtocartTap: () {},
                           ontap: () {
                             Get.to(() => const ProductDetails(
                                   productId: '',
+                                  catId: '',
                                 ));
                           },
-                          percentage: '20%',
-                          addtocartTap: () {},
-                          productId: '',
                         ),
                       );
                     }),
