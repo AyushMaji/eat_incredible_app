@@ -28,6 +28,7 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   int current = 0;
   final CarouselController controller = CarouselController();
+  ProductDetailsBloc productDetailsBloc = ProductDetailsBloc();
 
   @override
   void initState() {
@@ -37,7 +38,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   //* call the product details api and get the data from the api
   void getData() {
-    context.read<ProductDetailsBloc>().add(
+    productDetailsBloc.add(
         ProductDetailsEvent.getproductdetails(productId: widget.productId));
     context
         .read<ProductListBloc>()
@@ -73,6 +74,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           alignment: Alignment.topCenter,
           children: [
             BlocConsumer<ProductDetailsBloc, ProductDetailsState>(
+              bloc: productDetailsBloc,
               listener: (context, state) {
                 state.when(
                     initial: () {},
@@ -585,4 +587,3 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 }
- 
