@@ -67,7 +67,7 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
                   state.userInfo.mobile ?? 'Enter Your Phone';
               emailController.text = state.userInfo.email ?? 'Enter Your Email';
               addressController.text =
-                  state.userInfo.userAddress ?? 'Enter Your Address';
+                  state.userInfo.address ?? 'Add Your Address';
               editemailController.text =
                   state.userInfo.email ?? 'Enter Your Email';
               editphoneController.text =
@@ -465,14 +465,13 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
                             onTap: () => Get.to(() => const MyAddressPage()),
                             controller: addressController,
                             decoration: InputDecoration(
-                              hintText: '  Enter your address',
                               hintStyle: GoogleFonts.poppins(
                                 color: const Color.fromRGBO(97, 97, 97, 1),
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
                               ),
                               suffixIcon: Icon(
-                                Icons.location_on_rounded,
+                                Icons.edit,
                                 color: const Color(0xffE20A13),
                                 size: 15.sp,
                               ),

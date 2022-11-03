@@ -34,16 +34,19 @@ class AddressCard extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(left: 0.8.w, top: 10.h),
-              child: Text(address,
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xff404040),
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.normal,
-                  )),
+              padding: EdgeInsets.only(top: 10.h),
+              child: Text(
+                address.trimLeft(),
+                style: GoogleFonts.poppins(
+                  color: const Color(0xff404040),
+                  fontSize: 11.6.sp,
+                  fontWeight: FontWeight.normal,
+                ),
+                textAlign: TextAlign.left,
+              ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 0.8.w, top: 10.h, bottom: 0.5.h),
+              padding: EdgeInsets.only(left: 0.8.w, top: 10.h, bottom: 0.7.h),
               child: Row(
                 children: [
                   GestureDetector(
@@ -72,7 +75,7 @@ class AddressCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 0.w),
               child: const Divider(
                 color: Color(0xff000000),
-                thickness: 1,
+                thickness: 0.8,
               ),
             )
           ])

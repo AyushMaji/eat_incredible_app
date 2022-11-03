@@ -1,10 +1,25 @@
-import 'dart:developer';
+import 'package:eat_incredible_app/controller/address/view_address_list.dart/view_addresslist_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/views/home_page/others/add_address/add_address_page.dart';
 import 'package:eat_incredible_app/widgets/address_card/address_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MyAddressPage extends StatelessWidget {
+class MyAddressPage extends StatefulWidget {
   const MyAddressPage({super.key});
+
+  @override
+  State<MyAddressPage> createState() => _MyAddressPageState();
+}
+
+class _MyAddressPageState extends State<MyAddressPage> {
+  @override
+  void initState() {
+    context
+        .read<ViewAddresslistBloc>()
+        .add(const ViewAddresslistEvent.getAddressList());
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,29 +72,36 @@ class MyAddressPage extends StatelessWidget {
                   )),
             ),
             SizedBox(height: 5.h),
-            ListView.builder(
-                shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return Center(
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 13.w, vertical: 8.h),
-                      child: AddressCard(
-                        address:
-                            'Ogunlana Drive, Surulere, Lagos State Nigeria 100001',
-                        name: 'Home',
-                        onDelete: () {
-                          log('Delete');
-                        },
-                        onEdit: () {
-                          log('Edit');
-                        },
-                      ),
-                    ),
+            BlocConsumer<ViewAddresslistBloc, ViewAddresslistState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                return state.maybeWhen(orElse: () {
+                  return const Center(child: CircularProgressIndicator());
+                }, loaded: (addressList) {
+                  return ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: addressList.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 13.w, vertical: 8.h),
+                        child: AddressCard(
+                          address: addressList[index].address.toString(),
+                          name: addressList[index].locality.toString(),
+                          onDelete: () {},
+                          onEdit: () {},
+                        ),
+                      );
+                    },
                   );
-                })
+                }, error: (message) {
+                  return Center(
+                    child: Text(message),
+                  );
+                });
+              },
+            )
           ],
         ),
       ),

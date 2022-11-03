@@ -1,7 +1,10 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
+import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
+import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/others/Item_search/item_search.dart';
 import 'package:eat_incredible_app/views/home_page/others/cart_page/cart_page.dart';
 import 'package:eat_incredible_app/views/home_page/others/product_details/product_details.dart';
@@ -29,6 +32,18 @@ class FilterPage extends StatefulWidget {
 class _FilterPageState extends State<FilterPage> {
   final ScrollController _scrollController = ScrollController();
   late String filterIteamId;
+
+  //*  this is the fuction which is called when the user refresh the page ==========>
+
+  void getdata() {
+    context
+        .read<ProductListBloc>()
+        .add(ProductListEvent.fetchProductList(categoryId: filterIteamId));
+    context
+        .read<CartDetailsBloc>()
+        .add(const CartDetailsEvent.getCartDetails());
+  }
+
   @override
   void initState() {
     super.initState();
@@ -99,9 +114,7 @@ class _FilterPageState extends State<FilterPage> {
                     child: RefreshIndicator(
                       strokeWidth: 2.7,
                       onRefresh: () {
-                        context.read<ProductListBloc>().add(
-                            ProductListEvent.fetchProductList(
-                                categoryId: filterIteamId));
+                        getdata();
                         return Future.value();
                       },
                       child: BlocConsumer<ProductListBloc, ProductListState>(
@@ -172,41 +185,21 @@ class _FilterPageState extends State<FilterPage> {
                                               listener: (context, state) {
                                                 state.when(
                                                     initial: () {},
-                                                    loading: (data) {},
+                                                    loading: (pid) {
+                                                      if (pid ==
+                                                          productList[index]
+                                                              .id) {
+                                                        CustomSnackbar
+                                                            .loading();
+                                                      }
+                                                    },
                                                     success: (msg, pid) {
                                                       if (pid ==
                                                           productList[index]
                                                               .id) {
-                                                        context
-                                                            .read<
-                                                                ProductListBloc>()
-                                                            .add(ProductListEvent
-                                                                .fetchProductList(
-                                                                    categoryId:
-                                                                        filterIteamId));
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: Text(msg),
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    vertical:
-                                                                        16.h,
-                                                                    horizontal:
-                                                                        20.w),
-                                                            backgroundColor:
-                                                                const Color
-                                                                        .fromARGB(
-                                                                    255,
-                                                                    29,
-                                                                    30,
-                                                                    29),
-                                                            behavior:
-                                                                SnackBarBehavior
-                                                                    .fixed,
-                                                          ),
-                                                        );
+                                                        getdata();
+                                                        BotToast.showText(
+                                                            text: msg);
                                                       }
                                                     },
                                                     failure: (e) {});
@@ -260,7 +253,8 @@ class _FilterPageState extends State<FilterPage> {
                                                   },
                                                 );
                                               },
-                                            ));
+                                            )
+                                            );
                                       });
                             },
                           );
@@ -271,22 +265,31 @@ class _FilterPageState extends State<FilterPage> {
                 ],
               ),
             ),
-            Positioned(
-              bottom: 10.h,
-              child: _show
-                  ? SlideInUp(
-                      child: AddtocartBar(
-                        iteamCount: 20,
-                        onTap: () {
-                          Get.to(() => const CartPage());
-                        },
-                        totalAmount: 100.0,
-                      ),
-                    )
-                  : const Opacity(
-                      opacity: 0.0,
-                      child: SizedBox(),
-                    ),
+            BlocConsumer<CartDetailsBloc, CartDetailsState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                return state.maybeWhen(orElse: () {
+                  return const SizedBox();
+                }, loaded: (cartDetails) {
+                  return Positioned(
+                    bottom: 10.h,
+                    child: cartDetails.totalItem != 0 && _show == true
+                        ? SlideInUp(
+                            child: AddtocartBar(
+                              iteamCount: cartDetails.totalItem ?? 0,
+                              onTap: () {
+                                Get.to(() => const CartPage());
+                              },
+                              totalAmount: cartDetails.totalPrice ?? 0,
+                            ),
+                          )
+                        : const Opacity(
+                            opacity: 0.0,
+                            child: SizedBox(),
+                          ),
+                  );
+                });
+              },
             )
           ],
         ),

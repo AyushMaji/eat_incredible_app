@@ -4,9 +4,9 @@ import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
 class CartProduct extends StatefulWidget {
   final String imageUrl;
   final String title;
-  final int disprice;
-  final int price;
-  final int quantity;
+  final String disprice;
+  final String price;
+  final String quantity;
   final int iteam;
   final ValueChanged<String>? onChanged;
   final GestureTapCallback? ontap;
@@ -47,23 +47,20 @@ class _CartProductState extends State<CartProduct> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
                 child: CustomPic(
-                    imageUrl:
-                        "https://img.freepik.com/free-photo/red-onion-whole-isolated-white_146671-19175.jpg?size=626&ext=jpg&ga=GA1.2.1083069314.1662365651",
-                    height: 53.h,
-                    width: 57.w),
+                    imageUrl: widget.imageUrl, height: 53.h, width: 57.w),
               ),
               SizedBox(width: 10.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Schezwan Noodles",
+                  Text(widget.title,
                       style: GoogleFonts.poppins(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
                         color: const Color.fromRGBO(44, 44, 44, 1),
                       )),
                   SizedBox(height: 0.5.h),
-                  Text("500 g",
+                  Text(widget.quantity,
                       style: GoogleFonts.poppins(
                         fontSize: 8.sp,
                         fontWeight: FontWeight.w500,
@@ -72,14 +69,14 @@ class _CartProductState extends State<CartProduct> {
                   SizedBox(height: 0.5.h),
                   Row(
                     children: [
-                      Text("₹ 100",
+                      Text("₹ ${widget.disprice}",
                           style: GoogleFonts.poppins(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w600,
                             color: const Color.fromRGBO(44, 44, 44, 1),
                           )),
                       SizedBox(width: 2.5.w),
-                      Text("₹ 100",
+                      Text("₹ ${widget.price}",
                           style: GoogleFonts.poppins(
                             fontSize: 9.sp,
                             fontWeight: FontWeight.w500,

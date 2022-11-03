@@ -18,4 +18,12 @@ class UrlRepo {
   static const userInfo = 'account_info.php';
   static String editEmail(String email) => 'send_email_otp.php?id=$email';
   static String editPhone(String phone) => 'send_phone_otp.php?id=$phone';
+
+  //!! add all address api
+  static const addaddress = 'add_user_address.php';
+  static const addressList = 'view_user_address.php';
+  static String deleteaddress(String addressid) =>
+      'delete_address.php?id=$addressid';
+  static String updateaddress(String addressid) =>
+      'update_user_address.php?id=$addressid';
 }

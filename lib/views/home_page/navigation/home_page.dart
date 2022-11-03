@@ -1,11 +1,15 @@
+import 'package:bot_toast/bot_toast.dart';
+import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
 import 'package:eat_incredible_app/controller/category/category_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
+import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/others/filter_page/filter_page.dart';
 import 'package:eat_incredible_app/views/home_page/others/product_details/product_details.dart';
-import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
 import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
+import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,13 +19,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //* call the bloc to get the data from the api
+  void getData() {
+    context.read<CategoryBloc>().add(const CategoryEvent.getCategory());
+    context
+        .read<ProductListBloc>()
+        .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: RefreshIndicator(
         onRefresh: () {
-          context.read<CategoryBloc>().add(const CategoryEvent.getCategory());
+          getData();
           return Future.value();
         },
         child: SingleChildScrollView(
@@ -203,37 +215,112 @@ class _HomePageState extends State<HomePage> {
                     height: 150.h,
                     width: double.infinity),
               ),
-              SizedBox(
-                height: 165.h,
-                child: ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: 4,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(left: 10.w),
-                        child: ProductCard(
-                          isCart: false,
-                          imageUrl:
-                              "https://img.freepik.com/free-photo/indian-chicken-biryani-served-terracotta-bowl-with-yogurt-white-background-selective-focus_466689-72554.jpg?w=996&t=st=1662382774~exp=1662383374~hmac=3195b0404799d307075e5326a2b654503021f07749f8327c762c38418dda67a7",
-                          title: "title",
-                          disprice: "300",
-                          price: "200",
-                          quantity: "200",
-                          productId: '',
-                          cartId: '',
-                          percentage: '20%',
-                          addtocartTap: () {},
-                          ontap: () {
-                            Get.to(() => const ProductDetails(
-                                  productId: '',
-                                  catId: '',
-                                ));
-                          },
+              BlocConsumer<ProductListBloc, ProductListState>(
+                bloc: context.read<ProductListBloc>(),
+                listener: (context, state) {
+                  state.when(
+                      initial: () {},
+                      loading: () {},
+                      loaded: (_) {},
+                      failure: (e) {
+                        CustomSnackbar.flutterSnackbarWithAction(e, 'Retry',
+                            () {
+                          context.read<ProductListBloc>().add(
+                              const ProductListEvent.fetchProductList(
+                                  categoryId: "98989"));
+                        }, context);
+                      });
+                },
+                builder: (context, state) {
+                  return state.maybeWhen(orElse: () {
+                    return SizedBox(
+                      child: Shimmer.fromColors(
+                        baseColor: const Color.fromARGB(44, 222, 220, 220),
+                        highlightColor: Colors.grey[100]!,
+                        child: Image.asset(
+                          "assets/images/itemList.png",
+                          fit: BoxFit.cover,
                         ),
-                      );
-                    }),
+                      ),
+                    );
+                  }, loaded: (productList) {
+                    return SizedBox(
+                      height: 165.h,
+                      child: ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: productList.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.only(left: 10.w),
+                              child: BlocConsumer<CartBloc, CartState>(
+                                listener: (context, state) {
+                                  state.when(
+                                      initial: () {},
+                                      loading: (pid) {
+                                        if (pid == productList[index].id) {
+                                          CustomSnackbar.loading();
+                                        }
+                                      },
+                                      success: (msg, pid) {
+                                        if (pid == productList[index].id) {
+                                          context.read<ProductListBloc>().add(
+                                              const ProductListEvent
+                                                      .fetchProductList(
+                                                  categoryId: "98989"));
+                                          BotToast.showText(text: msg);
+                                        }
+                                      },
+                                      failure: (e) {});
+                                },
+                                builder: (context, state) {
+                                  return ProductCard(
+                                    isCart: productList[index].iscart,
+                                    imageUrl:
+                                        productList[index].thumbnail.toString(),
+                                    title: productList[index]
+                                        .productName
+                                        .toString(),
+                                    disprice: productList[index]
+                                        .originalPrice
+                                        .toString(),
+                                    price:
+                                        productList[index].salePrice.toString(),
+                                    quantity:
+                                        productList[index].weight.toString(),
+                                    percentage: productList[index]
+                                        .discountPercentage
+                                        .toString(),
+                                    productId: productList[index].id.toString(),
+                                    cartId: productList[index]
+                                        .categoryId
+                                        .toString(),
+                                    ontap: () {
+                                      Get.to(() => ProductDetails(
+                                            productId: productList[index]
+                                                .id
+                                                .toString(),
+                                            catId: productList[index]
+                                                .categoryId
+                                                .toString(),
+                                          ));
+                                    },
+                                    addtocartTap: () {
+                                      context.read<CartBloc>().add(
+                                          CartEvent.addToCart(
+                                              productid: productList[index]
+                                                  .id
+                                                  .toString()));
+                                    },
+                                  );
+                                },
+                              ),
+                            );
+                          }),
+                    );
+                  });
+                },
               ),
               SizedBox(
                 height: 30.h,

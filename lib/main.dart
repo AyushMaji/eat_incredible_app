@@ -1,5 +1,10 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eat_incredible_app/controller/address/addaddress/addaddress_bloc.dart';
+import 'package:eat_incredible_app/controller/address/view_address_list.dart/view_addresslist_bloc.dart';
 import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
+import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
+import 'package:eat_incredible_app/controller/cart/cart_iteam/cart_iteams_bloc.dart';
 import 'package:eat_incredible_app/controller/category/category_bloc.dart';
 import 'package:eat_incredible_app/controller/login/login_bloc.dart';
 import 'package:eat_incredible_app/controller/product_details/product_details_bloc.dart';
@@ -41,8 +46,18 @@ class MyApp extends StatelessWidget {
                   create: (context) => UpdateUserBloc()),
               BlocProvider<UpVerrifyDataBloc>(
                   create: (context) => UpVerrifyDataBloc()),
+              BlocProvider<CartDetailsBloc>(
+                  create: (context) => CartDetailsBloc()),
+              BlocProvider<CartIteamsBloc>(
+                  create: (context) => CartIteamsBloc()),
+              BlocProvider<AddaddressBloc>(
+                  create: (context) => AddaddressBloc()),
+              BlocProvider<ViewAddresslistBloc>(
+                  create: (context) => ViewAddresslistBloc()),
             ],
             child: GetMaterialApp(
+              builder: BotToastInit(),
+              navigatorObservers: [BotToastNavigatorObserver()],
               theme: ThemeData(useMaterial3: true),
               debugShowCheckedModeBanner: false,
               title: 'Eat incredible App',

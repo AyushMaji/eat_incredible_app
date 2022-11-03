@@ -1,8 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
+import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
 import 'package:eat_incredible_app/controller/product_details/product_details_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
+import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/others/cart_page/cart_page.dart';
 import 'package:eat_incredible_app/widgets/addtocart/addtocart_bar.dart';
 import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
@@ -11,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 class ProductDetails extends StatefulWidget {
   final String productId;
@@ -25,15 +28,23 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   int current = 0;
   final CarouselController controller = CarouselController();
+
   @override
   void initState() {
+    getData();
+    super.initState();
+  }
+
+  //* call the product details api and get the data from the api
+  void getData() {
+    context.read<ProductDetailsBloc>().add(
+        ProductDetailsEvent.getproductdetails(productId: widget.productId));
     context
         .read<ProductListBloc>()
         .add(ProductListEvent.fetchProductList(categoryId: widget.catId));
-    context.read<ProductDetailsBloc>().add(
-        ProductDetailsEvent.getproductdetails(productId: widget.productId));
-
-    super.initState();
+    context
+        .read<CartDetailsBloc>()
+        .add(const CartDetailsEvent.getCartDetails());
   }
 
   @override
@@ -55,13 +66,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       ),
       body: RefreshIndicator(
         onRefresh: () {
-          context.read<ProductDetailsBloc>().add(
-              ProductDetailsEvent.getproductdetails(
-                  productId: widget.productId));
-          context
-              .read<ProductListBloc>()
-              .add(ProductListEvent.fetchProductList(categoryId: widget.catId));
-
+          getData();
           return Future.value();
         },
         child: Stack(
@@ -247,19 +252,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                 initial: () {},
                                                 loading: (productId) {},
                                                 success: (msg, producId) {
-                                                  context
-                                                      .read<ProductListBloc>()
-                                                      .add(ProductListEvent
-                                                          .fetchProductList(
-                                                              categoryId: widget
-                                                                  .catId));
-                                                  context
-                                                      .read<
-                                                          ProductDetailsBloc>()
-                                                      .add(ProductDetailsEvent
-                                                          .getproductdetails(
-                                                              productId: widget
-                                                                  .productId));
+                                                  getData();
                                                 },
                                                 failure: (error) {});
                                           },
@@ -444,31 +437,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     loading: () {},
                                     loaded: (_) {},
                                     failure: (e) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(e),
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 4.6.h,
-                                              horizontal: 20.w),
-                                          action: SnackBarAction(
-                                            label: 'Retry',
-                                            onPressed: () {
-                                              context
-                                                  .read<ProductListBloc>()
-                                                  .add(ProductListEvent
-                                                      .fetchProductList(
-                                                          categoryId:
-                                                              productdetails[0]
-                                                                  .categoryId
-                                                                  .toString()));
-                                            },
-                                          ),
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 29, 30, 29),
-                                          behavior: SnackBarBehavior.floating,
-                                        ),
-                                      );
+                                      CustomSnackbar.flutterSnackbarWithAction(
+                                          e, 'Retry', () {
+                                        context.read<ProductListBloc>().add(
+                                            ProductListEvent.fetchProductList(
+                                                categoryId: productdetails[0]
+                                                    .categoryId
+                                                    .toString()));
+                                      }, context);
                                     });
                               },
                               builder: (context, state) {
@@ -522,24 +498,45 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               productId: productList[index]
                                                   .id
                                                   .toString(),
-                                              addtocartTap: () {},
+                                              addtocartTap: () {
+                                                context.read<CartBloc>().add(
+                                                    CartEvent.addToCart(
+                                                        productid:
+                                                            productList[index]
+                                                                .id
+                                                                .toString()));
+                                              },
                                               ontap: () {
-                                                context
-                                                    .read<ProductDetailsBloc>()
-                                                    .add(ProductDetailsEvent
-                                                        .getproductdetails(
-                                                            productId:
-                                                                productList[
-                                                                        index]
-                                                                    .id
-                                                                    .toString()));
-                                                Get.to(ProductDetails(
-                                                  productId: productList[index]
-                                                      .id
-                                                      .toString(),
-                                                  catId: productList[index]
-                                                      .categoryId
-                                                      .toString(),
+                                                // Navigator.push(
+                                                //   context,
+                                                //   MaterialPageRoute(
+                                                //     builder: (context) =>
+                                                //         ProductDetails(
+                                                //       productId:
+                                                //           productList[
+                                                //                   index]
+                                                //               .id
+                                                //               .toString(),
+                                                //       catId: productList[
+                                                //               index]
+                                                //           .categoryId
+                                                //           .toString(),
+                                                //     ),
+                                                //   ),
+                                                // );
+                                                Navigator.of(context)
+                                                    .push(SwipeablePageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          ProductDetails(
+                                                    productId:
+                                                        productList[index]
+                                                            .id
+                                                            .toString(),
+                                                    catId: productList[index]
+                                                        .categoryId
+                                                        .toString(),
+                                                  ),
                                                 ));
                                               },
                                             ),
@@ -558,15 +555,29 @@ class _ProductDetailsState extends State<ProductDetails> {
                 );
               },
             ),
-            Positioned(
-              bottom: 10.h,
-              child: AddtocartBar(
-                iteamCount: 20,
-                onTap: () {
-                  Get.to(() => const CartPage());
-                },
-                totalAmount: 100.0,
-              ),
+            BlocConsumer<CartDetailsBloc, CartDetailsState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                return state.maybeWhen(orElse: () {
+                  return const SizedBox();
+                }, loaded: (cartDetails) {
+                  return cartDetails.totalItem != 0
+                      ? Positioned(
+                          bottom: 10.h,
+                          child: AddtocartBar(
+                            iteamCount: cartDetails.totalItem ?? 0,
+                            onTap: () {
+                              Get.to(() => const CartPage());
+                            },
+                            totalAmount: cartDetails.totalPrice ?? 0,
+                          ),
+                        )
+                      : const Opacity(
+                          opacity: 0.0,
+                          child: SizedBox(),
+                        );
+                });
+              },
             )
           ],
         ),
@@ -574,3 +585,4 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 }
+ 

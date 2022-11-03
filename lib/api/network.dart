@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:eat_incredible_app/api/api_helper.dart';
 import 'package:eat_incredible_app/repo/url_repo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Network {
   final client = ApiHelper();
@@ -77,5 +78,47 @@ class Network {
 
   Future<Response> updateUserPhone(String phone) async {
     return await client.postRequest(UrlRepo.editPhone(phone), data: {});
+  }
+  //! address ===================>
+
+  Future<Response> getaddress() async {
+    return await client.postRequest(UrlRepo.addressList, data: {});
+  }
+
+  Future<Response> addaddress(String locality, String landmark, String address,
+      String city, String pincode, String location) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+    return await client.postRequest(UrlRepo.addaddress, data: {
+      "token": token,
+      "city": city,
+      "location": location,
+      "pincode": pincode,
+      "locality": locality,
+      "landmark": landmark,
+      "address": address,
+    });
+  }
+
+  Future<Response> updateaddress(
+      String addressId,
+      String locality,
+      String landmark,
+      String address,
+      String city,
+      String pincode,
+      String location) async {
+    return await client.postRequest(UrlRepo.updateaddress(addressId), data: {
+      "city": city,
+      "landmark": landmark,
+      "address": address,
+      "locality": locality,
+      "pincode": pincode,
+      "location": location,
+    });
+  }
+
+  Future<Response> deleteaddress(String id) async {
+    return await client.postRequest(UrlRepo.deleteaddress(id), data: {});
   }
 }

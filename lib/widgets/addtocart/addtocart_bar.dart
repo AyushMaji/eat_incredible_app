@@ -2,7 +2,7 @@ import 'package:eat_incredible_app/utils/barrel.dart';
 
 class AddtocartBar extends StatelessWidget {
   final int iteamCount;
-  final double totalAmount;
+  final int totalAmount;
   final GestureTapCallback onTap;
 
   const AddtocartBar(

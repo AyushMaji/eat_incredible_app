@@ -14,7 +14,6 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
       List<ProductlistModel> productList = [];
       emit(const _Loading());
       var result = await ProductListRepo().getProductListData(event.categoryId);
-
       result.when(
         success: (data) {
           productList.clear();

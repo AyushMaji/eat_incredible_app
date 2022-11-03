@@ -1,16 +1,17 @@
 // To parse this JSON data, do
 //
-//     final userInfoModel = userInfoModelFromJson(jsonString);
+//     final viewAddressListModel = viewAddressListModelFromJson(jsonString);
 
 import 'dart:convert';
 
-UserInfoModel userInfoModelFromJson(String str) =>
-    UserInfoModel.fromJson(json.decode(str));
+ViewAddressListModel viewAddressListModelFromJson(String str) =>
+    ViewAddressListModel.fromJson(json.decode(str));
 
-String userInfoModelToJson(UserInfoModel data) => json.encode(data.toJson());
+String viewAddressListModelToJson(ViewAddressListModel data) =>
+    json.encode(data.toJson());
 
-class UserInfoModel {
-  UserInfoModel({
+class ViewAddressListModel {
+  ViewAddressListModel({
     required this.id,
     required this.name,
     required this.mobile,
@@ -34,6 +35,7 @@ class UserInfoModel {
     required this.landmark,
     required this.altPhone,
     required this.address,
+    required this.successStatus,
   });
 
   String? id;
@@ -59,8 +61,10 @@ class UserInfoModel {
   String? landmark;
   String? altPhone;
   String? address;
+  int? successStatus;
 
-  factory UserInfoModel.fromJson(Map<String, dynamic> json) => UserInfoModel(
+  factory ViewAddressListModel.fromJson(Map<String, dynamic> json) =>
+      ViewAddressListModel(
         id: json["id"],
         name: json["name"],
         mobile: json["mobile"],
@@ -84,6 +88,7 @@ class UserInfoModel {
         landmark: json["landmark"],
         altPhone: json["alt_phone"],
         address: json["address"],
+        successStatus: json["success status"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -110,5 +115,6 @@ class UserInfoModel {
         "landmark": landmark,
         "alt_phone": altPhone,
         "address": address,
+        "success status": successStatus,
       };
 }

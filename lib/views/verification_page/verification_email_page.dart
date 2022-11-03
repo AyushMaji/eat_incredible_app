@@ -266,6 +266,7 @@ class VerifyBtn extends StatelessWidget {
           }
         },
         style: ElevatedButton.styleFrom(
+          // ignore: deprecated_member_use
           primary: const Color.fromARGB(255, 226, 10, 19),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),

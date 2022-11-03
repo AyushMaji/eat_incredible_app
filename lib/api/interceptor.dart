@@ -11,7 +11,8 @@ class Interceptors extends InterceptorsWrapper {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (options.path.contains(UrlRepo.logout) ||
-        options.path.contains(UrlRepo.userInfo)) {
+        options.path.contains(UrlRepo.userInfo) ||
+        options.path.contains(UrlRepo.addressList)) {
       String token = prefs.getString('token') ?? '';
       options.data = {
         "token": token,
