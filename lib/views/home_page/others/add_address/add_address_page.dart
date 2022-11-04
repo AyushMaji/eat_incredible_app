@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:eat_incredible_app/controller/address/addaddress/addaddress_bloc.dart';
+import 'package:eat_incredible_app/controller/address/view_address_list/view_addresslist_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,6 +74,9 @@ class AddAddressPage extends StatelessWidget {
                     loading: () {},
                     success: () {
                       Get.back();
+                      context
+                          .read<ViewAddresslistBloc>()
+                          .add(const ViewAddresslistEvent.getAddressList());
                     },
                     failure: (error) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -312,4 +316,3 @@ class AddAddressPage extends StatelessWidget {
             )));
   }
 }
- 

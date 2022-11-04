@@ -1,4 +1,5 @@
-import 'package:eat_incredible_app/controller/address/view_address_list.dart/view_addresslist_bloc.dart';
+import 'package:eat_incredible_app/controller/address/view_address_list/view_addresslist_bloc.dart';
+import 'package:eat_incredible_app/repo/address_repo.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/views/home_page/others/add_address/add_address_page.dart';
 import 'package:eat_incredible_app/widgets/address_card/address_card.dart';
@@ -76,6 +77,8 @@ class _MyAddressPageState extends State<MyAddressPage> {
               listener: (context, state) {},
               builder: (context, state) {
                 return state.maybeWhen(orElse: () {
+                  return const Text('No address found');
+                }, loading: () {
                   return const Center(child: CircularProgressIndicator());
                 }, loaded: (addressList) {
                   return ListView.builder(
@@ -89,7 +92,42 @@ class _MyAddressPageState extends State<MyAddressPage> {
                         child: AddressCard(
                           address: addressList[index].address.toString(),
                           name: addressList[index].locality.toString(),
-                          onDelete: () {},
+                          onDelete: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Delete Address'),
+                                    content: const Text(
+                                        'Are you sure you want to delete this address?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          AddressRepo()
+                                              .deleteaddress(
+                                                  addressId: addressList[index]
+                                                      .id
+                                                      .toString())
+                                              .then((value) {
+                                            context
+                                                .read<ViewAddresslistBloc>()
+                                                .add(const ViewAddresslistEvent
+                                                    .getAddressList());
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        child: const Text('Delete'),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
                           onEdit: () {},
                         ),
                       );

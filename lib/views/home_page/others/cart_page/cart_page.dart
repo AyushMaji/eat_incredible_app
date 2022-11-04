@@ -11,10 +11,12 @@ import 'package:eat_incredible_app/views/home_page/others/coupon_code/coupon_cod
 import 'package:eat_incredible_app/views/home_page/others/location_search/location_search.dart';
 import 'package:eat_incredible_app/views/home_page/others/order_confirm/order_confirm.dart';
 import 'package:eat_incredible_app/views/home_page/others/product_details/product_details.dart';
+import 'package:eat_incredible_app/views/signup_page/signup_page_phone.dart';
 import 'package:eat_incredible_app/widgets/addtocart/cart_product.dart';
 import 'package:eat_incredible_app/widgets/coupon_code/use_coupon.dart';
 import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CartPage extends StatefulWidget {
@@ -25,9 +27,20 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  bool isGuest = true;
+  Future<void> checkGuest() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('token') != null) {
+      setState(() {
+        isGuest = false;
+      });
+    }
+  }
+
   @override
   void initState() {
     getData();
+    checkGuest();
     super.initState();
   }
 
@@ -438,7 +451,29 @@ class _CartPageState extends State<CartPage> {
                         height: 42.h,
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: _showBottomSheet,
+                          onPressed: isGuest
+                              ? () {
+                                  Get.dialog(
+                                    AlertDialog(
+                                      title: const Text('Log In / Sign Up'),
+                                      content: const Text(
+                                          'Please login or signup to continue shopping with us.'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Get.back(),
+                                          child: const Text('No'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            Get.to(() => const SignupPage());
+                                          },
+                                          child: const Text('Yes'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              : _showBottomSheet,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff02A008),
                           ),

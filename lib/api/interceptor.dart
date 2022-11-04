@@ -12,7 +12,8 @@ class Interceptors extends InterceptorsWrapper {
 
     if (options.path.contains(UrlRepo.logout) ||
         options.path.contains(UrlRepo.userInfo) ||
-        options.path.contains(UrlRepo.addressList)) {
+        options.path.contains(UrlRepo.addressList) ||
+        options.path.contains('delete_user_address.php')) {
       String token = prefs.getString('token') ?? '';
       options.data = {
         "token": token,

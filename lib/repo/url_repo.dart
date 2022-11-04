@@ -23,7 +23,7 @@ class UrlRepo {
   static const addaddress = 'add_user_address.php';
   static const addressList = 'view_user_address.php';
   static String deleteaddress(String addressid) =>
-      'delete_address.php?id=$addressid';
+      'delete_user_address.php?id=$addressid';
   static String updateaddress(String addressid) =>
       'update_user_address.php?id=$addressid';
 }
