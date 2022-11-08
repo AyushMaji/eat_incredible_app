@@ -25,7 +25,8 @@ class Interceptors extends InterceptorsWrapper {
         options.path.contains('each_product.php') ||
         options.path.contains('add_to_cart.php') ||
         options.path.contains(UrlRepo.cartDetails) ||
-        options.path.contains(UrlRepo.cartIteam)) {
+        options.path.contains(UrlRepo.cartIteam) ||
+        options.path.contains('remove_cart.php')) {
       String token = prefs.getString('token') ?? '';
       String guestId = prefs.getString('guest_id') ?? '';
       log("token $token");

@@ -1,4 +1,5 @@
 import 'package:eat_incredible_app/controller/address/view_address_list/view_addresslist_bloc.dart';
+import 'package:eat_incredible_app/controller/user_info/user_info_bloc.dart';
 import 'package:eat_incredible_app/repo/address_repo.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/views/home_page/others/add_address/add_address_page.dart';
@@ -119,6 +120,9 @@ class _MyAddressPageState extends State<MyAddressPage> {
                                                 .read<ViewAddresslistBloc>()
                                                 .add(const ViewAddresslistEvent
                                                     .getAddressList());
+                                            context.read<UserInfoBloc>().add(
+                                                const UserInfoEvent
+                                                    .getUserInfo());
                                             Navigator.pop(context);
                                           });
                                         },

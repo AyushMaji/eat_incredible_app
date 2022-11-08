@@ -50,9 +50,9 @@ class _FilterBarState extends State<FilterBar> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        context.read<ProductListBloc>().add(
-                            ProductListEvent.fetchProductList(
-                                categoryId: allIndex.toString()));
+                        // context.read<ProductListBloc>().add(
+                        //     ProductListEvent.fetchProductList(
+                        //         categoryId: allIndex.toString()));
 
                         setState(() {
                           filterIteam = allIndex;

@@ -25,4 +25,13 @@ class CartRepo {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
     }
   }
+
+  static Future deleteCartIteam(String cartid) async {
+    try {
+      var res = await network.deleteCartIteam(cartid);
+      return ApiResult.success(data: res.data);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
 }

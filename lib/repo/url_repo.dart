@@ -14,6 +14,7 @@ class UrlRepo {
   static String addTocart(String productid) => 'add_to_cart.php?id=$productid';
   static const cartDetails = 'cart_details.php';
   static const cartIteam = 'cart_items.php';
+  static String removecart(String productid) => 'remove_cart.php?id=$productid';
 
   static const userInfo = 'account_info.php';
   static String editEmail(String email) => 'send_email_otp.php?id=$email';

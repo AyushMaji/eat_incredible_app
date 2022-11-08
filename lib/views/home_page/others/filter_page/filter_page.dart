@@ -31,13 +31,13 @@ class FilterPage extends StatefulWidget {
 
 class _FilterPageState extends State<FilterPage> {
   final ScrollController _scrollController = ScrollController();
+  ProductListBloc productListBloc = ProductListBloc();
   late String filterIteamId;
 
   //*  this is the fuction which is called when the user refresh the page ==========>
 
   void getdata() {
-    context
-        .read<ProductListBloc>()
+    productListBloc
         .add(ProductListEvent.fetchProductList(categoryId: filterIteamId));
     context
         .read<CartDetailsBloc>()
@@ -48,10 +48,10 @@ class _FilterPageState extends State<FilterPage> {
   void initState() {
     super.initState();
     handleScroll();
-
     setState(() {
       filterIteamId = widget.categoryId;
     });
+    getdata();
   }
 
   bool _show = true;
@@ -105,6 +105,8 @@ class _FilterPageState extends State<FilterPage> {
                   FilterBar(
                     categoryIndex: widget.categoryIndex,
                     onChanged: (value) {
+                      productListBloc.add(
+                          ProductListEvent.fetchProductList(categoryId: value));
                       setState(() {
                         filterIteamId = value;
                       });
@@ -118,7 +120,7 @@ class _FilterPageState extends State<FilterPage> {
                         return Future.value();
                       },
                       child: BlocConsumer<ProductListBloc, ProductListState>(
-                        bloc: context.read<ProductListBloc>(),
+                        bloc: productListBloc,
                         listener: (context, state) {
                           state.when(
                               initial: () {},
@@ -133,7 +135,7 @@ class _FilterPageState extends State<FilterPage> {
                                     action: SnackBarAction(
                                       label: 'Retry',
                                       onPressed: () {
-                                        context.read<ProductListBloc>().add(
+                                        productListBloc.add(
                                             ProductListEvent.fetchProductList(
                                                 categoryId: filterIteamId));
                                       },
@@ -253,8 +255,7 @@ class _FilterPageState extends State<FilterPage> {
                                                   },
                                                 );
                                               },
-                                            )
-                                            );
+                                            ));
                                       });
                             },
                           );

@@ -68,6 +68,10 @@ class Network {
     return await client.postRequest(UrlRepo.cartIteam, data: {});
   }
 
+  Future<Response> deleteCartIteam(String pid) async {
+    return await client.postRequest(UrlRepo.removecart(pid), data: {});
+  }
+
   Future<Response> getuserInfo() async {
     return await client.postRequest(UrlRepo.userInfo, data: {});
   }

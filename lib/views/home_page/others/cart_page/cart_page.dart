@@ -5,6 +5,7 @@ import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
 import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
 import 'package:eat_incredible_app/controller/cart/cart_iteam/cart_iteams_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
+import 'package:eat_incredible_app/repo/cart_repo.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/others/coupon_code/coupon_code.dart';
@@ -27,6 +28,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  ProductListBloc productListBloc = ProductListBloc();
   bool isGuest = true;
   Future<void> checkGuest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -48,8 +50,7 @@ class _CartPageState extends State<CartPage> {
     BlocProvider.of<CartDetailsBloc>(context)
         .add(const CartDetailsEvent.getCartDetails());
     context.read<CartIteamsBloc>().add(const CartIteamsEvent.getCartIteams());
-    context
-        .read<ProductListBloc>()
+    productListBloc
         .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
   }
 
@@ -194,38 +195,86 @@ class _CartPageState extends State<CartPage> {
                             );
                           },
                           loaded: (cartIteamsList) {
-                            return ListView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: cartIteamsList.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10.w, vertical: 2.2.h),
-                                    child: CartProduct(
-                                      imageUrl: cartIteamsList[index]
-                                          .thumbnail
-                                          .toString(),
-                                      title: cartIteamsList[index]
-                                          .productName
-                                          .toString(),
-                                      price: cartIteamsList[index]
-                                          .originalPrice
-                                          .toString(),
-                                      disprice: cartIteamsList[index]
-                                          .salePrice
-                                          .toString(),
-                                      quantity: cartIteamsList[index]
-                                          .weight
-                                          .toString(),
-                                      iteam: 4,
-                                      onChanged: (String value) {
-                                        log("value: $value");
-                                      },
-                                      ontap: () {},
-                                    ),
-                                  );
-                                });
+                            return cartIteamsList.isEmpty
+                                ? Text("No items in cart",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: const Color(0xff616161),
+                                    ))
+                                : ListView.builder(
+                                    physics: const BouncingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: cartIteamsList.length,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 2.2.h),
+                                        child: Dismissible(
+                                          onDismissed: ((direction) {
+                                            CartRepo.deleteCartIteam(
+                                                    cartIteamsList[index]
+                                                        .productId
+                                                        .toString())
+                                                .then((value) => {getData()});
+                                          }),
+                                          key: UniqueKey(),
+                                          background: Container(
+                                            color: Colors.red,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: const [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 26.0),
+                                                  child: Icon(
+                                                    Icons.delete,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      right: 26.0),
+                                                  child: Icon(
+                                                    Icons.delete,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8.w,
+                                            ),
+                                            child: CartProduct(
+                                              imageUrl: cartIteamsList[index]
+                                                  .thumbnail
+                                                  .toString(),
+                                              title: cartIteamsList[index]
+                                                  .productName
+                                                  .toString(),
+                                              price: cartIteamsList[index]
+                                                  .originalPrice
+                                                  .toString(),
+                                              disprice: cartIteamsList[index]
+                                                  .salePrice
+                                                  .toString(),
+                                              quantity: cartIteamsList[index]
+                                                  .weight
+                                                  .toString(),
+                                              iteam: 4,
+                                              onChanged: (String value) {
+                                                log("value: $value");
+                                              },
+                                              ontap: () {},
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    });
                           },
                         );
                       },
@@ -255,7 +304,7 @@ class _CartPageState extends State<CartPage> {
                       ],
                     ),
                     BlocConsumer<ProductListBloc, ProductListState>(
-                      bloc: context.read<ProductListBloc>(),
+                      bloc: productListBloc,
                       listener: (context, state) {
                         state.when(
                             initial: () {},

@@ -29,6 +29,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   int current = 0;
   final CarouselController controller = CarouselController();
   ProductDetailsBloc productDetailsBloc = ProductDetailsBloc();
+  ProductListBloc productListBloc = ProductListBloc();
 
   @override
   void initState() {
@@ -40,8 +41,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   void getData() {
     productDetailsBloc.add(
         ProductDetailsEvent.getproductdetails(productId: widget.productId));
-    context
-        .read<ProductListBloc>()
+    productListBloc
         .add(ProductListEvent.fetchProductList(categoryId: widget.catId));
     context
         .read<CartDetailsBloc>()
@@ -432,7 +432,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               ),
                             ),
                             BlocConsumer<ProductListBloc, ProductListState>(
-                              bloc: context.read<ProductListBloc>(),
+                              bloc: productListBloc,
                               listener: (context, state) {
                                 state.when(
                                     initial: () {},
@@ -441,7 +441,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     failure: (e) {
                                       CustomSnackbar.flutterSnackbarWithAction(
                                           e, 'Retry', () {
-                                        context.read<ProductListBloc>().add(
+                                        productListBloc.add(
                                             ProductListEvent.fetchProductList(
                                                 categoryId: productdetails[0]
                                                     .categoryId
@@ -507,25 +507,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                             productList[index]
                                                                 .id
                                                                 .toString()));
+                                                getData();
                                               },
                                               ontap: () {
-                                                // Navigator.push(
-                                                //   context,
-                                                //   MaterialPageRoute(
-                                                //     builder: (context) =>
-                                                //         ProductDetails(
-                                                //       productId:
-                                                //           productList[
-                                                //                   index]
-                                                //               .id
-                                                //               .toString(),
-                                                //       catId: productList[
-                                                //               index]
-                                                //           .categoryId
-                                                //           .toString(),
-                                                //     ),
-                                                //   ),
-                                                // );
                                                 Navigator.of(context)
                                                     .push(SwipeablePageRoute(
                                                   builder:

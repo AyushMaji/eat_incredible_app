@@ -19,11 +19,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ProductListBloc productListBloc = ProductListBloc();
   //* call the bloc to get the data from the api
   void getData() {
     context.read<CategoryBloc>().add(const CategoryEvent.getCategory());
-    context
-        .read<ProductListBloc>()
+    productListBloc
         .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
   }
 
@@ -100,9 +100,9 @@ class _HomePageState extends State<HomePage> {
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () {
-                                context.read<ProductListBloc>().add(
-                                    ProductListEvent.fetchProductList(
-                                        categoryId: category[index].id));
+                                // context.read<ProductListBloc>().add(
+                                //     ProductListEvent.fetchProductList(
+                                //         categoryId: category[index].id));
                                 Get.to(() => FilterPage(
                                       categoryIndex: index,
                                       categoryId: category[index].id,

@@ -11,7 +11,7 @@ part 'cart_iteams_state.dart';
 part 'cart_iteams_bloc.freezed.dart';
 
 class CartIteamsBloc extends Bloc<CartIteamsEvent, CartIteamsState> {
-  CartIteamsBloc() : super(const _Initial()) {
+  CartIteamsBloc() : super(const _Initial()) { 
     on<_GetCartIteams>((event, emit) async {
       List<CartIteamModel> cartIteamDataList = [];
       emit(const _Loading());
