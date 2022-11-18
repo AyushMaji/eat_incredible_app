@@ -3,6 +3,7 @@ import 'package:eat_incredible_app/controller/login/login_bloc.dart';
 import 'package:eat_incredible_app/controller/verify_otp/verify_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/views/home_page/navigation/navigation.dart';
+import 'package:eat_incredible_app/views/user_details/user_details.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -11,8 +12,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class VerificationPage extends StatefulWidget {
   final String? phone;
   final String? countryCode;
+  final bool isNewUser;
   const VerificationPage(
-      {super.key, required this.phone, required this.countryCode});
+      {super.key,
+      required this.phone,
+      required this.countryCode,
+      required this.isNewUser});
 
   @override
   State<VerificationPage> createState() => _VerificationPageState();
@@ -212,8 +217,10 @@ class _VerificationPageState extends State<VerificationPage> {
                     initial: () {},
                     loading: () {},
                     loaded: (lodedData) {
-                      isNewUser
-                          ? Get.offAll(() => const Navigation())
+                      widget.isNewUser
+                          ? Get.offAll(() => UserDetails(
+                              loginType: 'phone',
+                              value: widget.phone.toString()))
                           : Get.offAll(() => const Navigation());
                     },
                     failure: (e) {

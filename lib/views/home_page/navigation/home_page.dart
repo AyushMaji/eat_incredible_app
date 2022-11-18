@@ -100,9 +100,6 @@ class _HomePageState extends State<HomePage> {
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () {
-                                // context.read<ProductListBloc>().add(
-                                //     ProductListEvent.fetchProductList(
-                                //         categoryId: category[index].id));
                                 Get.to(() => FilterPage(
                                       categoryIndex: index,
                                       categoryId: category[index].id,

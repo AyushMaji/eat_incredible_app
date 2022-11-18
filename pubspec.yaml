@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: ">=2.18.0 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -29,74 +29,73 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  animate_do: ^2.1.0
+  animations: ^2.0.4
+  bloc: ^8.0.2
+  bot_toast: ^4.0.3
+  cached_network_image: ^3.2.0
+  carousel_slider: ^4.1.1
+  cart_stepper: ^3.0.2
+  cherry_toast: ^1.0.8
+  country_calling_code_picker: ^2.0.1
+  cupertino_icons: ^1.0.2
+  dio: ^4.0.6
+  equatable: ^2.0.5
+  fading_images_slider: ^0.0.4
   flutter:
     sdk: flutter
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  provider: ^6.0.3
-  get: ^4.6.5
-  get_it: ^7.2.0
-  google_fonts: ^3.0.1
-  lottie: ^1.4.2
-  flutter_screenutil: ^5.5.4
-  fading_images_slider: ^0.0.4
-  carousel_slider: ^4.1.1
-  cached_network_image: ^3.2.0
-  pin_code_fields: ^7.4.0
-  readmore: ^2.2.0
-  animate_do: ^2.1.0
-  flutter_staggered_animations: ^1.1.1
-  animations: ^2.0.4
-  timeline_tile: ^2.0.0
-  cart_stepper: ^3.0.2
-  pdf: ^3.8.3
-  printing: ^5.9.3
-  country_calling_code_picker: ^2.0.1
-  dio: ^4.0.6
-  bloc: ^8.0.2
-  equatable: ^2.0.5
   flutter_bloc: ^8.1.1
   flutter_gen: ^4.3.0
+  flutter_screenutil: ^5.5.4
+  flutter_slidable: ^2.0.0
+  flutter_staggered_animations: ^1.1.1
+  flutter_timer_countdown: ^1.0.5
   flutter_tts: ^3.5.3
   freezed: ^2.1.0+1
   freezed_annotation: ^2.1.0
+  geocoding: ^2.0.5
+  geolocator: ^9.0.2
+  get: ^4.6.5
+  get_it: ^7.2.0
+  google_fonts: ^3.0.1
+  http: ^0.13.5
   intl: ^0.17.0
   json_serializable: ^6.3.2
-  video_player: ^2.4.7
-  scrollable_positioned_list: ^0.3.5
-  shimmer: ^2.0.0
-  http: ^0.13.5
-  flutter_timer_countdown: ^1.0.5
-  shared_preferences: ^2.0.15
+  logger: ^1.1.0
+  lottie: ^1.4.2
+  pdf: ^3.8.3
+  pin_code_fields: ^7.4.0
+  printing: ^5.9.3
+  provider: ^6.0.3
   pull_to_refresh: ^2.0.0
-  cherry_toast: ^1.0.8
+  readmore: ^2.2.0
+  scrollable_positioned_list: ^0.3.5
+  shared_preferences: ^2.0.15
+  shimmer: ^2.0.0
   swipeable_page_route: ^0.2.6
-  bot_toast: ^4.0.3
-  geolocator: ^9.0.2
-  geocoding: ^2.0.5
-  flutter_slidable: ^2.0.0
+  timeline_tile: ^2.0.0
+  video_player: ^2.4.7
+  dropdown_button2: ^1.8.9
+  find_dropdown: ^1.0.0
+  dropdown_search: ^5.0.3
+  
 
 dev_dependencies:
   build_runner: ^2.2.1
-  flutter_test:
-    sdk: flutter
-   
+
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -106,13 +105,10 @@ flutter:
   assets:
     - assets/images/
     - assets/
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

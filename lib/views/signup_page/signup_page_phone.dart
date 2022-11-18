@@ -201,6 +201,7 @@ class _SignupPageState extends State<SignupPage> {
                       Get.to(() => VerificationPage(
                             phone: _phoneController.text,
                             countryCode: selectedCountryCode,
+                            isNewUser: lodedData.isNewUser,
                           ));
                     },
                     failure: (e) {

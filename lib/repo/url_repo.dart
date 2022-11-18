@@ -1,9 +1,10 @@
 class UrlRepo {
-  static const loginwithOtp = "send_mobile_otp.php";
-  static const loginwithemail = "send_email_otp.php";
-  static const verifyOtp = "mobile_otp_verify.php";
-  static const verifyemailOtp = "email_verify.php";
-  static const logout = "mobile_otp_logout.php";
+  static const loginwithOtp = "mobileotp.php";
+  static const loginwithemail = "emailotp.php";
+  static const verifyOtp = "mobileverify.php";
+  static const verifyemailOtp = "emailverify.php";
+  static const insertName = "insert_name.php";
+  static const logout = "logout.php";
   static const category = 'category.php';
   static const productList = 'product_list.php';
   static String productListCategory(String categoryid) =>
@@ -15,6 +16,7 @@ class UrlRepo {
   static const cartDetails = 'cart_details.php';
   static const cartIteam = 'cart_items.php';
   static String removecart(String productid) => 'remove_cart.php?id=$productid';
+  static const updateCart = 'update_cart_quantity.php';
 
   static const userInfo = 'account_info.php';
   static String editEmail(String email) => 'send_email_otp.php?id=$email';

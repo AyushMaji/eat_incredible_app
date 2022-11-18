@@ -17,6 +17,7 @@ import 'package:eat_incredible_app/widgets/addtocart/cart_product.dart';
 import 'package:eat_incredible_app/widgets/coupon_code/use_coupon.dart';
 import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -265,9 +266,20 @@ class _CartPageState extends State<CartPage> {
                                               quantity: cartIteamsList[index]
                                                   .weight
                                                   .toString(),
-                                              iteam: 4,
+                                              iteam: int.parse(
+                                                  cartIteamsList[index]
+                                                      .quantity
+                                                      .toString()),
                                               onChanged: (String value) {
-                                                log("value: $value");
+                                                CartRepo.updateCartIteam(
+                                                        cartIteamsList[index]
+                                                            .productId
+                                                            .toString(),
+                                                        value)
+                                                    .then((value) => {
+                                                          Logger().e(value),
+                                                          getData(),
+                                                        });
                                               },
                                               ontap: () {},
                                             ),

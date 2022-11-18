@@ -3,15 +3,21 @@ import 'package:eat_incredible_app/controller/login/login_bloc.dart';
 import 'package:eat_incredible_app/controller/verify_otp/verify_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/views/home_page/navigation/navigation.dart';
+import 'package:eat_incredible_app/views/user_details/user_details.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
+import 'package:logger/logger.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerificationWithPage extends StatefulWidget {
-  final String? email;
-  final String? password;
+  final String email;
+  final String password;
+  final bool isNewUser;
   const VerificationWithPage(
-      {Key? key, required this.email, required this.password})
+      {Key? key,
+      required this.email,
+      required this.password,
+      required this.isNewUser})
       : super(key: key);
 
   @override
@@ -103,7 +109,7 @@ class _VerificationWithPageState extends State<VerificationWithPage> {
                           context
                               .read<VerifyBloc>()
                               .add(VerifyEvent.verifyEmail(
-                                email: widget.email!,
+                                email: widget.email,
                                 otp: _codeController.text,
                               ));
                         }
@@ -163,8 +169,8 @@ class _VerificationWithPageState extends State<VerificationWithPage> {
                                   });
                                   context.read<LoginBloc>().add(
                                       LoginEvent.loginWithEmail(
-                                          email: widget.email!,
-                                          password: widget.password!));
+                                          email: widget.email,
+                                          password: widget.password));
                                 },
                                 child: Text(
                                   'Resend OTP',
@@ -202,7 +208,11 @@ class _VerificationWithPageState extends State<VerificationWithPage> {
                     initial: () {},
                     loading: () {},
                     loaded: (lodedData) {
-                      Get.offAll(() => const Navigation());
+                      Logger().i(widget.isNewUser);
+                      widget.isNewUser
+                          ? Get.offAll(() => UserDetails(
+                              loginType: 'email', value: widget.email))
+                          : Get.offAll(() => const Navigation());
                     },
                     failure: (e) {
                       Get.snackbar(
@@ -260,7 +270,7 @@ class VerifyBtn extends StatelessWidget {
         onPressed: () {
           if (_codeController.text.length > 3) {
             context.read<VerifyBloc>().add(VerifyEvent.verifyEmail(
-                  email: widget.email!,
+                  email: widget.email,
                   otp: _codeController.text,
                 ));
           }

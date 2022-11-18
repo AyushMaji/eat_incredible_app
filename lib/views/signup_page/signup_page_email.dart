@@ -193,6 +193,7 @@ class _SignupPageWithEmailState extends State<SignupPageWithEmail> {
                       Get.to(() => VerificationWithPage(
                             email: _emailController.text,
                             password: _emailController.text,
+                            isNewUser: lodedData.isNewUser,
                           ));
                     },
                     failure: (e) {

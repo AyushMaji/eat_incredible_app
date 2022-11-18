@@ -65,4 +65,14 @@ class LoginRepo {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
     }
   }
+
+  Future<ApiResult> insertName(
+      String name, String value, String loginType) async {
+    try {
+      var res = await network.insertName(name, value, loginType);
+      return ApiResult.success(data: res.data);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
 }

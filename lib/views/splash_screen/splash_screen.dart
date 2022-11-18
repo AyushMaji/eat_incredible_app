@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //   }
     // });
 
-    Timer(const Duration(milliseconds: 3300), () {
+    Timer(const Duration(milliseconds: 4400), () {
       checkRoute();
     });
 

@@ -34,4 +34,13 @@ class CartRepo {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
     }
   }
+
+  static Future updateCartIteam(String pid, String quantity) async {
+    try {
+      var res = await network.updateCartCount(pid, quantity);
+      return ApiResult.success(data: res.data);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
 }

@@ -39,6 +39,17 @@ class Network {
     return await client.postRequest(UrlRepo.logout, data: {});
   }
 
+  Future<Response> insertName(
+      String name, String value, String loginType) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+    return await client.postRequest(UrlRepo.insertName, data: {
+      "name": name,
+      loginType: value,
+      "token": token,
+    });
+  }
+
   Future<Response> getCategories() async {
     return await client.getRequest(UrlRepo.category);
   }
@@ -70,6 +81,26 @@ class Network {
 
   Future<Response> deleteCartIteam(String pid) async {
     return await client.postRequest(UrlRepo.removecart(pid), data: {});
+  }
+
+  Future<Response> updateCartCount(
+    String pid,
+    String count,
+  ) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+    String guestId = prefs.getString('guest_id') ?? '';
+    return token != ''
+        ? await client.postRequest(UrlRepo.updateCart, data: {
+            "token": token,
+            "p_id": pid,
+            "quantity": count,
+          })
+        : await client.postRequest(UrlRepo.updateCart, data: {
+            "guest_id": guestId,
+            "p_id": pid,
+            "quantity": count,
+          });
   }
 
   Future<Response> getuserInfo() async {
