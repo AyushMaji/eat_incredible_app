@@ -19,10 +19,28 @@ class Interceptors extends InterceptorsWrapper {
         "token": token,
       };
     }
-
     if (options.path.contains(UrlRepo.productList) ||
-        options.path.contains('category_wise_product_list.php') ||
-        options.path.contains('each_product.php') ||
+        options.path.contains('category_wise_product_list.php')) {
+      String token = prefs.getString('token') ?? '';
+      String guestId = prefs.getString('guest_id') ?? '';
+      String location = prefs.getString('location') ?? '';
+      String pincode = prefs.getString('pincode') ?? '';
+      log("location $location");
+      log("pincode $pincode");
+      token != ''
+          ? options.data = {
+              "token": token,
+              "location": location,
+              "pincode": pincode
+            }
+          : options.data = {
+              "guest_id": guestId,
+              "location": location,
+              "pincode": pincode
+            };
+    }
+
+    if (options.path.contains('each_product.php') ||
         options.path.contains('add_to_cart.php') ||
         options.path.contains(UrlRepo.cartDetails) ||
         options.path.contains(UrlRepo.cartIteam) ||

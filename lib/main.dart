@@ -10,6 +10,7 @@ import 'package:eat_incredible_app/controller/inser_name/insername_bloc.dart';
 import 'package:eat_incredible_app/controller/login/login_bloc.dart';
 import 'package:eat_incredible_app/controller/product_details/product_details_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
+import 'package:eat_incredible_app/controller/search/search_bloc.dart';
 import 'package:eat_incredible_app/controller/update_userdata/update_user_data/update_user_bloc.dart';
 import 'package:eat_incredible_app/controller/update_userdata/verify_user_data/up_verrify_data_bloc.dart';
 import 'package:eat_incredible_app/controller/user_info/user_info_bloc.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
               BlocProvider<ViewAddresslistBloc>(
                   create: (context) => ViewAddresslistBloc()),
               BlocProvider<InsernameBloc>(create: (context) => InsernameBloc()),
+              BlocProvider<SearchBloc>(create: (context) => SearchBloc()),
             ],
             child: GetMaterialApp(
               builder: BotToastInit(),

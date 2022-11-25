@@ -29,4 +29,8 @@ class UrlRepo {
       'delete_user_address.php?id=$addressid';
   static String updateaddress(String addressid) =>
       'update_user_address.php?id=$addressid';
+  //! search api ====
+  static String searchKey = 'search.php';
+  static String searchData = 'search_list.php';
+  static String treadingSearch = 'trending_search.php';
 }

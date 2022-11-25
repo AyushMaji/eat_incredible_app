@@ -463,72 +463,86 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     ),
                                   );
                                 }, loaded: (productList) {
-                                  return SizedBox(
-                                    height: 165.h,
-                                    child: ListView.builder(
-                                        physics: const BouncingScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: productList.length,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (context, index) {
-                                          return Padding(
-                                            padding:
-                                                EdgeInsets.only(left: 10.w),
-                                            child: ProductCard(
-                                              isCart: productList[index].iscart,
-                                              imageUrl: productList[index]
-                                                  .thumbnail
-                                                  .toString(),
-                                              title: productList[index]
-                                                  .productName
-                                                  .toString(),
-                                              disprice: productList[index]
-                                                  .originalPrice
-                                                  .toString(),
-                                              price: productList[index]
-                                                  .salePrice
-                                                  .toString(),
-                                              quantity: productList[index]
-                                                  .weight
-                                                  .toString(),
-                                              cartId: productList[index]
-                                                  .categoryId
-                                                  .toString(),
-                                              percentage: productList[index]
-                                                  .discountPercentage
-                                                  .toString(),
-                                              productId: productList[index]
-                                                  .id
-                                                  .toString(),
-                                              addtocartTap: () {
-                                                context.read<CartBloc>().add(
-                                                    CartEvent.addToCart(
-                                                        productid:
-                                                            productList[index]
-                                                                .id
-                                                                .toString()));
-                                                getData();
-                                              },
-                                              ontap: () {
-                                                Navigator.of(context)
-                                                    .push(SwipeablePageRoute(
-                                                  builder:
-                                                      (BuildContext context) =>
-                                                          ProductDetails(
+                                  return productList.isEmpty
+                                      ? Text(
+                                          "No Product Found ",
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 14.sp,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.normal),
+                                        )
+                                      : SizedBox(
+                                          height: 165.h,
+                                          child: ListView.builder(
+                                              physics:
+                                                  const BouncingScrollPhysics(),
+                                              shrinkWrap: true,
+                                              itemCount: productList.length,
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 10.w),
+                                                  child: ProductCard(
+                                                    isCart: productList[index]
+                                                        .iscart,
+                                                    imageUrl: productList[index]
+                                                        .thumbnail
+                                                        .toString(),
+                                                    title: productList[index]
+                                                        .productName
+                                                        .toString(),
+                                                    disprice: productList[index]
+                                                        .originalPrice
+                                                        .toString(),
+                                                    price: productList[index]
+                                                        .salePrice
+                                                        .toString(),
+                                                    quantity: productList[index]
+                                                        .weight
+                                                        .toString(),
+                                                    cartId: productList[index]
+                                                        .categoryId
+                                                        .toString(),
+                                                    percentage:
+                                                        productList[index]
+                                                            .discountPercentage
+                                                            .toString(),
                                                     productId:
                                                         productList[index]
                                                             .id
                                                             .toString(),
-                                                    catId: productList[index]
-                                                        .categoryId
-                                                        .toString(),
+                                                    addtocartTap: () {
+                                                      context.read<CartBloc>().add(
+                                                          CartEvent.addToCart(
+                                                              productid:
+                                                                  productList[
+                                                                          index]
+                                                                      .id
+                                                                      .toString()));
+                                                      getData();
+                                                    },
+                                                    ontap: () {
+                                                      Navigator.of(context).push(
+                                                          SwipeablePageRoute(
+                                                        builder: (BuildContext
+                                                                context) =>
+                                                            ProductDetails(
+                                                          productId:
+                                                              productList[index]
+                                                                  .id
+                                                                  .toString(),
+                                                          catId:
+                                                              productList[index]
+                                                                  .categoryId
+                                                                  .toString(),
+                                                        ),
+                                                      ));
+                                                    },
                                                   ),
-                                                ));
-                                              },
-                                            ),
-                                          );
-                                        }),
-                                  );
+                                                );
+                                              }),
+                                        );
                                 });
                               },
                             ),

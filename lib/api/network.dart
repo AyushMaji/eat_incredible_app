@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:eat_incredible_app/api/api_helper.dart';
 import 'package:eat_incredible_app/repo/url_repo.dart';
@@ -155,5 +157,43 @@ class Network {
 
   Future<Response> deleteaddress(String id) async {
     return await client.postRequest(UrlRepo.deleteaddress(id), data: {});
+  }
+
+  //! search api ===================>
+
+  Future<Response> searchKey(String search) async {
+    return await client.postRequest(UrlRepo.searchKey, data: {
+      "search": search,
+    });
+  }
+
+  Future<Response> searchProduct(String search) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+    String guestId = prefs.getString('guest_id') ?? '';
+    String location = prefs.getString('location') ?? '';
+    String pincode = prefs.getString('pincode') ?? '';
+    log('location wererewrew$location');
+    log('pincodewerwe $pincode');
+    log('token werewrew $token');
+    log('guestId werewrew $guestId');
+
+    return token != ''
+        ? await client.postRequest(UrlRepo.searchData, data: {
+            "token": token,
+            "search": search,
+            "location": location,
+            "pincode": pincode,
+          })
+        : await client.postRequest(UrlRepo.searchData, data: {
+            "guest_id": guestId,
+            "search": search,
+            "location": location,
+            "pincode": pincode,
+          });
+  }
+
+  Future<Response> trendingSearch() async {
+    return await client.postRequest(UrlRepo.treadingSearch);
   }
 }
