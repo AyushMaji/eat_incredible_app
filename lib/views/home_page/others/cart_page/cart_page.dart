@@ -128,10 +128,7 @@ class _CartPageState extends State<CartPage> {
     if (generatedSignature.toString() == response.signature) {
       log("Payment was successful!");
       //Handle what to do after a successful payment.
-    } else {
-      log("The payment was unauthentic!");
-    }
-    showDialog(
+      showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -149,6 +146,10 @@ class _CartPageState extends State<CartPage> {
         );
       },
     );
+    } else {
+      log("The payment was unauthentic!");
+    }
+    
 
   }
   handlerErrorFailure(PaymentFailureResponse response) {
