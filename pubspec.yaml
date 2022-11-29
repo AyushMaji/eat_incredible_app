@@ -79,6 +79,7 @@ dependencies:
   find_dropdown: ^1.0.0
   dropdown_search: ^5.0.3
   paginated_search_bar: ^1.1.2
+  razorpay_flutter:
   
 
 dev_dependencies:

@@ -18,6 +18,7 @@ import 'package:eat_incredible_app/widgets/coupon_code/use_coupon.dart';
 import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -31,6 +32,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   ProductListBloc productListBloc = ProductListBloc();
   bool isGuest = true;
+  late Razorpay razorpay;
   Future<void> checkGuest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('token') != null) {
@@ -44,6 +46,10 @@ class _CartPageState extends State<CartPage> {
   void initState() {
     getData();
     checkGuest();
+    razorpay = new Razorpay();
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlerPaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlerErrorFailure);
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handlerExternalWallet);
     super.initState();
   }
 
@@ -54,6 +60,79 @@ class _CartPageState extends State<CartPage> {
     productListBloc
         .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
   }
+
+
+  //!============================================================
+   void openCheckout() async {
+    var options = {
+      'key': 'rzp_test_VCMCUPxY6XXTS2',
+      //'amount': 100,
+      "amount": 1020 * 100,
+      'name': 'Eatincredible.co.in',
+      // 'prefill': {'contact': '', 'email': 'test@razorpay.com'},
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+
+    try {
+      razorpay.open(options);
+    } catch (e) {
+      debugPrint('Error: e');
+    }
+  }
+  //!============================================================
+
+  handlerPaymentSuccess(PaymentSuccessResponse response) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Success : payment successful"),
+          // content: const Text("Are you sure you wish to delete this item?"),
+          actions: <Widget>[
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                  // PlaceOrderPrepaid();
+                },
+                child: Text("OK"))
+            // ),
+          ],
+        );
+      },
+    );
+
+  }
+  handlerErrorFailure(PaymentFailureResponse response) {
+    // Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //         builder: (BuildContext context) => PaymentErrorPage()));
+
+  }
+  void handlerExternalWallet(ExternalWalletResponse response) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Success : payment successful"),
+          // content: const Text("Are you sure you wish to delete this item?"),
+          actions: <Widget>[
+            ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text("OK")),
+            // FlatButton(
+            //   onPressed: () => Navigator.of(context).pop(false),
+            //   child: const Text("CANCEL"),
+            // ),
+          ],
+        );
+      },
+    );
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -605,7 +684,8 @@ class _CartPageState extends State<CartPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.offAll(() => const OrderConfirmPage());
+                            openCheckout();
+                           // Get.offAll(() => const OrderConfirmPage());
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff02A008),
