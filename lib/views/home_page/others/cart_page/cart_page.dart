@@ -65,9 +65,9 @@ class _CartPageState extends State<CartPage> {
   //!============================================================
    void openCheckout() async {
     var options = {
-      'key': 'rzp_test_VCMCUPxY6XXTS2',
+      'key': 'rzp_live_vqdCt0dXhP4PHg',
       //'amount': 100,
-      "amount": 1020 * 100,
+      "amount": 1 * 100,
       'name': 'Eatincredible.co.in',
       // 'prefill': {'contact': '', 'email': 'test@razorpay.com'},
       'external': {
@@ -105,10 +105,24 @@ class _CartPageState extends State<CartPage> {
 
   }
   handlerErrorFailure(PaymentFailureResponse response) {
-    // Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (BuildContext context) => PaymentErrorPage()));
+     showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Error : Something went wrong"),
+          // content: const Text("Are you sure you wish to delete this item?"),
+          actions: <Widget>[
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                  // PlaceOrderPrepaid();
+                },
+                child: Text("OK"))
+            // ),
+          ],
+        );
+      },
+    );
 
   }
   void handlerExternalWallet(ExternalWalletResponse response) {
