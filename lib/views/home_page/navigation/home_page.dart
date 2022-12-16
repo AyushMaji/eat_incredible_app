@@ -73,9 +73,6 @@ class _HomePageState extends State<HomePage> {
                                   context
                                       .read<CategoryBloc>()
                                       .add(const CategoryEvent.getCategory());
-
-
-                                      
                                 },
                               ),
                               backgroundColor:
