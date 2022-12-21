@@ -10,7 +10,7 @@ class ApiHelper {
 
   setUpOptions() {
     baseOptions = BaseOptions(
-      baseUrl: 'https://jolly-ride.159-203-17-191.plesk.page/api/',
+      baseUrl: 'https://eatincredible.previewforclient.com/api/',
       connectTimeout: 5000,
       receiveTimeout: 3000,
     );
