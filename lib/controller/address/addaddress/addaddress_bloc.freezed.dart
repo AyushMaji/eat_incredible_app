@@ -22,6 +22,16 @@ mixin _$AddaddressEvent {
     required TResult Function(String address, String city, String state,
             String pincode, String landmark, String locality, String location)
         addAddress,
+    required TResult Function(
+            String addressId,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String landmark,
+            String locality,
+            String location)
+        editAddress,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -30,6 +40,16 @@ mixin _$AddaddressEvent {
     TResult Function(String address, String city, String state, String pincode,
             String landmark, String locality, String location)?
         addAddress,
+    TResult Function(
+            String addressId,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String landmark,
+            String locality,
+            String location)?
+        editAddress,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -38,6 +58,16 @@ mixin _$AddaddressEvent {
     TResult Function(String address, String city, String state, String pincode,
             String landmark, String locality, String location)?
         addAddress,
+    TResult Function(
+            String addressId,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String landmark,
+            String locality,
+            String location)?
+        editAddress,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -45,18 +75,21 @@ mixin _$AddaddressEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_AddAddress value) addAddress,
+    required TResult Function(_EditAddress value) editAddress,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_AddAddress value)? addAddress,
+    TResult Function(_EditAddress value)? editAddress,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_AddAddress value)? addAddress,
+    TResult Function(_EditAddress value)? editAddress,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -122,6 +155,16 @@ class _$_Started implements _Started {
     required TResult Function(String address, String city, String state,
             String pincode, String landmark, String locality, String location)
         addAddress,
+    required TResult Function(
+            String addressId,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String landmark,
+            String locality,
+            String location)
+        editAddress,
   }) {
     return started();
   }
@@ -133,6 +176,16 @@ class _$_Started implements _Started {
     TResult Function(String address, String city, String state, String pincode,
             String landmark, String locality, String location)?
         addAddress,
+    TResult Function(
+            String addressId,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String landmark,
+            String locality,
+            String location)?
+        editAddress,
   }) {
     return started?.call();
   }
@@ -144,6 +197,16 @@ class _$_Started implements _Started {
     TResult Function(String address, String city, String state, String pincode,
             String landmark, String locality, String location)?
         addAddress,
+    TResult Function(
+            String addressId,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String landmark,
+            String locality,
+            String location)?
+        editAddress,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -157,6 +220,7 @@ class _$_Started implements _Started {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_AddAddress value) addAddress,
+    required TResult Function(_EditAddress value) editAddress,
   }) {
     return started(this);
   }
@@ -166,6 +230,7 @@ class _$_Started implements _Started {
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_AddAddress value)? addAddress,
+    TResult Function(_EditAddress value)? editAddress,
   }) {
     return started?.call(this);
   }
@@ -175,6 +240,7 @@ class _$_Started implements _Started {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_AddAddress value)? addAddress,
+    TResult Function(_EditAddress value)? editAddress,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -326,6 +392,16 @@ class _$_AddAddress implements _AddAddress {
     required TResult Function(String address, String city, String state,
             String pincode, String landmark, String locality, String location)
         addAddress,
+    required TResult Function(
+            String addressId,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String landmark,
+            String locality,
+            String location)
+        editAddress,
   }) {
     return addAddress(
         address, city, state, pincode, landmark, locality, location);
@@ -338,6 +414,16 @@ class _$_AddAddress implements _AddAddress {
     TResult Function(String address, String city, String state, String pincode,
             String landmark, String locality, String location)?
         addAddress,
+    TResult Function(
+            String addressId,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String landmark,
+            String locality,
+            String location)?
+        editAddress,
   }) {
     return addAddress?.call(
         address, city, state, pincode, landmark, locality, location);
@@ -350,6 +436,16 @@ class _$_AddAddress implements _AddAddress {
     TResult Function(String address, String city, String state, String pincode,
             String landmark, String locality, String location)?
         addAddress,
+    TResult Function(
+            String addressId,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String landmark,
+            String locality,
+            String location)?
+        editAddress,
     required TResult orElse(),
   }) {
     if (addAddress != null) {
@@ -364,6 +460,7 @@ class _$_AddAddress implements _AddAddress {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_AddAddress value) addAddress,
+    required TResult Function(_EditAddress value) editAddress,
   }) {
     return addAddress(this);
   }
@@ -373,6 +470,7 @@ class _$_AddAddress implements _AddAddress {
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_AddAddress value)? addAddress,
+    TResult Function(_EditAddress value)? editAddress,
   }) {
     return addAddress?.call(this);
   }
@@ -382,6 +480,7 @@ class _$_AddAddress implements _AddAddress {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_AddAddress value)? addAddress,
+    TResult Function(_EditAddress value)? editAddress,
     required TResult orElse(),
   }) {
     if (addAddress != null) {
@@ -410,6 +509,277 @@ abstract class _AddAddress implements AddaddressEvent {
   String get location;
   @JsonKey(ignore: true)
   _$$_AddAddressCopyWith<_$_AddAddress> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_EditAddressCopyWith<$Res> {
+  factory _$$_EditAddressCopyWith(
+          _$_EditAddress value, $Res Function(_$_EditAddress) then) =
+      __$$_EditAddressCopyWithImpl<$Res>;
+  $Res call(
+      {String addressId,
+      String address,
+      String city,
+      String state,
+      String pincode,
+      String landmark,
+      String locality,
+      String location});
+}
+
+/// @nodoc
+class __$$_EditAddressCopyWithImpl<$Res>
+    extends _$AddaddressEventCopyWithImpl<$Res>
+    implements _$$_EditAddressCopyWith<$Res> {
+  __$$_EditAddressCopyWithImpl(
+      _$_EditAddress _value, $Res Function(_$_EditAddress) _then)
+      : super(_value, (v) => _then(v as _$_EditAddress));
+
+  @override
+  _$_EditAddress get _value => super._value as _$_EditAddress;
+
+  @override
+  $Res call({
+    Object? addressId = freezed,
+    Object? address = freezed,
+    Object? city = freezed,
+    Object? state = freezed,
+    Object? pincode = freezed,
+    Object? landmark = freezed,
+    Object? locality = freezed,
+    Object? location = freezed,
+  }) {
+    return _then(_$_EditAddress(
+      addressId: addressId == freezed
+          ? _value.addressId
+          : addressId // ignore: cast_nullable_to_non_nullable
+              as String,
+      address: address == freezed
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
+      city: city == freezed
+          ? _value.city
+          : city // ignore: cast_nullable_to_non_nullable
+              as String,
+      state: state == freezed
+          ? _value.state
+          : state // ignore: cast_nullable_to_non_nullable
+              as String,
+      pincode: pincode == freezed
+          ? _value.pincode
+          : pincode // ignore: cast_nullable_to_non_nullable
+              as String,
+      landmark: landmark == freezed
+          ? _value.landmark
+          : landmark // ignore: cast_nullable_to_non_nullable
+              as String,
+      locality: locality == freezed
+          ? _value.locality
+          : locality // ignore: cast_nullable_to_non_nullable
+              as String,
+      location: location == freezed
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_EditAddress implements _EditAddress {
+  const _$_EditAddress(
+      {required this.addressId,
+      required this.address,
+      required this.city,
+      required this.state,
+      required this.pincode,
+      required this.landmark,
+      required this.locality,
+      required this.location});
+
+  @override
+  final String addressId;
+  @override
+  final String address;
+  @override
+  final String city;
+  @override
+  final String state;
+  @override
+  final String pincode;
+  @override
+  final String landmark;
+  @override
+  final String locality;
+  @override
+  final String location;
+
+  @override
+  String toString() {
+    return 'AddaddressEvent.editAddress(addressId: $addressId, address: $address, city: $city, state: $state, pincode: $pincode, landmark: $landmark, locality: $locality, location: $location)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_EditAddress &&
+            const DeepCollectionEquality().equals(other.addressId, addressId) &&
+            const DeepCollectionEquality().equals(other.address, address) &&
+            const DeepCollectionEquality().equals(other.city, city) &&
+            const DeepCollectionEquality().equals(other.state, state) &&
+            const DeepCollectionEquality().equals(other.pincode, pincode) &&
+            const DeepCollectionEquality().equals(other.landmark, landmark) &&
+            const DeepCollectionEquality().equals(other.locality, locality) &&
+            const DeepCollectionEquality().equals(other.location, location));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(addressId),
+      const DeepCollectionEquality().hash(address),
+      const DeepCollectionEquality().hash(city),
+      const DeepCollectionEquality().hash(state),
+      const DeepCollectionEquality().hash(pincode),
+      const DeepCollectionEquality().hash(landmark),
+      const DeepCollectionEquality().hash(locality),
+      const DeepCollectionEquality().hash(location));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_EditAddressCopyWith<_$_EditAddress> get copyWith =>
+      __$$_EditAddressCopyWithImpl<_$_EditAddress>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function(String address, String city, String state,
+            String pincode, String landmark, String locality, String location)
+        addAddress,
+    required TResult Function(
+            String addressId,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String landmark,
+            String locality,
+            String location)
+        editAddress,
+  }) {
+    return editAddress(
+        addressId, address, city, state, pincode, landmark, locality, location);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(String address, String city, String state, String pincode,
+            String landmark, String locality, String location)?
+        addAddress,
+    TResult Function(
+            String addressId,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String landmark,
+            String locality,
+            String location)?
+        editAddress,
+  }) {
+    return editAddress?.call(
+        addressId, address, city, state, pincode, landmark, locality, location);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(String address, String city, String state, String pincode,
+            String landmark, String locality, String location)?
+        addAddress,
+    TResult Function(
+            String addressId,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String landmark,
+            String locality,
+            String location)?
+        editAddress,
+    required TResult orElse(),
+  }) {
+    if (editAddress != null) {
+      return editAddress(addressId, address, city, state, pincode, landmark,
+          locality, location);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_AddAddress value) addAddress,
+    required TResult Function(_EditAddress value) editAddress,
+  }) {
+    return editAddress(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_AddAddress value)? addAddress,
+    TResult Function(_EditAddress value)? editAddress,
+  }) {
+    return editAddress?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_AddAddress value)? addAddress,
+    TResult Function(_EditAddress value)? editAddress,
+    required TResult orElse(),
+  }) {
+    if (editAddress != null) {
+      return editAddress(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _EditAddress implements AddaddressEvent {
+  const factory _EditAddress(
+      {required final String addressId,
+      required final String address,
+      required final String city,
+      required final String state,
+      required final String pincode,
+      required final String landmark,
+      required final String locality,
+      required final String location}) = _$_EditAddress;
+
+  String get addressId;
+  String get address;
+  String get city;
+  String get state;
+  String get pincode;
+  String get landmark;
+  String get locality;
+  String get location;
+  @JsonKey(ignore: true)
+  _$$_EditAddressCopyWith<_$_EditAddress> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

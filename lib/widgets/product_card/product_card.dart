@@ -72,9 +72,11 @@ class _ProductCardState extends State<ProductCard> {
                     alignment: Alignment.topLeft,
                     children: [
                       CustomPic(
-                          imageUrl: widget.imageUrl,
-                          height: 95.h,
-                          width: double.infinity),
+                        imageUrl: widget.imageUrl,
+                        height: 95.h,
+                        width: double.infinity,
+                        fit: BoxFit.contain,
+                      ),
                       Positioned(
                         top: 3.h,
                         child: Container(

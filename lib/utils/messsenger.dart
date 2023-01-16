@@ -24,7 +24,7 @@ class CustomSnackbar {
         ),
         backgroundColor: Colors.green,
         colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         duration: const Duration(seconds: 3),
         margin: EdgeInsets.only(bottom: 60.h, left: 9.w, right: 9.w),
       );

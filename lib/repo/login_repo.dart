@@ -4,6 +4,7 @@ import 'package:eat_incredible_app/api/api_result.dart';
 import 'package:eat_incredible_app/api/network.dart';
 import 'package:eat_incredible_app/api/network_exception.dart';
 import 'package:eat_incredible_app/views/signup_page/signup_page_phone.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/barrel.dart';
@@ -31,6 +32,7 @@ class LoginRepo {
   Future<ApiResult> verify(String phone, String otp) async {
     try {
       var res = await network.verifyOtp(phone, otp);
+      Logger().i(res.data.toString());
       return ApiResult.success(data: res.data);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
@@ -70,8 +72,10 @@ class LoginRepo {
       String name, String value, String loginType) async {
     try {
       var res = await network.insertName(name, value, loginType);
+      Logger().i(res.data);
       return ApiResult.success(data: res.data);
     } catch (e) {
+      Logger().e(e);
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
     }
   }

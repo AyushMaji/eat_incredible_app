@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:eat_incredible_app/controller/login/login_bloc.dart';
 import 'package:eat_incredible_app/controller/verify_otp/verify_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
+import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/navigation/navigation.dart';
 import 'package:eat_incredible_app/views/user_details/user_details.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,12 +13,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class VerificationPage extends StatefulWidget {
   final String? phone;
   final String? countryCode;
-  final bool isNewUser;
-  const VerificationPage(
-      {super.key,
-      required this.phone,
-      required this.countryCode,
-      required this.isNewUser});
+
+  const VerificationPage({
+    super.key,
+    required this.phone,
+    required this.countryCode,
+  });
 
   @override
   State<VerificationPage> createState() => _VerificationPageState();
@@ -217,11 +218,15 @@ class _VerificationPageState extends State<VerificationPage> {
                     initial: () {},
                     loading: () {},
                     loaded: (lodedData) {
-                      widget.isNewUser
-                          ? Get.offAll(() => UserDetails(
-                              loginType: 'phone',
-                              value: widget.phone.toString()))
-                          : Get.offAll(() => const Navigation());
+                      if (lodedData.isNewUser) {
+                        Get.offAll(() => UserDetails(
+                            loginType: 'phone',
+                            value: widget.phone.toString()));
+                      } else {
+                        CustomSnackbar.successSnackbar('Login Successful',
+                            'your account has been verified');
+                        Get.offAll(() => const Navigation());
+                      }
                     },
                     failure: (e) {
                       Get.snackbar(

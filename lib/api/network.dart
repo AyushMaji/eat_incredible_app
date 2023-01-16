@@ -7,6 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Network {
   final client = ApiHelper();
+  // about api
+  Future<Response> getAbout() async {
+    return await client.getRequest(UrlRepo.aboutApi);
+  }
 
   Future<Response> postlogin(String phone, String countryCode) async {
     return await client.postRequest(UrlRepo.loginwithOtp, data: {
@@ -65,8 +69,10 @@ class Network {
         .postRequest(UrlRepo.productListCategory(categoryId), data: {});
   }
 
-  Future<Response> getProductDetails(String productid) async {
-    return await client.postRequest(UrlRepo.productDetail(productid), data: {});
+  Future<Response> getProductDetails(String productid, String vid) async {
+    return await client.postRequest(UrlRepo.productDetail(productid), data: {
+      "vid": vid,
+    });
   }
 
   Future<Response> addToCart(String productid) async {
@@ -109,12 +115,15 @@ class Network {
     return await client.postRequest(UrlRepo.userInfo, data: {});
   }
 
-  Future<Response> updateUserEmail(String email) async {
-    return await client.postRequest(UrlRepo.editEmail(email), data: {});
-  }
-
-  Future<Response> updateUserPhone(String phone) async {
-    return await client.postRequest(UrlRepo.editPhone(phone), data: {});
+  Future<Response> updateUserInfo(
+      String email, String phone, String name) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await client.postRequest(UrlRepo.editUserInfo, data: {
+      "token": prefs.getString('token') ?? '',
+      "email": email,
+      "phone": phone,
+      "name": name,
+    });
   }
   //! address ===================>
 
@@ -145,6 +154,7 @@ class Network {
       String city,
       String pincode,
       String location) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     return await client.postRequest(UrlRepo.updateaddress(addressId), data: {
       "city": city,
       "landmark": landmark,
@@ -152,6 +162,7 @@ class Network {
       "locality": locality,
       "pincode": pincode,
       "location": location,
+      'token': prefs.getString('token') ?? ''
     });
   }
 
@@ -195,5 +206,41 @@ class Network {
 
   Future<Response> trendingSearch() async {
     return await client.postRequest(UrlRepo.treadingSearch);
+  }
+
+  //! coupon code list
+  Future<Response> couponCodeList() async {
+    return await client.postRequest(UrlRepo.couponCode);
+  }
+
+  //! orderList
+  Future<Response> orderList() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await client.postRequest(UrlRepo.orderList, data: {
+      "token": prefs.getString('token') ?? '',
+    });
+  }
+
+  //! order details
+  Future<Response> orderDetails(String orderId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await client.postRequest(UrlRepo.orderDetails, data: {
+      "token": prefs.getString('token') ?? '',
+      'oid': orderId,
+    });
+  }
+
+  //! order item details
+  Future<Response> orderItem(String orderId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await client.postRequest(UrlRepo.orderitems, data: {
+      "token": prefs.getString('token') ?? '',
+      'oid': orderId,
+    });
+  }
+
+  // weight list
+  Future<Response> weightList(String pid) async {
+    return await client.postRequest(UrlRepo.weightlist);
   }
 }

@@ -19,8 +19,7 @@ class UrlRepo {
   static const updateCart = 'update_cart_quantity.php';
 
   static const userInfo = 'account_info.php';
-  static String editEmail(String email) => 'send_email_otp.php?id=$email';
-  static String editPhone(String phone) => 'send_phone_otp.php?id=$phone';
+  static String editUserInfo = 'update_user_info.php';
 
   //!! add all address api
   static const addaddress = 'add_user_address.php';
@@ -33,4 +32,11 @@ class UrlRepo {
   static String searchKey = 'search.php';
   static String searchData = 'search_list.php';
   static String treadingSearch = 'trending_search.php';
+
+  static String aboutApi = 'about_us.php';
+  static String couponCode = 'coupon_list.php';
+  static String orderList = "order_history.php";
+  static String orderDetails = "order_bill_details.php";
+  static String orderitems = "ordered_items.php";
+  static String weightlist = "product_weight.php";
 }

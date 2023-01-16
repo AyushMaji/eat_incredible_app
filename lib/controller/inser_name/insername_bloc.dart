@@ -14,13 +14,13 @@ class InsernameBloc extends Bloc<InsernameEvent, InsernameState> {
           .insertName(event.name, event.value, event.loginType);
       result.when(
         success: (data) {
-          emit(const _Loaded());
+          emit(_Loaded(data['status'].toString(), data['message']));
         },
         failure: (error) {
           emit(_Error(message: error.toString()));
-          emit(const _Initial());
         },
       );
     });
   }
 }
+ 

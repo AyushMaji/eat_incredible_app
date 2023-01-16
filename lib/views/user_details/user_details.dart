@@ -28,8 +28,13 @@ class _UserDetailsState extends State<UserDetails> {
         child: BlocConsumer<InsernameBloc, InsernameState>(
           listener: (context, state) {
             state.maybeWhen(
-                loaded: () {
-                  Get.offAll(() => const Navigation());
+                loaded: (status, msg) {
+                  if (status == '200') {
+                    CustomSnackbar.successSnackbar('Success', msg);
+                    Get.offAll(() => const Navigation());
+                  } else {
+                    CustomSnackbar.errorSnackbar('Error', msg);
+                  }
                 },
                 orElse: () {});
           },
@@ -93,121 +98,151 @@ class _UserDetailsState extends State<UserDetails> {
           onPressed: () => Get.back(),
         ),
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            child: Column(
-              children: [
-                Center(
-                  child: Text(
-                    'User Details',
-                    style: GoogleFonts.poppins(
-                      fontSize: 25.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
+      body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 50.r,
+              backgroundColor: Colors.white,
+              child: ClipOval(
+                child: SizedBox(
+                  width: 100.h,
+                  height: 100.h,
+                  child: Image.asset(
+                    'assets/images/profile.png',
+                    fit: BoxFit.fill,
                   ),
                 ),
-                SizedBox(
-                  height: 18.h,
-                ),
-                Center(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: Text(
-                      ' Please enter your name and mobile number to continue',
-                      style: GoogleFonts.poppins(
-                          fontSize: 11.5.sp,
-                          fontWeight: FontWeight.normal,
-                          color: const Color.fromRGBO(165, 165, 165, 1)),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 29.h,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-            child: SizedBox(
-              height: 46.h,
-              child: TextFormField(
-                controller: _nameController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    // borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
-                  ),
-                  hintText: 'Name',
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Name can't be empty";
-                  }
-                  return null;
-                },
               ),
             ),
-          ),
-          widget.loginType == "email"
-              ? Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-                  child: SizedBox(
-                    height: 46.h,
-                    child: TextFormField(
-                      controller: _valueController,
-                      keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                          // borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                          ),
-                        ),
-                        hintText: 'Mobile Number',
+            SizedBox(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 18.h,
+                  ),
+                  Center(
+                    child: Text(
+                      'User Details',
+                      style: GoogleFonts.poppins(
+                        fontSize: 25.sp,
+                        fontWeight: FontWeight.w500,
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Email can not be empty";
-                        }
-                        return null;
-                      },
                     ),
                   ),
-                )
-              : Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-                  child: SizedBox(
-                    height: 46.h,
-                    child: TextFormField(
-                      controller: _valueController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                          // borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                          ),
-                        ),
-                        hintText: 'Email Address',
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Email Address";
-                        }
-                        return null;
-                      },
-                    ),
+                  SizedBox(
+                    height: 18.h,
                   ),
+                  Center(
+                    child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 30.w),
+                        child: widget.loginType == "email"
+                            ? Text(
+                                ' Please enter your name and mobile number to continue',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 11.5.sp,
+                                    fontWeight: FontWeight.normal,
+                                    color:
+                                        const Color.fromRGBO(165, 165, 165, 1)),
+                                textAlign: TextAlign.center,
+                              )
+                            : Text(
+                                ' Please enter your name and email to continue',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 11.5.sp,
+                                    fontWeight: FontWeight.normal,
+                                    color:
+                                        const Color.fromRGBO(165, 165, 165, 1)),
+                                textAlign: TextAlign.center,
+                              )),
+                  ),
+                  SizedBox(
+                    height: 29.h,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+              child: SizedBox(
+                height: 46.h,
+                child: TextFormField(
+                  controller: _nameController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      // borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                        color: Colors.black,
+                      ),
+                    ),
+                    hintText: 'Name',
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Name can't be empty";
+                    }
+                    return null;
+                  },
                 ),
-        ],
+              ),
+            ),
+            widget.loginType == "email"
+                ? Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+                    child: SizedBox(
+                      height: 46.h,
+                      child: TextFormField(
+                        controller: _valueController,
+                        keyboardType: TextInputType.phone,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                            // borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          hintText: 'Mobile Number',
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Email can not be empty";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  )
+                : Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+                    child: SizedBox(
+                      height: 46.h,
+                      child: TextFormField(
+                        controller: _valueController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                            // borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          hintText: 'Email Address',
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Email Address";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ),
+          ],
+        ),
       ),
     );
   }

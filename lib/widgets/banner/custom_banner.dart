@@ -6,12 +6,13 @@ class CustomPic extends StatelessWidget {
   final String imageUrl;
   final double height;
   final double width;
-
+  final BoxFit fit;
   const CustomPic(
       {super.key,
       required this.imageUrl,
       required this.height,
-      required this.width});
+      required this.width,
+      required this.fit});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class CustomPic extends StatelessWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: imageProvider,
-              fit: BoxFit.cover,
+              fit: fit,
             ),
           ),
         ),

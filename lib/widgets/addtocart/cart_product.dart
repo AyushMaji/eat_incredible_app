@@ -47,7 +47,11 @@ class _CartProductState extends State<CartProduct> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
                 child: CustomPic(
-                    imageUrl: widget.imageUrl, height: 53.h, width: 57.w),
+                  imageUrl: widget.imageUrl,
+                  height: 53.h,
+                  width: 57.w,
+                  fit: BoxFit.contain,
+                ),
               ),
               SizedBox(width: 10.w),
               Column(

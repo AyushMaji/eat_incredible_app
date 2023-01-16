@@ -13,18 +13,22 @@ class VerifyModel {
   VerifyModel({
     required this.message,
     required this.status,
+    required this.isNewUser,
   });
 
   String message;
   int status;
+  bool isNewUser;
 
   factory VerifyModel.fromJson(Map<String, dynamic> json) => VerifyModel(
         message: json["message"],
         status: json["status"],
+        isNewUser: json["isNewUser"],
       );
 
   Map<String, dynamic> toJson() => {
         "message": message,
         "status": status,
+        "isNewUser": isNewUser,
       };
 }

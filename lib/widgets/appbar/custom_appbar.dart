@@ -7,6 +7,7 @@ import 'package:eat_incredible_app/views/home_page/others/Item_search/item_searc
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomAppbar extends StatefulWidget {
   const CustomAppbar({super.key});
@@ -83,7 +84,7 @@ class _CustomAppbarState extends State<CustomAppbar> {
                                         showSearchBox: false,
                                         onFind: (String filter) async {
                                           var response = await Dio().get(
-                                            "https://jolly-ride.159-203-17-191.plesk.page/api/location.php",
+                                            "https://eatincredible.in/api/location.php",
                                             queryParameters: {
                                               "location": filter
                                             },
@@ -216,9 +217,15 @@ class _CustomAppbarState extends State<CustomAppbar> {
                       ],
                     ),
                   ),
-                  const Icon(
-                    Icons.whatsapp,
-                    color: Colors.white,
+                  GestureDetector(
+                    onTap: () {
+                      // ignore: deprecated_member_use
+                      launch('https://wa.me/9433990099');
+                    },
+                    child: const Icon(
+                      Icons.whatsapp,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),

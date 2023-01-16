@@ -3,6 +3,8 @@ import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
 import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
 import 'package:eat_incredible_app/controller/product_details/product_details_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
+import 'package:eat_incredible_app/controller/weight_bloc/weight_bloc.dart';
+import 'package:eat_incredible_app/model/weight/weight_model.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/others/cart_page/cart_page.dart';
@@ -30,22 +32,26 @@ class _ProductDetailsState extends State<ProductDetails> {
   final CarouselController controller = CarouselController();
   ProductDetailsBloc productDetailsBloc = ProductDetailsBloc();
   ProductListBloc productListBloc = ProductListBloc();
+  WeightBloc weightBloc = WeightBloc();
+  late String dropdownvalue;
+  // ignore: non_constant_identifier_names
+  String v_id = '';
 
   @override
   void initState() {
-    getData();
+    getData(widget.productId, '');
     super.initState();
   }
 
   //* call the product details api and get the data from the api
-  void getData() {
-    productDetailsBloc.add(
-        ProductDetailsEvent.getproductdetails(productId: widget.productId));
+  void getData(pid, vid) {
+    productDetailsBloc.add(ProductDetailsEvent.getproductdetails(pid, vid));
     productListBloc
         .add(ProductListEvent.fetchProductList(categoryId: widget.catId));
-    context
-        .read<CartDetailsBloc>()
-        .add(const CartDetailsEvent.getCartDetails());
+    weightBloc.add(WeightEvent.getWeight(pid));
+    // context
+    //     .read<CartDetailsBloc>()
+    //     .add(const CartDetailsEvent.getCartDetails());
   }
 
   @override
@@ -67,7 +73,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       ),
       body: RefreshIndicator(
         onRefresh: () {
-          getData();
+          getData(widget.productId, '');
           return Future.value();
         },
         child: Stack(
@@ -91,7 +97,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             onPressed: () {
                               context.read<ProductDetailsBloc>().add(
                                   ProductDetailsEvent.getproductdetails(
-                                      productId: widget.productId));
+                                      widget.productId, v_id));
                             },
                           ),
                           backgroundColor:
@@ -103,7 +109,8 @@ class _ProductDetailsState extends State<ProductDetails> {
               },
               builder: (context, state) {
                 return state.maybeWhen(
-                  orElse: () {
+                  orElse: () => Container(),
+                  loading: () {
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.w),
                       child: SizedBox(
@@ -135,13 +142,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   enableInfiniteScroll: true,
                                   reverse: false,
                                   autoPlay: true,
-                                  autoPlayInterval: const Duration(seconds: 10),
+                                  autoPlayInterval: const Duration(seconds: 5),
                                   autoPlayAnimationDuration:
                                       const Duration(milliseconds: 1000),
                                   autoPlayCurve: Curves.fastOutSlowIn,
                                   enlargeCenterPage: true,
                                   scrollDirection: Axis.horizontal,
-                                  height: 200.h,
+                                  height: 230.h,
                                   viewportFraction: 1.0,
                                   onPageChanged: (index, reason) {
                                     setState(() {
@@ -149,21 +156,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     });
                                   },
                                 ),
-                                items: [
-                                  productdetails[0].thumbnail.toString(),
-                                ].map((i) {
+                                items:
+                                    productdetails[0].productMoreImg.map((i) {
                                   return Builder(
                                     builder: (BuildContext context) {
                                       return Container(
                                           width: double.infinity,
-                                          color: const Color.fromRGBO(
-                                              245, 239, 240, 1),
+                                          color: const Color.fromARGB(
+                                              0, 255, 255, 255),
                                           margin: const EdgeInsets.symmetric(
                                               horizontal: 5.0),
                                           child: CustomPic(
                                             imageUrl: i,
-                                            height: 200.h,
+                                            height: 230.h,
                                             width: double.infinity,
+                                            fit: BoxFit.contain,
                                           ));
                                     },
                                   );
@@ -172,9 +179,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                productdetails[0].thumbnail.toString(),
-                              ].asMap().entries.map((entry) {
+                              children: productdetails[0]
+                                  .productMoreImg
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
                                 return GestureDetector(
                                   onTap: () =>
                                       controller.animateToPage(entry.key),
@@ -196,26 +205,250 @@ class _ProductDetailsState extends State<ProductDetails> {
                             ),
                             //* Banner ============== >
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 11.w),
+                              padding: EdgeInsets.symmetric(horizontal: 13.w),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    productdetails[0].productName.toString(),
-                                    style: GoogleFonts.poppins(
-                                        color:
-                                            const Color.fromRGBO(44, 44, 44, 1),
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w600),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "₹ ${productdetails[0].salePrice.toString()}",
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 15.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: const Color.fromRGBO(
+                                                44, 44, 44, 1)),
+                                      ),
+                                    ],
                                   ),
-                                  IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.share,
-                                        color: const Color.fromRGBO(0, 0, 0, 1),
-                                        size: 14.sp,
-                                      ))
+                                  Row(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(3),
+                                          border: Border.all(
+                                            color: const Color.fromARGB(
+                                                83, 0, 0, 0),
+                                          ),
+                                        ),
+                                        width: 70.w,
+                                        height: 25.h,
+                                        child: BlocConsumer<WeightBloc,
+                                            WeightState>(
+                                          bloc: weightBloc,
+                                          listener: (context, state) {
+                                            state.maybeWhen(
+                                                orElse: () {},
+                                                loaded: (weightList) {});
+                                          },
+                                          builder: (context, state) {
+                                            return state.maybeWhen(
+                                              orElse: () {
+                                                return const SizedBox();
+                                              },
+                                              loaded: (weightListModel) {
+                                                return Center(
+                                                  child: DropdownButton<String>(
+                                                    underline: Container(),
+                                                    menuMaxHeight: 200.h,
+                                                    value: dropdownvalue,
+                                                    icon: const Icon(
+                                                        Icons.arrow_drop_down),
+                                                    iconSize: 24.sp,
+                                                    elevation: 12,
+                                                    style: const TextStyle(
+                                                        color: Colors.black),
+                                                    onChanged:
+                                                        (String? newValue) {
+                                                      setState(() {
+                                                        dropdownvalue =
+                                                            newValue ??
+                                                                productdetails[
+                                                                        0]
+                                                                    .weight
+                                                                    .toString();
+                                                      });
+                                                    },
+                                                    items: weightListModel.map<
+                                                            DropdownMenuItem<
+                                                                String>>(
+                                                        (WeightModel value) {
+                                                      return DropdownMenuItem<
+                                                          String>(
+                                                        onTap: () {
+                                                          getData(
+                                                              widget.productId,
+                                                              value.id
+                                                                  .toString());
+
+                                                          setState(() {
+                                                            v_id = value.id
+                                                                .toString();
+                                                          });
+                                                        },
+                                                        value: value.weight
+                                                            .toString(),
+                                                        child: Text(value.weight
+                                                            .toString()),
+                                                      );
+                                                    }).toList(),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      // productDetails[0].iscart == false
+                                      //     ? BlocConsumer<AddtocartBloc,
+                                      //         AddtocartState>(
+                                      //         listener: (context, state) {
+                                      //           state.maybeWhen(
+                                      //               orElse: () {},
+                                      //               addtocartSuccess: (() {
+                                      //                 getData(widget.productId,
+                                      //                     v_id);
+                                      //               }));
+                                      //         },
+                                      //         builder: (context, state) {
+                                      //           return state.maybeWhen(
+                                      //             orElse: () {
+                                      //               return GestureDetector(
+                                      //                 onTap: (() {
+                                      //                   context
+                                      //                       .read<
+                                      //                           AddtocartBloc>()
+                                      //                       .add(AddtocartEvent.addToCart(
+                                      //                           productid:
+                                      //                               productDetails[
+                                      //                                       0]
+                                      //                                   .variantId
+                                      //                                   .toString(),
+                                      //                           quant: productDetails[
+                                      //                                   0]
+                                      //                               .weight
+                                      //                               .toString()));
+                                      //                 }),
+                                      //                 child: Container(
+                                      //                   height: 24.h,
+                                      //                   width: 60.w,
+                                      //                   decoration:
+                                      //                       BoxDecoration(
+                                      //                     color: Colors
+                                      //                         .transparent,
+                                      //                     borderRadius:
+                                      //                         BorderRadius
+                                      //                             .circular(3),
+                                      //                     border: Border.all(
+                                      //                         color: const Color
+                                      //                                 .fromRGBO(
+                                      //                             2,
+                                      //                             160,
+                                      //                             8,
+                                      //                             1)),
+                                      //                   ),
+                                      //                   child: Center(
+                                      //                     child: Text(
+                                      //                       "Add",
+                                      //                       overflow:
+                                      //                           TextOverflow
+                                      //                               .ellipsis,
+                                      //                       style: TextStyle(
+                                      //                           fontFamily:
+                                      //                               'Poppins',
+                                      //                           fontSize: 10.sp,
+                                      //                           color: const Color
+                                      //                                   .fromRGBO(
+                                      //                               2,
+                                      //                               160,
+                                      //                               8,
+                                      //                               1),
+                                      //                           fontWeight:
+                                      //                               FontWeight
+                                      //                                   .w600),
+                                      //                     ),
+                                      //                   ),
+                                      //                 ),
+                                      //               );
+                                      //             },
+                                      //             loading: () {
+                                      //               return Center(
+                                      //                 child: Container(
+                                      //                   height: 24.h,
+                                      //                   width: 60.w,
+                                      //                   decoration:
+                                      //                       BoxDecoration(
+                                      //                     color: Colors
+                                      //                         .transparent,
+                                      //                     borderRadius:
+                                      //                         BorderRadius
+                                      //                             .circular(3),
+                                      //                     border: Border.all(
+                                      //                         color: const Color
+                                      //                                 .fromRGBO(
+                                      //                             2,
+                                      //                             160,
+                                      //                             8,
+                                      //                             1)),
+                                      //                   ),
+                                      //                   child: Center(
+                                      //                     child:
+                                      //                         CupertinoActivityIndicator(
+                                      //                       radius: 8.sp,
+                                      //                       color: const Color
+                                      //                               .fromARGB(
+                                      //                           162, 2, 160, 7),
+                                      //                     ),
+                                      //                   ),
+                                      //                 ),
+                                      //               );
+                                      //             },
+                                      //           );
+                                      //         },
+                                      //       )
+                                      //     : GestureDetector(
+                                      //         onTap: (() {
+                                      //           Get.to(() => const CartPage());
+                                      //         }),
+                                      //         child: Container(
+                                      //           height: 24.h,
+                                      //           width: 60.w,
+                                      //           decoration: BoxDecoration(
+                                      //             color: const Color.fromRGBO(
+                                      //                 2, 160, 8, 1),
+                                      //             borderRadius:
+                                      //                 BorderRadius.circular(3),
+                                      //             border: Border.all(
+                                      //                 color:
+                                      //                     const Color.fromRGBO(
+                                      //                         2, 160, 8, 1)),
+                                      //           ),
+                                      //           child: Center(
+                                      //             child: Text(
+                                      //               "View cart",
+                                      //               overflow:
+                                      //                   TextOverflow.ellipsis,
+                                      //               style: TextStyle(
+                                      //                   fontFamily: 'Poppins',
+                                      //                   fontSize: 10.sp,
+                                      //                   color: const Color
+                                      //                           .fromARGB(
+                                      //                       255, 255, 255, 255),
+                                      //                   fontWeight:
+                                      //                       FontWeight.w600),
+                                      //             ),
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
@@ -254,7 +487,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                 initial: () {},
                                                 loading: (productId) {},
                                                 success: (msg, producId) {
-                                                  getData();
+                                                  getData(
+                                                      widget.productId, v_id);
                                                 },
                                                 failure: (error) {});
                                           },
@@ -520,7 +754,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                                           index]
                                                                       .id
                                                                       .toString()));
-                                                      getData();
+                                                      getData(widget.productId,
+                                                          v_id);
                                                     },
                                                     ontap: () {
                                                       Navigator.of(context).push(

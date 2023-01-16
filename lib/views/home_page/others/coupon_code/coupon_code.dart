@@ -117,10 +117,12 @@ class _CouponsCodeState extends State<CouponsCode> {
                     });
                   },
                   child: CustomPic(
-                      imageUrl:
-                          'https://i.imgur.com/0cbymTF_d.webp?maxwidth=760&fidelity=grand',
-                      height: 155.h,
-                      width: double.infinity),
+                    imageUrl:
+                        'https://i.imgur.com/0cbymTF_d.webp?maxwidth=760&fidelity=grand',
+                    height: 155.h,
+                    width: double.infinity,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               );
             },

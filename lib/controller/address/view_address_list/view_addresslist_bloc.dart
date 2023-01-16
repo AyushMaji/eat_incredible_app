@@ -20,7 +20,7 @@ class ViewAddresslistBloc
           for (var i = 0; i < data.length; i++) {
             addressList.add(ViewAddressListModel.fromJson(data[i]));
           }
-          emit(_Loaded(addressList: addressList));
+          emit(_Loaded(addressList: addressList)); 
         },
         failure: (error) {
           emit(_Error(message: NetworkExceptions.getErrorMessage(error)));

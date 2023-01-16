@@ -30,38 +30,34 @@ class ProductDeatilsModel {
     required this.quantity,
     required this.status,
     required this.date,
-    required this.topSellingProduct,
-    required this.couponCode,
-    required this.specialPrice,
-    required this.locationId,
+    required this.variantId,
     required this.iscart,
-    required this.discountPercentage,
+    required this.shareLink,
+    required this.productMoreImg,
   });
 
-  String? id;
-  String? productName;
-  String? slug;
-  String? categoryId;
-  String? tax;
-  String? originalPrice;
-  String? salePrice;
-  String? weight;
-  String? nutriBenifit;
-  String? description;
-  String? metaTitle;
-  String? metaTag;
-  String? metaDesc;
-  String? thumbnail;
-  String? thumbHover;
-  String? quantity;
-  String? status;
-  String? date;
-  dynamic topSellingProduct;
-  dynamic couponCode;
-  dynamic specialPrice;
-  dynamic locationId;
-  bool? iscart;
-  int? discountPercentage;
+  String id;
+  String productName;
+  String slug;
+  String categoryId;
+  String tax;
+  String originalPrice;
+  String salePrice;
+  String weight;
+  String nutriBenifit;
+  String description;
+  String metaTitle;
+  String metaTag;
+  String metaDesc;
+  String thumbnail;
+  String thumbHover;
+  String quantity;
+  String status;
+  String date;
+  String variantId;
+  bool iscart;
+  String shareLink;
+  List<String> productMoreImg;
 
   factory ProductDeatilsModel.fromJson(Map<String, dynamic> json) =>
       ProductDeatilsModel(
@@ -83,12 +79,11 @@ class ProductDeatilsModel {
         quantity: json["quantity"],
         status: json["status"],
         date: json["date"],
-        topSellingProduct: json["top_selling_product"],
-        couponCode: json["coupon_code"],
-        specialPrice: json["special_price"],
-        locationId: json["location_id"],
+        variantId: json["variant_id"],
         iscart: json["iscart"],
-        discountPercentage: json["discount_percentage"],
+        shareLink: json["share_link"],
+        productMoreImg:
+            List<String>.from(json["product_more_img"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -110,11 +105,9 @@ class ProductDeatilsModel {
         "quantity": quantity,
         "status": status,
         "date": date,
-        "top_selling_product": topSellingProduct,
-        "coupon_code": couponCode,
-        "special_price": specialPrice,
-        "location_id": locationId,
+        "variant_id": variantId,
         "iscart": iscart,
-        "discount_percentage": discountPercentage,
+        "share_link": shareLink,
+        "product_more_img": List<dynamic>.from(productMoreImg.map((x) => x)),
       };
 }

@@ -42,7 +42,7 @@ class AddressRepo {
   }) async {
     try {
       var res = await network.updateaddress(
-          locality, landmark, address, city, pincode, location, addressId);
+          addressId, locality, landmark, address, city, pincode, location);
       return ApiResult.success(data: res.data);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));

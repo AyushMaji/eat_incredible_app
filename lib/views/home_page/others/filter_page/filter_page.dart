@@ -13,6 +13,7 @@ import 'package:eat_incredible_app/widgets/filter/filter_bar.dart';
 import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:shimmer/shimmer.dart';
 
 class FilterPage extends StatefulWidget {
@@ -31,13 +32,14 @@ class FilterPage extends StatefulWidget {
 
 class _FilterPageState extends State<FilterPage> {
   final ScrollController _scrollController = ScrollController();
-  ProductListBloc productListBloc = ProductListBloc();
   late String filterIteamId;
 
   //*  this is the fuction which is called when the user refresh the page ==========>
 
   void getdata() {
-    productListBloc
+    Logger().i(filterIteamId);
+    context
+        .read<ProductListBloc>()
         .add(ProductListEvent.fetchProductList(categoryId: filterIteamId));
     context
         .read<CartDetailsBloc>()
@@ -105,7 +107,7 @@ class _FilterPageState extends State<FilterPage> {
                   FilterBar(
                     categoryIndex: widget.categoryIndex,
                     onChanged: (value) {
-                      productListBloc.add(
+                      context.read<ProductListBloc>().add(
                           ProductListEvent.fetchProductList(categoryId: value));
                       setState(() {
                         filterIteamId = value;
@@ -120,36 +122,15 @@ class _FilterPageState extends State<FilterPage> {
                         return Future.value();
                       },
                       child: BlocConsumer<ProductListBloc, ProductListState>(
-                        bloc: productListBloc,
-                        listener: (context, state) {
-                          state.when(
-                              initial: () {},
-                              loading: () {},
-                              loaded: (_) {},
-                              failure: (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(e),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 4.6.h, horizontal: 20.w),
-                                    action: SnackBarAction(
-                                      label: 'Retry',
-                                      onPressed: () {
-                                        productListBloc.add(
-                                            ProductListEvent.fetchProductList(
-                                                categoryId: filterIteamId));
-                                      },
-                                    ),
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 29, 30, 29),
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
-                                );
-                              });
-                        },
+                        bloc: context.read<ProductListBloc>(),
+                        listener: (context, state) {},
                         builder: (context, state) {
                           return state.maybeWhen(
                             orElse: () {
+                              return const Center(
+                                  child: Text("somthing went wrong"));
+                            },
+                            loading: () {
                               return Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10.w),
                                 child: SizedBox(
@@ -169,8 +150,18 @@ class _FilterPageState extends State<FilterPage> {
                             },
                             loaded: (productList) {
                               return productList.isEmpty
-                                  ? const Center(child: Text("No Data"))
+                                  ? Center(
+                                      child: Text(
+                                      "No Data",
+                                      style: TextStyle(
+                                          color: const Color.fromARGB(
+                                              92, 97, 97, 97),
+                                          fontSize: 13.sp,
+                                          fontWeight: FontWeight.bold),
+                                    ))
                                   : GridView.builder(
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
                                       controller: _scrollController,
                                       itemCount: productList.length,
                                       gridDelegate:
@@ -184,13 +175,14 @@ class _FilterPageState extends State<FilterPage> {
                                             from: 3,
                                             child: BlocConsumer<CartBloc,
                                                 CartState>(
+                                              bloc: context.read<CartBloc>(),
                                               listener: (context, state) {
                                                 state.when(
                                                     initial: () {},
                                                     loading: (pid) {
                                                       if (pid ==
                                                           productList[index]
-                                                              .id) {
+                                                              .variantId) {
                                                         CustomSnackbar
                                                             .loading();
                                                       }
@@ -198,7 +190,7 @@ class _FilterPageState extends State<FilterPage> {
                                                     success: (msg, pid) {
                                                       if (pid ==
                                                           productList[index]
-                                                              .id) {
+                                                              .variantId) {
                                                         getdata();
                                                         BotToast.showText(
                                                             text: msg);
@@ -245,12 +237,14 @@ class _FilterPageState extends State<FilterPage> {
                                                         ));
                                                   },
                                                   addtocartTap: () {
+                                                    Logger().i(
+                                                        "product id ${productList[index].variantId}");
                                                     context.read<CartBloc>().add(
                                                         CartEvent.addToCart(
                                                             productid:
                                                                 productList[
                                                                         index]
-                                                                    .id
+                                                                    .variantId
                                                                     .toString()));
                                                   },
                                                 );
@@ -267,6 +261,7 @@ class _FilterPageState extends State<FilterPage> {
               ),
             ),
             BlocConsumer<CartDetailsBloc, CartDetailsState>(
+              bloc: context.read<CartDetailsBloc>(),
               listener: (context, state) {},
               builder: (context, state) {
                 return state.maybeWhen(orElse: () {

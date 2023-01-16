@@ -13,12 +13,20 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(_Loading(productId: event.productid));
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       var result = await CartRepo.addToCart(event.productid);
-      if (result.data['guest'] != null) {
-        prefs.setString('guest_id', result.data['guest'].toString());
-      }
-
-      emit(_Success(
-          message: result.data['message'], productId: event.productid));
+      result.when(
+        success: (data) {
+          if (data['status'] == 200) {
+            prefs.setString('guest_id', data['guest'].toString());
+            emit(
+                _Success(message: data['message'], productId: event.productid));
+          } else {
+            emit(_Failure(message: data['message']));
+          }
+        },
+        failure: (error) {
+          emit(_Failure(message: error));
+        },
+      );
     });
   }
 }

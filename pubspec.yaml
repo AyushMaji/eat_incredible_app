@@ -38,10 +38,14 @@ dependencies:
   cart_stepper: ^3.0.2
   cherry_toast: ^1.0.8
   country_calling_code_picker: ^2.0.1
+  crypto: ^3.0.2
   cupertino_icons: ^1.0.2
   dio: ^4.0.6
+  dropdown_button2: ^1.8.9
+  dropdown_search: ^5.0.3
   equatable: ^2.0.5
   fading_images_slider: ^0.0.4
+  find_dropdown: ^1.0.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
@@ -63,24 +67,23 @@ dependencies:
   json_serializable: ^6.3.2
   logger: ^1.1.0
   lottie: ^1.4.2
+  paginated_search_bar: ^1.1.2
   pdf: ^3.8.3
   pin_code_fields: ^7.4.0
   printing: ^5.9.3
   provider: ^6.0.3
   pull_to_refresh: ^2.0.0
+  razorpay_flutter: null
   readmore: ^2.2.0
+  rive: ^0.10.0
   scrollable_positioned_list: ^0.3.5
+  share_plus: ^6.3.0
   shared_preferences: ^2.0.15
   shimmer: ^2.0.0
   swipeable_page_route: ^0.2.6
   timeline_tile: ^2.0.0
+  url_launcher: ^6.1.7
   video_player: ^2.4.7
-  dropdown_button2: ^1.8.9
-  find_dropdown: ^1.0.0
-  dropdown_search: ^5.0.3
-  paginated_search_bar: ^1.1.2
-  razorpay_flutter:
-  crypto: ^3.0.2
   
 
 dev_dependencies:

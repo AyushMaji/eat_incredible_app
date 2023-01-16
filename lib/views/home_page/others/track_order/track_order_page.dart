@@ -118,6 +118,7 @@ class TrackOrderPage extends StatelessWidget {
                               width: 70.w,
                               imageUrl:
                                   "https://img.freepik.com/free-photo/overhead-view-fresh-broccoli-brown-basket-white-table_140725-142300.jpg?w=1060&t=st=1663250304~exp=1663250904~hmac=1e58ba0b229bf70163d4cad58c295877ac7f30b35f537c832df26b9298ea62be",
+                              fit: BoxFit.cover,
                             ),
                           ),
                           SizedBox(

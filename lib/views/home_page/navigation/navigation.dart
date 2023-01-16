@@ -1,6 +1,8 @@
 import 'package:animations/animations.dart';
-import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
+import 'package:eat_incredible_app/controller/about/about_bloc.dart';
 import 'package:eat_incredible_app/controller/category/category_bloc.dart';
+import 'package:eat_incredible_app/controller/coupon/coupon_bloc.dart';
+import 'package:eat_incredible_app/controller/orderlist/orderlist_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/views/home_page/navigation/acount_page.dart';
@@ -8,6 +10,7 @@ import 'package:eat_incredible_app/views/home_page/navigation/home_page.dart';
 import 'package:eat_incredible_app/views/home_page/navigation/offers_page.dart';
 import 'package:eat_incredible_app/views/home_page/navigation/orders_page.dart';
 import 'package:eat_incredible_app/widgets/appbar/custom_appbar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -23,13 +26,16 @@ class _NavigationState extends State<Navigation> {
   }
 
   void getData() {
+    context.read<OrderlistBloc>().add(const OrderlistEvent.orderList());
     context.read<CategoryBloc>().add(const CategoryEvent.getCategory());
-    context
-        .read<CartDetailsBloc>()
-        .add(const CartDetailsEvent.getCartDetails());
+    // context
+    //     .read<CartDetailsBloc>()
+    //     .add(const CartDetailsEvent.getCartDetails());
     context
         .read<ProductListBloc>()
         .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
+    context.read<AboutBloc>().add(const AboutEvent.aboutUs());
+    context.read<CouponBloc>().add(const CouponEvent.getCouponList());
   }
 
   int pageIndex = 0;
@@ -94,7 +100,10 @@ class _NavigationState extends State<Navigation> {
                     ),
                     actions: [
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              // ignore: deprecated_member_use
+                              launch('https://wa.me/9433990099');
+                            },
                             child: const Text(
                               "Need Help?",
                               style: TextStyle(

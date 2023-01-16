@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eat_incredible_app/controller/login/login_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
@@ -194,33 +192,17 @@ class _SignupPageState extends State<SignupPage> {
             //! Login Button =========================== >
             BlocConsumer<LoginBloc, LoginState>(
               listener: (context, state) {
-                state.when(
-                    initial: () {},
-                    loading: () {},
-                    loaded: (lodedData) {
-                      Get.to(() => VerificationPage(
-                            phone: _phoneController.text,
-                            countryCode: selectedCountryCode,
-                            isNewUser: lodedData.isNewUser,
-                          ));
-                    },
-                    failure: (e) {
-                      Get.snackbar(
-                        'Error',
-                        e,
-                        backgroundColor: const Color.fromARGB(255, 255, 17, 0),
-                        colorText: Colors.white,
-                      );
-                    });
+                state.maybeWhen(
+                  orElse: () {
+                    Get.to(() => VerificationPage(
+                          phone: _phoneController.text,
+                          countryCode: selectedCountryCode,
+                        ));
+                  },
+                );
               },
               builder: (context, state) {
                 return state.maybeWhen(
-                  initial: () {
-                    return Loginbtn(
-                      phoneController: _phoneController,
-                      countryCode: selectedCountryCode,
-                    );
-                  },
                   orElse: () {
                     return Loginbtn(
                       phoneController: _phoneController,
@@ -233,12 +215,6 @@ class _SignupPageState extends State<SignupPage> {
                         child:
                             const Center(child: CircularProgressIndicator()));
                   }),
-                  loaded: (logindata) {
-                    return Loginbtn(
-                      phoneController: _phoneController,
-                      countryCode: selectedCountryCode,
-                    );
-                  },
                 );
               },
             ),
@@ -293,8 +269,6 @@ class Loginbtn extends StatelessWidget {
           backgroundColor: const Color.fromRGBO(226, 10, 19, 1),
         ),
         onPressed: () {
-          log(_phoneController.text);
-          log(countryCode);
           if (_phoneController.text.length != 10) {
             Get.snackbar(
               'Error',

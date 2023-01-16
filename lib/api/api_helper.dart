@@ -10,9 +10,9 @@ class ApiHelper {
 
   setUpOptions() {
     baseOptions = BaseOptions(
-      baseUrl: 'https://eatincredible.previewforclient.com/api/',
-      connectTimeout: 5000,
-      receiveTimeout: 3000,
+      baseUrl: 'https://eatincredible.in/api/',
+      // connectTimeout: 5000,
+      // receiveTimeout: 3000,
     );
     _dio = Dio(baseOptions);
     _dio.interceptors.add(interceptor.Interceptors());

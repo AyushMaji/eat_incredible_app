@@ -15,8 +15,8 @@ class FaqCard extends StatelessWidget {
             title: Text(
               description,
               style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w400,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
                 color: const Color(0xff3C3C3C),
               ),
             ),

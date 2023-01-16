@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bot_toast/bot_toast.dart';
 import 'package:eat_incredible_app/controller/address/addaddress/addaddress_bloc.dart';
 import 'package:eat_incredible_app/controller/address/view_address_list/view_addresslist_bloc.dart';
@@ -9,60 +7,64 @@ import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:logger/logger.dart';
 
-class AddAddressPage extends StatelessWidget {
+class AddAddressPage extends StatefulWidget {
   const AddAddressPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController cityController = TextEditingController();
-    final TextEditingController locationController = TextEditingController();
-    final TextEditingController pincodeController = TextEditingController();
-    final TextEditingController localityController = TextEditingController();
-    final TextEditingController landmarkController = TextEditingController();
-    final TextEditingController addressController = TextEditingController();
-    final TextEditingController administrativeAreaController =
-        TextEditingController();
-    final TextEditingController countryController = TextEditingController();
+  State<AddAddressPage> createState() => _AddAddressPageState();
+}
 
-    Future<Position> determinePosition() async {
-      BotToast.showLoading();
-      bool serviceEnabled;
-      LocationPermission permission;
-      serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        return Future.error('Location services are disabled.');
-      }
-      permission = await Geolocator.checkPermission();
+class _AddAddressPageState extends State<AddAddressPage> {
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController pincodeController = TextEditingController();
+  final TextEditingController localityController = TextEditingController();
+  final TextEditingController landmarkController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+
+  Future<Position> determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          return Future.error('Location permissions are denied');
-        }
+        return Future.error('Location permissions are denied');
       }
-      if (permission == LocationPermission.deniedForever) {
-        return Future.error(
-            'Location permissions are permanently denied, we cannot request permissions.');
-      }
-
-      return await Geolocator.getCurrentPosition();
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    Future<void> getCurrentLocation() async {
-      final Position position = await determinePosition();
-      final List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-      final Placemark place = placemarks[0];
-      localityController.text = " ${place.name}, ${place.street!}";
-      cityController.text = place.locality!;
-      pincodeController.text = place.postalCode!;
-      locationController.text =
-          "${place.subLocality!}, ${place.subAdministrativeArea!}";
-      administrativeAreaController.text = place.administrativeArea!;
-      countryController.text = place.country!;
-      BotToast.closeAllLoading();
-    }
+    return await Geolocator.getCurrentPosition();
+  }
 
+  Future<void> getCurrentLocation() async {
+    BotToast.showLoading();
+    final Position position = await determinePosition();
+    final List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+    final Placemark place = placemarks[0];
+    localityController.text = " ${place.name}, ${place.street!} ";
+    cityController.text = place.locality!;
+    landmarkController.text = place.subLocality!;
+    pincodeController.text = place.postalCode!;
+    locationController.text = place.administrativeArea!;
+    Logger().i(place);
+    BotToast.closeAllLoading();
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: Padding(
           padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 13.h),
@@ -75,6 +77,8 @@ class AddAddressPage extends StatelessWidget {
                     loading: () {},
                     success: () {
                       Get.back();
+                      CustomSnackbar.successSnackbar(
+                          "success", "Address added successfully");
                       context
                           .read<ViewAddresslistBloc>()
                           .add(const ViewAddresslistEvent.getAddressList());
@@ -83,8 +87,7 @@ class AddAddressPage extends StatelessWidget {
                           .add(const UserInfoEvent.getUserInfo());
                     },
                     failure: (error) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(error.toString())));
+                      CustomSnackbar.errorSnackbar("error", error);
                     });
               },
               builder: (context, state) {
@@ -101,8 +104,8 @@ class AddAddressPage extends StatelessWidget {
                             locationController.text.isNotEmpty &&
                             landmarkController.text.isNotEmpty) {
                           addressController.text =
-                              "${localityController.text}, ${landmarkController.text}, ${locationController.text},  ${cityController.text}, ${pincodeController.text}, ${administrativeAreaController.text}, ${countryController.text}";
-                          log(addressController.text);
+                              "${localityController.text}, ${landmarkController.text}, ${cityController.text}, ${pincodeController.text}, ${locationController.text} ";
+
                           context
                               .read<AddaddressBloc>()
                               .add(AddaddressEvent.addAddress(
@@ -120,8 +123,7 @@ class AddAddressPage extends StatelessWidget {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        // ignore: deprecated_member_use
-                        primary: const Color(0xffE20A13),
+                        backgroundColor: const Color(0xffE20A13),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.sp),
                         ),

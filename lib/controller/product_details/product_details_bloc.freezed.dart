@@ -19,19 +19,19 @@ mixin _$ProductDetailsEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String productId) getproductdetails,
+    required TResult Function(String productId, String vid) getproductdetails,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String productId)? getproductdetails,
+    TResult Function(String productId, String vid)? getproductdetails,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String productId)? getproductdetails,
+    TResult Function(String productId, String vid)? getproductdetails,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -114,7 +114,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String productId) getproductdetails,
+    required TResult Function(String productId, String vid) getproductdetails,
   }) {
     return started();
   }
@@ -123,7 +123,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String productId)? getproductdetails,
+    TResult Function(String productId, String vid)? getproductdetails,
   }) {
     return started?.call();
   }
@@ -132,7 +132,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String productId)? getproductdetails,
+    TResult Function(String productId, String vid)? getproductdetails,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -182,7 +182,7 @@ abstract class _$$_GetProductDetailsCopyWith<$Res> {
   factory _$$_GetProductDetailsCopyWith(_$_GetProductDetails value,
           $Res Function(_$_GetProductDetails) then) =
       __$$_GetProductDetailsCopyWithImpl<$Res>;
-  $Res call({String productId});
+  $Res call({String productId, String vid});
 }
 
 /// @nodoc
@@ -199,11 +199,16 @@ class __$$_GetProductDetailsCopyWithImpl<$Res>
   @override
   $Res call({
     Object? productId = freezed,
+    Object? vid = freezed,
   }) {
     return _then(_$_GetProductDetails(
-      productId: productId == freezed
+      productId == freezed
           ? _value.productId
           : productId // ignore: cast_nullable_to_non_nullable
+              as String,
+      vid == freezed
+          ? _value.vid
+          : vid // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -212,14 +217,16 @@ class __$$_GetProductDetailsCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_GetProductDetails implements _GetProductDetails {
-  const _$_GetProductDetails({required this.productId});
+  const _$_GetProductDetails(this.productId, this.vid);
 
   @override
   final String productId;
+  @override
+  final String vid;
 
   @override
   String toString() {
-    return 'ProductDetailsEvent.getproductdetails(productId: $productId)';
+    return 'ProductDetailsEvent.getproductdetails(productId: $productId, vid: $vid)';
   }
 
   @override
@@ -227,12 +234,15 @@ class _$_GetProductDetails implements _GetProductDetails {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_GetProductDetails &&
-            const DeepCollectionEquality().equals(other.productId, productId));
+            const DeepCollectionEquality().equals(other.productId, productId) &&
+            const DeepCollectionEquality().equals(other.vid, vid));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(productId));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(productId),
+      const DeepCollectionEquality().hash(vid));
 
   @JsonKey(ignore: true)
   @override
@@ -244,29 +254,29 @@ class _$_GetProductDetails implements _GetProductDetails {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String productId) getproductdetails,
+    required TResult Function(String productId, String vid) getproductdetails,
   }) {
-    return getproductdetails(productId);
+    return getproductdetails(productId, vid);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String productId)? getproductdetails,
+    TResult Function(String productId, String vid)? getproductdetails,
   }) {
-    return getproductdetails?.call(productId);
+    return getproductdetails?.call(productId, vid);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String productId)? getproductdetails,
+    TResult Function(String productId, String vid)? getproductdetails,
     required TResult orElse(),
   }) {
     if (getproductdetails != null) {
-      return getproductdetails(productId);
+      return getproductdetails(productId, vid);
     }
     return orElse();
   }
@@ -304,10 +314,11 @@ class _$_GetProductDetails implements _GetProductDetails {
 }
 
 abstract class _GetProductDetails implements ProductDetailsEvent {
-  const factory _GetProductDetails({required final String productId}) =
+  const factory _GetProductDetails(final String productId, final String vid) =
       _$_GetProductDetails;
 
   String get productId;
+  String get vid;
   @JsonKey(ignore: true)
   _$$_GetProductDetailsCopyWith<_$_GetProductDetails> get copyWith =>
       throw _privateConstructorUsedError;

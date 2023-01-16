@@ -344,7 +344,7 @@ mixin _$InsernameState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() loaded,
+    required TResult Function(String ms, String code) loaded,
     required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
@@ -352,7 +352,7 @@ mixin _$InsernameState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? loaded,
+    TResult Function(String ms, String code)? loaded,
     TResult Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -360,7 +360,7 @@ mixin _$InsernameState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? loaded,
+    TResult Function(String ms, String code)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
@@ -450,7 +450,7 @@ class _$_Initial implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() loaded,
+    required TResult Function(String ms, String code) loaded,
     required TResult Function(String message) error,
   }) {
     return initial();
@@ -461,7 +461,7 @@ class _$_Initial implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? loaded,
+    TResult Function(String ms, String code)? loaded,
     TResult Function(String message)? error,
   }) {
     return initial?.call();
@@ -472,7 +472,7 @@ class _$_Initial implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? loaded,
+    TResult Function(String ms, String code)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -565,7 +565,7 @@ class _$_Loading implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() loaded,
+    required TResult Function(String ms, String code) loaded,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -576,7 +576,7 @@ class _$_Loading implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? loaded,
+    TResult Function(String ms, String code)? loaded,
     TResult Function(String message)? error,
   }) {
     return loading?.call();
@@ -587,7 +587,7 @@ class _$_Loading implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? loaded,
+    TResult Function(String ms, String code)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -643,6 +643,7 @@ abstract class _Loading implements InsernameState {
 abstract class _$$_LoadedCopyWith<$Res> {
   factory _$$_LoadedCopyWith(_$_Loaded value, $Res Function(_$_Loaded) then) =
       __$$_LoadedCopyWithImpl<$Res>;
+  $Res call({String ms, String code});
 }
 
 /// @nodoc
@@ -653,36 +654,69 @@ class __$$_LoadedCopyWithImpl<$Res> extends _$InsernameStateCopyWithImpl<$Res>
 
   @override
   _$_Loaded get _value => super._value as _$_Loaded;
+
+  @override
+  $Res call({
+    Object? ms = freezed,
+    Object? code = freezed,
+  }) {
+    return _then(_$_Loaded(
+      ms == freezed
+          ? _value.ms
+          : ms // ignore: cast_nullable_to_non_nullable
+              as String,
+      code == freezed
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$_Loaded implements _Loaded {
-  const _$_Loaded();
+  const _$_Loaded(this.ms, this.code);
+
+  @override
+  final String ms;
+  @override
+  final String code;
 
   @override
   String toString() {
-    return 'InsernameState.loaded()';
+    return 'InsernameState.loaded(ms: $ms, code: $code)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Loaded);
+        (other.runtimeType == runtimeType &&
+            other is _$_Loaded &&
+            const DeepCollectionEquality().equals(other.ms, ms) &&
+            const DeepCollectionEquality().equals(other.code, code));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(ms),
+      const DeepCollectionEquality().hash(code));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_LoadedCopyWith<_$_Loaded> get copyWith =>
+      __$$_LoadedCopyWithImpl<_$_Loaded>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() loaded,
+    required TResult Function(String ms, String code) loaded,
     required TResult Function(String message) error,
   }) {
-    return loaded();
+    return loaded(ms, code);
   }
 
   @override
@@ -690,10 +724,10 @@ class _$_Loaded implements _Loaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? loaded,
+    TResult Function(String ms, String code)? loaded,
     TResult Function(String message)? error,
   }) {
-    return loaded?.call();
+    return loaded?.call(ms, code);
   }
 
   @override
@@ -701,12 +735,12 @@ class _$_Loaded implements _Loaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? loaded,
+    TResult Function(String ms, String code)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded();
+      return loaded(ms, code);
     }
     return orElse();
   }
@@ -750,7 +784,13 @@ class _$_Loaded implements _Loaded {
 }
 
 abstract class _Loaded implements InsernameState {
-  const factory _Loaded() = _$_Loaded;
+  const factory _Loaded(final String ms, final String code) = _$_Loaded;
+
+  String get ms;
+  String get code;
+  @JsonKey(ignore: true)
+  _$$_LoadedCopyWith<_$_Loaded> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -817,7 +857,7 @@ class _$_Error implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() loaded,
+    required TResult Function(String ms, String code) loaded,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -828,7 +868,7 @@ class _$_Error implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? loaded,
+    TResult Function(String ms, String code)? loaded,
     TResult Function(String message)? error,
   }) {
     return error?.call(message);
@@ -839,7 +879,7 @@ class _$_Error implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? loaded,
+    TResult Function(String ms, String code)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {

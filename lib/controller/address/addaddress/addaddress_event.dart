@@ -12,4 +12,15 @@ class AddaddressEvent with _$AddaddressEvent {
     required String locality,
     required String location,
   }) = _AddAddress;
+
+  const factory AddaddressEvent.editAddress({
+    required String addressId,
+    required String address,
+    required String city,
+    required String state,
+    required String pincode,
+    required String landmark,
+    required String locality,
+    required String location,
+  }) = _EditAddress;
 }

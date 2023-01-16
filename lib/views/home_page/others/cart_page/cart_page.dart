@@ -12,7 +12,6 @@ import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/others/coupon_code/coupon_code.dart';
 import 'package:eat_incredible_app/views/home_page/others/location_search/location_search.dart';
-import 'package:eat_incredible_app/views/home_page/others/order_confirm/order_confirm.dart';
 import 'package:eat_incredible_app/views/home_page/others/product_details/product_details.dart';
 import 'package:eat_incredible_app/views/signup_page/signup_page_phone.dart';
 import 'package:eat_incredible_app/widgets/addtocart/cart_product.dart';
@@ -49,13 +48,14 @@ class _CartPageState extends State<CartPage> {
   void initState() {
     getData();
     checkGuest();
-    razorpay = new Razorpay();
+    razorpay = Razorpay();
     razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlerPaymentSuccess);
     razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlerErrorFailure);
     razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handlerExternalWallet);
     super.initState();
   }
-   @override
+
+  @override
   void dispose() {
     super.dispose();
     razorpay.clear();
@@ -69,21 +69,21 @@ class _CartPageState extends State<CartPage> {
         .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
   }
 
-  //* create order ####################################################################################################### 
+  //* create order #######################################################################################################
   void createOrder() async {
-    String username = 'rzp_live_vqdCt0dXhP4PHg';// razorpay pay key
-    String password = "NgDLPyiDRPuQpcXy1E3GKTDv";// razoepay secret key
+    String username = 'rzp_live_vqdCt0dXhP4PHg'; // razorpay pay key
+    String password = "NgDLPyiDRPuQpcXy1E3GKTDv"; // razoepay secret key
     String basicAuth =
         'Basic ${base64Encode(utf8.encode('$username:$password'))}';
 
     Map<String, dynamic> body = {
-      "amount": 1 * 100, 
+      "amount": 1 * 100,
       "currency": "INR",
       "receipt": "rcptid_11"
     };
     var res = await http.post(
-      Uri.https(
-          "api.razorpay.com", "v1/orders"), //https://api.razorpay.com/v1/orders // Api provided by Razorpay Official 💙
+      Uri.https("api.razorpay.com",
+          "v1/orders"), //https://api.razorpay.com/v1/orders // Api provided by Razorpay Official 💙
       headers: <String, String>{
         "Content-Type": "application/json",
         'authorization': basicAuth,
@@ -96,12 +96,10 @@ class _CartPageState extends State<CartPage> {
     }
     print(res.body);
   }
-  //*####################################################################################################### 
-
-
+  //*#######################################################################################################
 
   //!=======================================================================================================
-   void openCheckout(String orderId) async {
+  void openCheckout(String orderId) async {
     var options = {
       'key': 'rzp_live_vqdCt0dXhP4PHg',
       "amount": 1 * 100,
@@ -119,41 +117,41 @@ class _CartPageState extends State<CartPage> {
       debugPrint('Error: e');
     }
   }
+
   //!========================================= Handeling Payments Events ==============================================================
   handlerPaymentSuccess(PaymentSuccessResponse response) {
     final key = utf8.encode('NgDLPyiDRPuQpcXy1E3GKTDv');
     final bytes = utf8.encode('${response.orderId}|${response.paymentId}');
     final hmacSha256 = Hmac(sha256, key);
-    final  generatedSignature = hmacSha256.convert(bytes);
+    final generatedSignature = hmacSha256.convert(bytes);
     if (generatedSignature.toString() == response.signature) {
       log("Payment was successful!");
       //Handle what to do after a successful payment.
       showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Success : payment successful"),
-          // content: const Text("Are you sure you wish to delete this item?"),
-          actions: <Widget>[
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                  // PlaceOrderPrepaid();
-                },
-                child: Text("OK"))
-            // ),
-          ],
-        );
-      },
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Success : payment successful"),
+            // content: const Text("Are you sure you wish to delete this item?"),
+            actions: <Widget>[
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                    // PlaceOrderPrepaid();
+                  },
+                  child: const Text("OK"))
+              // ),
+            ],
+          );
+        },
+      );
     } else {
       log("The payment was unauthentic!");
     }
-    
-
   }
+
   handlerErrorFailure(PaymentFailureResponse response) {
-     showDialog(
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -165,14 +163,14 @@ class _CartPageState extends State<CartPage> {
                   Navigator.of(context).pop(true);
                   // PlaceOrderPrepaid();
                 },
-                child: Text("OK"))
+                child: const Text("OK"))
             // ),
           ],
         );
       },
     );
-
   }
+
   handlerExternalWallet(ExternalWalletResponse response) {
     showDialog(
       context: context,
@@ -192,9 +190,7 @@ class _CartPageState extends State<CartPage> {
         );
       },
     );
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -746,8 +742,8 @@ class _CartPageState extends State<CartPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                           createOrder();
-                           // Get.offAll(() => const OrderConfirmPage());
+                            createOrder();
+                            // Get.offAll(() => const OrderConfirmPage());
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff02A008),

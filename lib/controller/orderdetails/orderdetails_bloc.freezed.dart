@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
-part of 'up_verrify_data_bloc.dart';
+part of 'orderdetails_bloc.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,68 +15,62 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$UpVerrifyDataEvent {
+mixin _$OrderdetailsEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String email) verifyUserEmail,
-    required TResult Function(String phone) verifyUserPhone,
+    required TResult Function(String orderId) orderDetails,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String email)? verifyUserEmail,
-    TResult Function(String phone)? verifyUserPhone,
+    TResult Function(String orderId)? orderDetails,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String email)? verifyUserEmail,
-    TResult Function(String phone)? verifyUserPhone,
+    TResult Function(String orderId)? orderDetails,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
-    required TResult Function(_VerifyUserEmail value) verifyUserEmail,
-    required TResult Function(_VerifyUserPhone value) verifyUserPhone,
+    required TResult Function(_OrderDetails value) orderDetails,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Started value)? started,
-    TResult Function(_VerifyUserEmail value)? verifyUserEmail,
-    TResult Function(_VerifyUserPhone value)? verifyUserPhone,
+    TResult Function(_OrderDetails value)? orderDetails,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
-    TResult Function(_VerifyUserEmail value)? verifyUserEmail,
-    TResult Function(_VerifyUserPhone value)? verifyUserPhone,
+    TResult Function(_OrderDetails value)? orderDetails,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UpVerrifyDataEventCopyWith<$Res> {
-  factory $UpVerrifyDataEventCopyWith(
-          UpVerrifyDataEvent value, $Res Function(UpVerrifyDataEvent) then) =
-      _$UpVerrifyDataEventCopyWithImpl<$Res>;
+abstract class $OrderdetailsEventCopyWith<$Res> {
+  factory $OrderdetailsEventCopyWith(
+          OrderdetailsEvent value, $Res Function(OrderdetailsEvent) then) =
+      _$OrderdetailsEventCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$UpVerrifyDataEventCopyWithImpl<$Res>
-    implements $UpVerrifyDataEventCopyWith<$Res> {
-  _$UpVerrifyDataEventCopyWithImpl(this._value, this._then);
+class _$OrderdetailsEventCopyWithImpl<$Res>
+    implements $OrderdetailsEventCopyWith<$Res> {
+  _$OrderdetailsEventCopyWithImpl(this._value, this._then);
 
-  final UpVerrifyDataEvent _value;
+  final OrderdetailsEvent _value;
   // ignore: unused_field
-  final $Res Function(UpVerrifyDataEvent) _then;
+  final $Res Function(OrderdetailsEvent) _then;
 }
 
 /// @nodoc
@@ -88,7 +82,7 @@ abstract class _$$_StartedCopyWith<$Res> {
 
 /// @nodoc
 class __$$_StartedCopyWithImpl<$Res>
-    extends _$UpVerrifyDataEventCopyWithImpl<$Res>
+    extends _$OrderdetailsEventCopyWithImpl<$Res>
     implements _$$_StartedCopyWith<$Res> {
   __$$_StartedCopyWithImpl(_$_Started _value, $Res Function(_$_Started) _then)
       : super(_value, (v) => _then(v as _$_Started));
@@ -104,7 +98,7 @@ class _$_Started implements _Started {
 
   @override
   String toString() {
-    return 'UpVerrifyDataEvent.started()';
+    return 'OrderdetailsEvent.started()';
   }
 
   @override
@@ -120,8 +114,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String email) verifyUserEmail,
-    required TResult Function(String phone) verifyUserPhone,
+    required TResult Function(String orderId) orderDetails,
   }) {
     return started();
   }
@@ -130,8 +123,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String email)? verifyUserEmail,
-    TResult Function(String phone)? verifyUserPhone,
+    TResult Function(String orderId)? orderDetails,
   }) {
     return started?.call();
   }
@@ -140,8 +132,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String email)? verifyUserEmail,
-    TResult Function(String phone)? verifyUserPhone,
+    TResult Function(String orderId)? orderDetails,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -154,8 +145,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
-    required TResult Function(_VerifyUserEmail value) verifyUserEmail,
-    required TResult Function(_VerifyUserPhone value) verifyUserPhone,
+    required TResult Function(_OrderDetails value) orderDetails,
   }) {
     return started(this);
   }
@@ -164,8 +154,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Started value)? started,
-    TResult Function(_VerifyUserEmail value)? verifyUserEmail,
-    TResult Function(_VerifyUserPhone value)? verifyUserPhone,
+    TResult Function(_OrderDetails value)? orderDetails,
   }) {
     return started?.call(this);
   }
@@ -174,8 +163,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
-    TResult Function(_VerifyUserEmail value)? verifyUserEmail,
-    TResult Function(_VerifyUserPhone value)? verifyUserPhone,
+    TResult Function(_OrderDetails value)? orderDetails,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -185,37 +173,37 @@ class _$_Started implements _Started {
   }
 }
 
-abstract class _Started implements UpVerrifyDataEvent {
+abstract class _Started implements OrderdetailsEvent {
   const factory _Started() = _$_Started;
 }
 
 /// @nodoc
-abstract class _$$_VerifyUserEmailCopyWith<$Res> {
-  factory _$$_VerifyUserEmailCopyWith(
-          _$_VerifyUserEmail value, $Res Function(_$_VerifyUserEmail) then) =
-      __$$_VerifyUserEmailCopyWithImpl<$Res>;
-  $Res call({String email});
+abstract class _$$_OrderDetailsCopyWith<$Res> {
+  factory _$$_OrderDetailsCopyWith(
+          _$_OrderDetails value, $Res Function(_$_OrderDetails) then) =
+      __$$_OrderDetailsCopyWithImpl<$Res>;
+  $Res call({String orderId});
 }
 
 /// @nodoc
-class __$$_VerifyUserEmailCopyWithImpl<$Res>
-    extends _$UpVerrifyDataEventCopyWithImpl<$Res>
-    implements _$$_VerifyUserEmailCopyWith<$Res> {
-  __$$_VerifyUserEmailCopyWithImpl(
-      _$_VerifyUserEmail _value, $Res Function(_$_VerifyUserEmail) _then)
-      : super(_value, (v) => _then(v as _$_VerifyUserEmail));
+class __$$_OrderDetailsCopyWithImpl<$Res>
+    extends _$OrderdetailsEventCopyWithImpl<$Res>
+    implements _$$_OrderDetailsCopyWith<$Res> {
+  __$$_OrderDetailsCopyWithImpl(
+      _$_OrderDetails _value, $Res Function(_$_OrderDetails) _then)
+      : super(_value, (v) => _then(v as _$_OrderDetails));
 
   @override
-  _$_VerifyUserEmail get _value => super._value as _$_VerifyUserEmail;
+  _$_OrderDetails get _value => super._value as _$_OrderDetails;
 
   @override
   $Res call({
-    Object? email = freezed,
+    Object? orderId = freezed,
   }) {
-    return _then(_$_VerifyUserEmail(
-      email == freezed
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
+    return _then(_$_OrderDetails(
+      orderId: orderId == freezed
+          ? _value.orderId
+          : orderId // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -223,64 +211,61 @@ class __$$_VerifyUserEmailCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_VerifyUserEmail implements _VerifyUserEmail {
-  const _$_VerifyUserEmail(this.email);
+class _$_OrderDetails implements _OrderDetails {
+  const _$_OrderDetails({required this.orderId});
 
   @override
-  final String email;
+  final String orderId;
 
   @override
   String toString() {
-    return 'UpVerrifyDataEvent.verifyUserEmail(email: $email)';
+    return 'OrderdetailsEvent.orderDetails(orderId: $orderId)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_VerifyUserEmail &&
-            const DeepCollectionEquality().equals(other.email, email));
+            other is _$_OrderDetails &&
+            const DeepCollectionEquality().equals(other.orderId, orderId));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(email));
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(orderId));
 
   @JsonKey(ignore: true)
   @override
-  _$$_VerifyUserEmailCopyWith<_$_VerifyUserEmail> get copyWith =>
-      __$$_VerifyUserEmailCopyWithImpl<_$_VerifyUserEmail>(this, _$identity);
+  _$$_OrderDetailsCopyWith<_$_OrderDetails> get copyWith =>
+      __$$_OrderDetailsCopyWithImpl<_$_OrderDetails>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String email) verifyUserEmail,
-    required TResult Function(String phone) verifyUserPhone,
+    required TResult Function(String orderId) orderDetails,
   }) {
-    return verifyUserEmail(email);
+    return orderDetails(orderId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String email)? verifyUserEmail,
-    TResult Function(String phone)? verifyUserPhone,
+    TResult Function(String orderId)? orderDetails,
   }) {
-    return verifyUserEmail?.call(email);
+    return orderDetails?.call(orderId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String email)? verifyUserEmail,
-    TResult Function(String phone)? verifyUserPhone,
+    TResult Function(String orderId)? orderDetails,
     required TResult orElse(),
   }) {
-    if (verifyUserEmail != null) {
-      return verifyUserEmail(email);
+    if (orderDetails != null) {
+      return orderDetails(orderId);
     }
     return orElse();
   }
@@ -289,193 +274,51 @@ class _$_VerifyUserEmail implements _VerifyUserEmail {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
-    required TResult Function(_VerifyUserEmail value) verifyUserEmail,
-    required TResult Function(_VerifyUserPhone value) verifyUserPhone,
+    required TResult Function(_OrderDetails value) orderDetails,
   }) {
-    return verifyUserEmail(this);
+    return orderDetails(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Started value)? started,
-    TResult Function(_VerifyUserEmail value)? verifyUserEmail,
-    TResult Function(_VerifyUserPhone value)? verifyUserPhone,
+    TResult Function(_OrderDetails value)? orderDetails,
   }) {
-    return verifyUserEmail?.call(this);
+    return orderDetails?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
-    TResult Function(_VerifyUserEmail value)? verifyUserEmail,
-    TResult Function(_VerifyUserPhone value)? verifyUserPhone,
+    TResult Function(_OrderDetails value)? orderDetails,
     required TResult orElse(),
   }) {
-    if (verifyUserEmail != null) {
-      return verifyUserEmail(this);
+    if (orderDetails != null) {
+      return orderDetails(this);
     }
     return orElse();
   }
 }
 
-abstract class _VerifyUserEmail implements UpVerrifyDataEvent {
-  const factory _VerifyUserEmail(final String email) = _$_VerifyUserEmail;
+abstract class _OrderDetails implements OrderdetailsEvent {
+  const factory _OrderDetails({required final String orderId}) =
+      _$_OrderDetails;
 
-  String get email;
+  String get orderId;
   @JsonKey(ignore: true)
-  _$$_VerifyUserEmailCopyWith<_$_VerifyUserEmail> get copyWith =>
+  _$$_OrderDetailsCopyWith<_$_OrderDetails> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_VerifyUserPhoneCopyWith<$Res> {
-  factory _$$_VerifyUserPhoneCopyWith(
-          _$_VerifyUserPhone value, $Res Function(_$_VerifyUserPhone) then) =
-      __$$_VerifyUserPhoneCopyWithImpl<$Res>;
-  $Res call({String phone});
-}
-
-/// @nodoc
-class __$$_VerifyUserPhoneCopyWithImpl<$Res>
-    extends _$UpVerrifyDataEventCopyWithImpl<$Res>
-    implements _$$_VerifyUserPhoneCopyWith<$Res> {
-  __$$_VerifyUserPhoneCopyWithImpl(
-      _$_VerifyUserPhone _value, $Res Function(_$_VerifyUserPhone) _then)
-      : super(_value, (v) => _then(v as _$_VerifyUserPhone));
-
-  @override
-  _$_VerifyUserPhone get _value => super._value as _$_VerifyUserPhone;
-
-  @override
-  $Res call({
-    Object? phone = freezed,
-  }) {
-    return _then(_$_VerifyUserPhone(
-      phone == freezed
-          ? _value.phone
-          : phone // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$_VerifyUserPhone implements _VerifyUserPhone {
-  const _$_VerifyUserPhone(this.phone);
-
-  @override
-  final String phone;
-
-  @override
-  String toString() {
-    return 'UpVerrifyDataEvent.verifyUserPhone(phone: $phone)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_VerifyUserPhone &&
-            const DeepCollectionEquality().equals(other.phone, phone));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(phone));
-
-  @JsonKey(ignore: true)
-  @override
-  _$$_VerifyUserPhoneCopyWith<_$_VerifyUserPhone> get copyWith =>
-      __$$_VerifyUserPhoneCopyWithImpl<_$_VerifyUserPhone>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(String email) verifyUserEmail,
-    required TResult Function(String phone) verifyUserPhone,
-  }) {
-    return verifyUserPhone(phone);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(String email)? verifyUserEmail,
-    TResult Function(String phone)? verifyUserPhone,
-  }) {
-    return verifyUserPhone?.call(phone);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(String email)? verifyUserEmail,
-    TResult Function(String phone)? verifyUserPhone,
-    required TResult orElse(),
-  }) {
-    if (verifyUserPhone != null) {
-      return verifyUserPhone(phone);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_VerifyUserEmail value) verifyUserEmail,
-    required TResult Function(_VerifyUserPhone value) verifyUserPhone,
-  }) {
-    return verifyUserPhone(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_VerifyUserEmail value)? verifyUserEmail,
-    TResult Function(_VerifyUserPhone value)? verifyUserPhone,
-  }) {
-    return verifyUserPhone?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_VerifyUserEmail value)? verifyUserEmail,
-    TResult Function(_VerifyUserPhone value)? verifyUserPhone,
-    required TResult orElse(),
-  }) {
-    if (verifyUserPhone != null) {
-      return verifyUserPhone(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _VerifyUserPhone implements UpVerrifyDataEvent {
-  const factory _VerifyUserPhone(final String phone) = _$_VerifyUserPhone;
-
-  String get phone;
-  @JsonKey(ignore: true)
-  _$$_VerifyUserPhoneCopyWith<_$_VerifyUserPhone> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-mixin _$UpVerrifyDataState {
+mixin _$OrderdetailsState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() success,
+    required TResult Function(List<OrderDetailsModel> orderDetails) success,
     required TResult Function(String message) failure,
   }) =>
       throw _privateConstructorUsedError;
@@ -483,7 +326,7 @@ mixin _$UpVerrifyDataState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(List<OrderDetailsModel> orderDetails)? success,
     TResult Function(String message)? failure,
   }) =>
       throw _privateConstructorUsedError;
@@ -491,7 +334,7 @@ mixin _$UpVerrifyDataState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(List<OrderDetailsModel> orderDetails)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) =>
@@ -524,20 +367,20 @@ mixin _$UpVerrifyDataState {
 }
 
 /// @nodoc
-abstract class $UpVerrifyDataStateCopyWith<$Res> {
-  factory $UpVerrifyDataStateCopyWith(
-          UpVerrifyDataState value, $Res Function(UpVerrifyDataState) then) =
-      _$UpVerrifyDataStateCopyWithImpl<$Res>;
+abstract class $OrderdetailsStateCopyWith<$Res> {
+  factory $OrderdetailsStateCopyWith(
+          OrderdetailsState value, $Res Function(OrderdetailsState) then) =
+      _$OrderdetailsStateCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$UpVerrifyDataStateCopyWithImpl<$Res>
-    implements $UpVerrifyDataStateCopyWith<$Res> {
-  _$UpVerrifyDataStateCopyWithImpl(this._value, this._then);
+class _$OrderdetailsStateCopyWithImpl<$Res>
+    implements $OrderdetailsStateCopyWith<$Res> {
+  _$OrderdetailsStateCopyWithImpl(this._value, this._then);
 
-  final UpVerrifyDataState _value;
+  final OrderdetailsState _value;
   // ignore: unused_field
-  final $Res Function(UpVerrifyDataState) _then;
+  final $Res Function(OrderdetailsState) _then;
 }
 
 /// @nodoc
@@ -549,7 +392,7 @@ abstract class _$$_InitialCopyWith<$Res> {
 
 /// @nodoc
 class __$$_InitialCopyWithImpl<$Res>
-    extends _$UpVerrifyDataStateCopyWithImpl<$Res>
+    extends _$OrderdetailsStateCopyWithImpl<$Res>
     implements _$$_InitialCopyWith<$Res> {
   __$$_InitialCopyWithImpl(_$_Initial _value, $Res Function(_$_Initial) _then)
       : super(_value, (v) => _then(v as _$_Initial));
@@ -565,7 +408,7 @@ class _$_Initial implements _Initial {
 
   @override
   String toString() {
-    return 'UpVerrifyDataState.initial()';
+    return 'OrderdetailsState.initial()';
   }
 
   @override
@@ -582,7 +425,7 @@ class _$_Initial implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() success,
+    required TResult Function(List<OrderDetailsModel> orderDetails) success,
     required TResult Function(String message) failure,
   }) {
     return initial();
@@ -593,7 +436,7 @@ class _$_Initial implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(List<OrderDetailsModel> orderDetails)? success,
     TResult Function(String message)? failure,
   }) {
     return initial?.call();
@@ -604,7 +447,7 @@ class _$_Initial implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(List<OrderDetailsModel> orderDetails)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) {
@@ -652,7 +495,7 @@ class _$_Initial implements _Initial {
   }
 }
 
-abstract class _Initial implements UpVerrifyDataState {
+abstract class _Initial implements OrderdetailsState {
   const factory _Initial() = _$_Initial;
 }
 
@@ -665,7 +508,7 @@ abstract class _$$_LoadingCopyWith<$Res> {
 
 /// @nodoc
 class __$$_LoadingCopyWithImpl<$Res>
-    extends _$UpVerrifyDataStateCopyWithImpl<$Res>
+    extends _$OrderdetailsStateCopyWithImpl<$Res>
     implements _$$_LoadingCopyWith<$Res> {
   __$$_LoadingCopyWithImpl(_$_Loading _value, $Res Function(_$_Loading) _then)
       : super(_value, (v) => _then(v as _$_Loading));
@@ -681,7 +524,7 @@ class _$_Loading implements _Loading {
 
   @override
   String toString() {
-    return 'UpVerrifyDataState.loading()';
+    return 'OrderdetailsState.loading()';
   }
 
   @override
@@ -698,7 +541,7 @@ class _$_Loading implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() success,
+    required TResult Function(List<OrderDetailsModel> orderDetails) success,
     required TResult Function(String message) failure,
   }) {
     return loading();
@@ -709,7 +552,7 @@ class _$_Loading implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(List<OrderDetailsModel> orderDetails)? success,
     TResult Function(String message)? failure,
   }) {
     return loading?.call();
@@ -720,7 +563,7 @@ class _$_Loading implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(List<OrderDetailsModel> orderDetails)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) {
@@ -768,7 +611,7 @@ class _$_Loading implements _Loading {
   }
 }
 
-abstract class _Loading implements UpVerrifyDataState {
+abstract class _Loading implements OrderdetailsState {
   const factory _Loading() = _$_Loading;
 }
 
@@ -777,47 +620,77 @@ abstract class _$$_SuccessCopyWith<$Res> {
   factory _$$_SuccessCopyWith(
           _$_Success value, $Res Function(_$_Success) then) =
       __$$_SuccessCopyWithImpl<$Res>;
+  $Res call({List<OrderDetailsModel> orderDetails});
 }
 
 /// @nodoc
 class __$$_SuccessCopyWithImpl<$Res>
-    extends _$UpVerrifyDataStateCopyWithImpl<$Res>
+    extends _$OrderdetailsStateCopyWithImpl<$Res>
     implements _$$_SuccessCopyWith<$Res> {
   __$$_SuccessCopyWithImpl(_$_Success _value, $Res Function(_$_Success) _then)
       : super(_value, (v) => _then(v as _$_Success));
 
   @override
   _$_Success get _value => super._value as _$_Success;
+
+  @override
+  $Res call({
+    Object? orderDetails = freezed,
+  }) {
+    return _then(_$_Success(
+      orderDetails: orderDetails == freezed
+          ? _value._orderDetails
+          : orderDetails // ignore: cast_nullable_to_non_nullable
+              as List<OrderDetailsModel>,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$_Success implements _Success {
-  const _$_Success();
+  const _$_Success({required final List<OrderDetailsModel> orderDetails})
+      : _orderDetails = orderDetails;
+
+  final List<OrderDetailsModel> _orderDetails;
+  @override
+  List<OrderDetailsModel> get orderDetails {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_orderDetails);
+  }
 
   @override
   String toString() {
-    return 'UpVerrifyDataState.success()';
+    return 'OrderdetailsState.success(orderDetails: $orderDetails)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Success);
+        (other.runtimeType == runtimeType &&
+            other is _$_Success &&
+            const DeepCollectionEquality()
+                .equals(other._orderDetails, _orderDetails));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_orderDetails));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_SuccessCopyWith<_$_Success> get copyWith =>
+      __$$_SuccessCopyWithImpl<_$_Success>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() success,
+    required TResult Function(List<OrderDetailsModel> orderDetails) success,
     required TResult Function(String message) failure,
   }) {
-    return success();
+    return success(orderDetails);
   }
 
   @override
@@ -825,10 +698,10 @@ class _$_Success implements _Success {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(List<OrderDetailsModel> orderDetails)? success,
     TResult Function(String message)? failure,
   }) {
-    return success?.call();
+    return success?.call(orderDetails);
   }
 
   @override
@@ -836,12 +709,12 @@ class _$_Success implements _Success {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(List<OrderDetailsModel> orderDetails)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success();
+      return success(orderDetails);
     }
     return orElse();
   }
@@ -884,8 +757,14 @@ class _$_Success implements _Success {
   }
 }
 
-abstract class _Success implements UpVerrifyDataState {
-  const factory _Success() = _$_Success;
+abstract class _Success implements OrderdetailsState {
+  const factory _Success(
+      {required final List<OrderDetailsModel> orderDetails}) = _$_Success;
+
+  List<OrderDetailsModel> get orderDetails;
+  @JsonKey(ignore: true)
+  _$$_SuccessCopyWith<_$_Success> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -898,7 +777,7 @@ abstract class _$$_FailureCopyWith<$Res> {
 
 /// @nodoc
 class __$$_FailureCopyWithImpl<$Res>
-    extends _$UpVerrifyDataStateCopyWithImpl<$Res>
+    extends _$OrderdetailsStateCopyWithImpl<$Res>
     implements _$$_FailureCopyWith<$Res> {
   __$$_FailureCopyWithImpl(_$_Failure _value, $Res Function(_$_Failure) _then)
       : super(_value, (v) => _then(v as _$_Failure));
@@ -929,7 +808,7 @@ class _$_Failure implements _Failure {
 
   @override
   String toString() {
-    return 'UpVerrifyDataState.failure(message: $message)';
+    return 'OrderdetailsState.failure(message: $message)';
   }
 
   @override
@@ -954,7 +833,7 @@ class _$_Failure implements _Failure {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() success,
+    required TResult Function(List<OrderDetailsModel> orderDetails) success,
     required TResult Function(String message) failure,
   }) {
     return failure(message);
@@ -965,7 +844,7 @@ class _$_Failure implements _Failure {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(List<OrderDetailsModel> orderDetails)? success,
     TResult Function(String message)? failure,
   }) {
     return failure?.call(message);
@@ -976,7 +855,7 @@ class _$_Failure implements _Failure {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(List<OrderDetailsModel> orderDetails)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) {
@@ -1024,7 +903,7 @@ class _$_Failure implements _Failure {
   }
 }
 
-abstract class _Failure implements UpVerrifyDataState {
+abstract class _Failure implements OrderdetailsState {
   const factory _Failure({required final String message}) = _$_Failure;
 
   String get message;

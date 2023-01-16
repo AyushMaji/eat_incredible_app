@@ -1,11 +1,14 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:eat_incredible_app/repo/login_repo.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
-import 'package:eat_incredible_app/views/home_page/others/account/about_page.dart';
+import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/others/account/account_info_page.dart';
 import 'package:eat_incredible_app/views/home_page/others/account/faqs_page.dart';
 import 'package:eat_incredible_app/views/home_page/others/my_address/my_address_page.dart';
 import 'package:eat_incredible_app/views/signup_page/signup_page_phone.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AcountPage extends StatefulWidget {
   const AcountPage({super.key});
@@ -37,7 +40,7 @@ class _AcountPageState extends State<AcountPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 3.5.w),
+        padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 7.h),
         child: ListView(
           children: [
             Visibility(
@@ -77,36 +80,36 @@ class _AcountPageState extends State<AcountPage> {
                 thickness: 1.5,
               ),
             ),
-            Visibility(
-              visible: isGuest,
-              child: ListTile(
-                title: Text('Payment methods',
-                    style: GoogleFonts.poppins(
-                      fontSize: 13.sp,
-                    )),
-                trailing: Icon(Icons.arrow_forward_ios, size: 15.sp),
-                onTap: () {},
-              ),
-            ),
-            Visibility(
-              visible: isGuest,
-              child: const Divider(
-                thickness: 1.5,
-              ),
-            ),
+            // Visibility(
+            //   visible: isGuest,
+            //   child: ListTile(
+            //     title: Text('Payment methods',
+            //         style: GoogleFonts.poppins(
+            //           fontSize: 13.sp,
+            //         )),
+            //     trailing: Icon(Icons.arrow_forward_ios, size: 15.sp),
+            //     onTap: () {},
+            //   ),
+            // ),
+            // Visibility(
+            //   visible: isGuest,
+            //   child: const Divider(
+            //     thickness: 1.5,
+            //   ),
+            // ),
+            // ListTile(
+            //   title: Text('About',
+            //       style: GoogleFonts.poppins(
+            //         fontSize: 13.sp,
+            //       )),
+            //   trailing: Icon(Icons.arrow_forward_ios, size: 15.sp),
+            //   onTap: () => Get.to(() => const AboutPage()),
+            // ),
+            // const Divider(
+            //   thickness: 1.5,
+            // ),
             ListTile(
               title: Text('About',
-                  style: GoogleFonts.poppins(
-                    fontSize: 13.sp,
-                  )),
-              trailing: Icon(Icons.arrow_forward_ios, size: 15.sp),
-              onTap: () => Get.to(() => const AboutPage()),
-            ),
-            const Divider(
-              thickness: 1.5,
-            ),
-            ListTile(
-              title: Text('FAQs',
                   style: GoogleFonts.poppins(
                     fontSize: 13.sp,
                   )),
@@ -122,33 +125,36 @@ class _AcountPageState extends State<AcountPage> {
                     fontSize: 13.sp,
                   )),
               trailing: Icon(Icons.arrow_forward_ios, size: 15.sp),
-              onTap: () {},
+              onTap: () {
+                // oepn whatsapp chat using url_luncher
+                launch('https://wa.me/9433990099');
+              },
             ),
             const Divider(
               thickness: 1.5,
             ),
-            ListTile(
-              title: Text('Rate The App',
-                  style: GoogleFonts.poppins(
-                    fontSize: 13.sp,
-                  )),
-              trailing: Icon(Icons.arrow_forward_ios, size: 15.sp),
-              onTap: () {},
-            ),
-            const Divider(
-              thickness: 1.5,
-            ),
-            ListTile(
-              title: Text('Share Application.',
-                  style: GoogleFonts.poppins(
-                    fontSize: 13.sp,
-                  )),
-              trailing: Icon(Icons.arrow_forward_ios, size: 15.sp),
-              onTap: () {},
-            ),
-            const Divider(
-              thickness: 1.5,
-            ),
+            // ListTile(
+            //   title: Text('Rate The App',
+            //       style: GoogleFonts.poppins(
+            //         fontSize: 13.sp,
+            //       )),
+            //   trailing: Icon(Icons.arrow_forward_ios, size: 15.sp),
+            //   onTap: () {},
+            // ),
+            // const Divider(
+            //   thickness: 1.5,
+            // ),
+            // ListTile(
+            //   title: Text('Share Application.',
+            //       style: GoogleFonts.poppins(
+            //         fontSize: 13.sp,
+            //       )),
+            //   trailing: Icon(Icons.arrow_forward_ios, size: 15.sp),
+            //   onTap: () {},
+            // ),
+            // const Divider(
+            //   thickness: 1.5,
+            // ),
             Visibility(
               visible: isGuest,
               child: ListTile(
@@ -169,10 +175,16 @@ class _AcountPageState extends State<AcountPage> {
                         ),
                         TextButton(
                           onPressed: () async {
-                            // final SharedPreferences prefs =
-                            //     await SharedPreferences.getInstance();
-                            // final String? phone = prefs.getString('phone');
-                            LoginRepo().logout();
+                            CustomSnackbar.loading();
+                            var result = await LoginRepo().logout();
+                            result.when(success: (value) {
+                              CustomSnackbar.successSnackbar(
+                                  'Logged out', 'Logged out successfully');
+                              Get.offAll(() => const SignupPage());
+                            }, failure: (error) {
+                              CustomSnackbar.errorSnackbar(
+                                  'Error', error.toString());
+                            });
                           },
                           child: const Text('Yes'),
                         ),

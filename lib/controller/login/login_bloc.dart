@@ -16,19 +16,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<_Login>((event, emit) async {
       emit(const _Loading());
       var result = await LoginRepo().login(event.phone, event.countryCode);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
       result.when(
         success: (data) {
-          if (data['status'].toString() == "1") {
-            prefs.setString('isNewUser', data['isNewUser'].toString());
-            emit(_Loaded(logindata: LoginModel.fromJson(data)));
-          } else {
-            emit(_Failure(message: data['message']));
-          }
+          // prefs.setString('isNewUser', data['isNewUser'].toString());
+          emit(_Loaded(logindata: LoginModel.fromJson(data)));
         },
         failure: (error) {
           emit(_Failure(message: NetworkExceptions.getErrorMessage(error)));
-          emit(const _Initial());
         },
       );
     });

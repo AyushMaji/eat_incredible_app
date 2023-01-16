@@ -1,5 +1,4 @@
 import 'package:eat_incredible_app/utils/barrel.dart';
-import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
 
 class OrderCard extends StatelessWidget {
   final String image;
@@ -10,17 +9,16 @@ class OrderCard extends StatelessWidget {
   final String orderQuantity;
   final GestureTapCallback viewDetails;
 
-  final GestureTapCallback trackOrder;
-  const OrderCard(
-      {super.key,
-      required this.image,
-      required this.orderId,
-      required this.orderDate,
-      required this.orderStatus,
-      required this.orderTotal,
-      required this.orderQuantity,
-      required this.viewDetails,
-      required this.trackOrder});
+  const OrderCard({
+    super.key,
+    required this.image,
+    required this.orderId,
+    required this.orderDate,
+    required this.orderStatus,
+    required this.orderTotal,
+    required this.orderQuantity,
+    required this.viewDetails,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +41,6 @@ class OrderCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 9.h),
                 child: SizedBox(
-                  //color: Colors.green,
-                  // padding: EdgeInsets.only(left: 2.w, right: 2.w, top: 1.h),
-                  //  padding: EdgeInsets.all(8),
                   height: 69.5.h,
                   width: double.infinity,
                   child: Row(
@@ -66,10 +61,9 @@ class OrderCard extends StatelessWidget {
                                 width: 1,
                               ),
                             ),
-                            child: CustomPic(
-                              height: 36.h,
-                              imageUrl: image,
-                              width: 36.h,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset(image, height: 50.h),
                             ),
                           ),
                           SizedBox(
@@ -108,7 +102,11 @@ class OrderCard extends StatelessWidget {
                         ),
                         height: 23.4.h,
                         decoration: BoxDecoration(
-                          color: const Color.fromRGBO(211, 104, 5, 0.25),
+                          color: orderStatus == 'Delivered'
+                              ? const Color.fromRGBO(2, 160, 8, 0.25)
+                              : orderStatus == 'Cancelled'
+                                  ? const Color.fromRGBO(160, 2, 2, 0.25)
+                                  : const Color.fromRGBO(211, 104, 5, 0.25),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Padding(
@@ -119,7 +117,12 @@ class OrderCard extends StatelessWidget {
                               Icon(
                                 // icon
                                 Icons.circle,
-                                color: const Color.fromARGB(255, 246, 122, 7),
+                                color: orderStatus == 'Delivered'
+                                    ? const Color.fromRGBO(2, 160, 8, 1)
+                                    : orderStatus == 'Cancelled'
+                                        ? const Color.fromRGBO(226, 10, 19, 1)
+                                        : const Color.fromARGB(
+                                            166, 211, 105, 5),
                                 size: 8.sp,
                               ),
                               SizedBox(
@@ -128,7 +131,12 @@ class OrderCard extends StatelessWidget {
                               Text(
                                 orderStatus,
                                 style: GoogleFonts.poppins(
-                                  color: const Color.fromRGBO(211, 104, 5, 1),
+                                  color: orderStatus == 'Delivered'
+                                      ? const Color.fromRGBO(2, 160, 8, 1)
+                                      : orderStatus == 'Cancelled'
+                                          ? const Color.fromRGBO(226, 10, 19, 1)
+                                          : const Color.fromARGB(
+                                              166, 211, 105, 5),
                                   fontSize: 9.sp,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -158,11 +166,11 @@ class OrderCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '$orderQuantity items',
+                          orderQuantity,
                           style: GoogleFonts.poppins(
-                            color: const Color.fromRGBO(97, 97, 97, 1),
+                            color: const Color.fromARGB(225, 97, 97, 97),
                             fontSize: 12.sp,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                           ),
                           textAlign: TextAlign.left,
                         ),
@@ -206,18 +214,6 @@ class OrderCard extends StatelessWidget {
                                 size: 10.sp,
                               ),
                             ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: trackOrder,
-                          child: Text(
-                            'Track Order',
-                            style: GoogleFonts.poppins(
-                              color: const Color.fromRGBO(226, 10, 19, 1.0),
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.left,
                           ),
                         ),
                       ],

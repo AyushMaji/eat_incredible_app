@@ -1,8 +1,21 @@
+import 'package:eat_incredible_app/controller/about/about_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/widgets/faq_card/faq_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class FaqsPage extends StatelessWidget {
+class FaqsPage extends StatefulWidget {
   const FaqsPage({super.key});
+
+  @override
+  State<FaqsPage> createState() => _FaqsPageState();
+}
+
+class _FaqsPageState extends State<FaqsPage> {
+  @override
+  void initState() {
+    context.read<AboutBloc>().add(const AboutEvent.aboutUs());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +31,7 @@ class FaqsPage extends StatelessWidget {
         ),
         title: Center(
           child: Text(
-            'How can we help?',
+            'About Us',
             style: GoogleFonts.poppins(
               color: const Color.fromRGBO(97, 97, 97, 1),
               fontSize: 13.sp,
@@ -36,40 +49,76 @@ class FaqsPage extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 18.w, bottom: 10.h, top: 2.h),
-              child: Text("help with a recent order",
-                  style: GoogleFonts.poppins(
-                      fontSize: 14.sp, fontWeight: FontWeight.bold)),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 18.w, bottom: 20.h),
-              child: Text("You don't have any orders.",
-                  style: GoogleFonts.poppins(
-                      fontSize: 12.sp, fontWeight: FontWeight.w500)),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 18.w, bottom: 1.h),
-              child: Text("FAQs",
-                  style: GoogleFonts.poppins(
-                      fontSize: 14.sp, fontWeight: FontWeight.bold)),
-            ),
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: 5,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return const FaqCard(
-                    title: "Safe & responsible ordering",
-                    description:
-                        "How do I know my order is safe and responsible?",
-                  );
-                }),
-          ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<AboutBloc>().add(const AboutEvent.aboutUs());
+        },
+        child: BlocConsumer<AboutBloc, AboutState>(
+          bloc: context.read<AboutBloc>(),
+          listener: (context, state) {},
+          builder: (context, state) {
+            return state.maybeWhen(
+              orElse: (() {
+                return const Center(
+                  child: Text('Something went worng'),
+                );
+              }),
+              loaded: ((aboutModel) {
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding:
+                            EdgeInsets.only(left: 18.w, bottom: 10.h, top: 2.h),
+                        child: Text("About Us",
+                            style: GoogleFonts.poppins(
+                                fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 18.w, bottom: 20.h, right: 18.w),
+                        child: Text(
+                          aboutModel.about,
+                          textAlign: TextAlign.justify,
+                          style: GoogleFonts.poppins(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            color: const Color.fromRGBO(97, 97, 97, 1),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 18.w, bottom: 1.h),
+                        child: Text("FAQs",
+                            style: GoogleFonts.poppins(
+                                fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                      ),
+                      FaqCard(
+                          description: "Our Mission",
+                          title: aboutModel.ourMission),
+                      FaqCard(
+                          description: "Our Vision",
+                          title: aboutModel.ourVision),
+                      FaqCard(
+                          description: "why you choose us",
+                          title: aboutModel.whyChooseUs),
+                      FaqCard(
+                          description: "Our Founders",
+                          title: aboutModel.ourFounders)
+                    ],
+                  ),
+                );
+              }),
+              loading: () {
+                return const LinearProgressIndicator(
+                  color: Colors.red,
+                  backgroundColor: Color.fromARGB(60, 244, 67, 54),
+                );
+              },
+            );
+          },
         ),
       ),
     );

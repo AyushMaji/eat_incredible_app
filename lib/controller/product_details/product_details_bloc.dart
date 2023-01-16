@@ -15,8 +15,8 @@ class ProductDetailsBloc
       List<ProductDeatilsModel> productDetails = [];
 
       emit(const _Loading());
-      var result =
-          await ProductDetailsRepo().getProductDetailsData(event.productId);
+      var result = await ProductDetailsRepo()
+          .getProductDetailsData(event.productId, event.vid);
       result.when(
         success: (data) {
           for (var element in data) {

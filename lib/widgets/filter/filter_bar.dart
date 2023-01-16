@@ -74,6 +74,7 @@ class _FilterBarState extends State<FilterBar> {
                                       'https://media.istockphoto.com/photos/food-background-with-assortment-of-fresh-organic-fruits-and-picture-id1203599963?k=20&m=1203599963&s=612x612&w=0&h=XY0PiCcaw1HShjCU9JgywVoY5JQC-lZnZfWqyyREOus=',
                                   height: 38.h,
                                   width: 40.w,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                               Text('All',
@@ -100,9 +101,8 @@ class _FilterBarState extends State<FilterBar> {
                           onTap: () {
                             context.read<ProductListBloc>().add(
                                 ProductListEvent.fetchProductList(
-                                    categoryId: categoryData[index]
-                                        .id
-                                        .toString()));
+                                    categoryId:
+                                        categoryData[index].id.toString()));
                             setState(() {
                               filterIteam = index;
                               widget.onChanged!(
@@ -120,11 +120,13 @@ class _FilterBarState extends State<FilterBar> {
                                   Padding(
                                     padding: EdgeInsets.all(8.0.sp),
                                     child: CustomPic(
-                                        imageUrl: categoryData[index]
-                                            .categoryImg
-                                            .toString(),
-                                        height: 38.h,
-                                        width: 40.w),
+                                      imageUrl: categoryData[index]
+                                          .categoryImg
+                                          .toString(),
+                                      height: 38.h,
+                                      width: 40.w,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                   Text(categoryData[index].name.toString(),
                                       textAlign: TextAlign.center,
