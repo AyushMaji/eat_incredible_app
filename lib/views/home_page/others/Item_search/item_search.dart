@@ -1,12 +1,17 @@
 import 'dart:developer';
+import 'package:bot_toast/bot_toast.dart';
+import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
+import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
 import 'package:eat_incredible_app/controller/search/search_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
+import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/navigation/navigation.dart';
 import 'package:eat_incredible_app/views/home_page/others/Item_search/search_productlist.dart';
 import 'package:eat_incredible_app/views/home_page/others/product_details/product_details.dart';
 import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ItemSearch extends StatefulWidget {
   const ItemSearch({super.key});
@@ -88,36 +93,6 @@ class _ItemSearchState extends State<ItemSearch> {
             ],
           ),
         ),
-        //  AppBar(
-        //   backgroundColor: Colors.white,
-        //   elevation: 0,
-        //   leading: IconButton(
-        //     icon: const Icon(
-        //       Icons.arrow_back_ios,
-        //       color: Colors.black,
-        //     ),
-        //     onPressed: () {
-        //       Get.back();
-        //     },
-        //   ),
-        //   title: Center(
-        //     child: Text("search",
-        //         style: GoogleFonts.poppins(
-        //           fontSize: 11.sp,
-        //           fontWeight: FontWeight.w600,
-        //           color: Colors.black,
-        //         )),
-        //   ),
-        //   actions: [
-        //     IconButton(
-        //       icon: const Icon(
-        //         Icons.filter_list,
-        //         color: Colors.black,
-        //       ),
-        //       onPressed: () {},
-        //     ),
-        //   ],
-        // ),
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -138,37 +113,156 @@ class _ItemSearchState extends State<ItemSearch> {
                           ],
                         ),
                       ),
-                      SizedBox(
-                        height: 165.h,
-                        child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: 4,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(left: 12.w),
-                                child: ProductCard(
-                                  isCart: true,
-                                  imageUrl:
-                                      "https://img.freepik.com/free-photo/indian-chicken-biryani-served-terracotta-bowl-with-yogurt-white-background-selective-focus_466689-72554.jpg?w=996&t=st=1662382774~exp=1662383374~hmac=3195b0404799d307075e5326a2b654503021f07749f8327c762c38418dda67a7",
-                                  title: "title",
-                                  disprice: "200",
-                                  price: "200",
-                                  quantity: "200",
-                                  percentage: '20%',
-                                  addtocartTap: () {},
-                                  productId: '',
-                                  cartId: '',
-                                  ontap: () {
-                                    Get.to(() => const ProductDetails(
-                                          productId: '',
-                                          catId: '',
-                                        ));
-                                  },
-                                ),
-                              );
-                            }),
+                      BlocConsumer<ProductListBloc, ProductListState>(
+                        bloc: context.read<ProductListBloc>(),
+                        listener: (context, state) {
+                          state.when(
+                              initial: () {},
+                              loading: () {},
+                              loaded: (_) {},
+                              failure: (e) {
+                                CustomSnackbar.flutterSnackbarWithAction(
+                                    e, 'Retry', () {
+                                  context.read<ProductListBloc>().add(
+                                      const ProductListEvent.fetchProductList(
+                                          categoryId: "98989"));
+                                }, context);
+                              });
+                        },
+                        builder: (context, state) {
+                          return state.maybeWhen(
+                              orElse: () => SizedBox(
+                                  height: 165.h,
+                                  child: const Text('something went wrong')),
+                              loading: () {
+                                return SizedBox(
+                                  height: 165.h,
+                                  child: Shimmer.fromColors(
+                                    baseColor:
+                                        const Color.fromARGB(44, 222, 220, 220),
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Image.asset(
+                                      "assets/images/itemList.png",
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              },
+                              loaded: (productList) {
+                                return productList.isEmpty
+                                    ? Text(
+                                        "No Product Found",
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 14.sp,
+                                            color: const Color.fromARGB(
+                                                30, 0, 0, 0),
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    : SizedBox(
+                                        height: 165.h,
+                                        child: ListView.builder(
+                                            physics:
+                                                const BouncingScrollPhysics(),
+                                            shrinkWrap: true,
+                                            itemCount: productList.length,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 15.w),
+                                                child: BlocConsumer<CartBloc,
+                                                    CartState>(
+                                                  listener: (context, state) {
+                                                    state.when(
+                                                        initial: () {},
+                                                        loading: (pid) {
+                                                          if (pid ==
+                                                              productList[index]
+                                                                  .variantId) {
+                                                            CustomSnackbar
+                                                                .loading();
+                                                          }
+                                                        },
+                                                        success: (msg, pid) {
+                                                          if (pid ==
+                                                              productList[index]
+                                                                  .variantId) {
+                                                            context
+                                                                .read<
+                                                                    ProductListBloc>()
+                                                                .add(const ProductListEvent
+                                                                        .fetchProductList(
+                                                                    categoryId:
+                                                                        "98989"));
+                                                            BotToast.showText(
+                                                                text: msg);
+                                                          }
+                                                        },
+                                                        failure: (e) {});
+                                                  },
+                                                  builder: (context, state) {
+                                                    return ProductCard(
+                                                      isCart: productList[index]
+                                                          .iscart,
+                                                      imageUrl:
+                                                          productList[index]
+                                                              .thumbnail
+                                                              .toString(),
+                                                      title: productList[index]
+                                                          .productName
+                                                          .toString(),
+                                                      disprice:
+                                                          productList[index]
+                                                              .originalPrice
+                                                              .toString(),
+                                                      price: productList[index]
+                                                          .salePrice
+                                                          .toString(),
+                                                      quantity:
+                                                          productList[index]
+                                                              .weight
+                                                              .toString(),
+                                                      percentage: productList[
+                                                              index]
+                                                          .discountPercentage
+                                                          .toString(),
+                                                      productId:
+                                                          productList[index]
+                                                              .id
+                                                              .toString(),
+                                                      cartId: productList[index]
+                                                          .categoryId
+                                                          .toString(),
+                                                      ontap: () {
+                                                        Get.to(() =>
+                                                            ProductDetails(
+                                                              productId:
+                                                                  productList[
+                                                                          index]
+                                                                      .id
+                                                                      .toString(),
+                                                              catId: productList[
+                                                                      index]
+                                                                  .categoryId
+                                                                  .toString(),
+                                                            ));
+                                                      },
+                                                      addtocartTap: () {
+                                                        context.read<CartBloc>().add(
+                                                            CartEvent.addToCart(
+                                                                productid: productList[
+                                                                        index]
+                                                                    .variantId
+                                                                    .toString()));
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            }),
+                                      );
+                              });
+                        },
                       ),
                       Padding(
                         padding:
@@ -209,50 +303,6 @@ class _ItemSearchState extends State<ItemSearch> {
                                   onSelected: (bool value) {
                                     log("$index iteam$value");
                                   },
-                                ),
-                              );
-                            }),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: 13.w, top: 13.h, bottom: 15.h),
-                        child: Row(
-                          children: [
-                            Text("your may also like",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 165.h,
-                        child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: 4,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(left: 12.w),
-                                child: ProductCard(
-                                  imageUrl:
-                                      "https://img.freepik.com/free-photo/indian-chicken-biryani-served-terracotta-bowl-with-yogurt-white-background-selective-focus_466689-72554.jpg?w=996&t=st=1662382774~exp=1662383374~hmac=3195b0404799d307075e5326a2b654503021f07749f8327c762c38418dda67a7",
-                                  title: "title",
-                                  disprice: "200",
-                                  price: "200",
-                                  quantity: "200",
-                                  ontap: () {
-                                    Get.to(() => const ProductDetails(
-                                          productId: '',
-                                          catId: '',
-                                        ));
-                                  },
-                                  percentage: '20%',
-                                  addtocartTap: () {},
-                                  isCart: true,
-                                  productId: '',
-                                  cartId: '',
                                 ),
                               );
                             }),

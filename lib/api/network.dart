@@ -70,21 +70,50 @@ class Network {
   }
 
   Future<Response> getProductDetails(String productid, String vid) async {
-    return await client.postRequest(UrlRepo.productDetail(productid), data: {
-      "vid": vid,
-    });
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+    String guestId = prefs.getString('guest_id') ?? '';
+    return token != ''
+        ? await client.postRequest(UrlRepo.productDetail(productid), data: {
+            "token": token,
+            "v_id": vid,
+          })
+        : await client.postRequest(UrlRepo.productDetail(productid), data: {
+            "guest_id": guestId,
+            "v_id": vid,
+          });
   }
 
   Future<Response> addToCart(String productid) async {
     return await client.postRequest(UrlRepo.addTocart(productid), data: {});
   }
 
-  Future<Response> getCartDetails() async {
-    return await client.postRequest(UrlRepo.cartDetails, data: {});
+  Future<Response> getCartDetails(String couponCode) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+    String guestId = prefs.getString('guest_id') ?? '';
+    return token != ''
+        ? await client.postRequest(UrlRepo.cartDetails, data: {
+            "token": token,
+            "coupon_code": couponCode,
+          })
+        : await client.postRequest(UrlRepo.cartDetails, data: {
+            "guest_id": guestId,
+            "coupon": couponCode,
+          });
   }
 
   Future<Response> getCartIteam() async {
-    return await client.postRequest(UrlRepo.cartIteam, data: {});
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+    String guestId = prefs.getString('guest_id') ?? '';
+    return token != ''
+        ? await client.postRequest(UrlRepo.cartIteam, data: {
+            "token": token,
+          })
+        : await client.postRequest(UrlRepo.cartIteam, data: {
+            "guest_id": guestId,
+          });
   }
 
   Future<Response> deleteCartIteam(String pid) async {
@@ -101,7 +130,7 @@ class Network {
     return token != ''
         ? await client.postRequest(UrlRepo.updateCart, data: {
             "token": token,
-            "p_id": pid,
+            "cid": pid,
             "quantity": count,
           })
         : await client.postRequest(UrlRepo.updateCart, data: {
@@ -241,6 +270,8 @@ class Network {
 
   // weight list
   Future<Response> weightList(String pid) async {
-    return await client.postRequest(UrlRepo.weightlist);
+    return await client.postRequest(UrlRepo.weightlist, data: {
+      'pid': pid,
+    });
   }
 }

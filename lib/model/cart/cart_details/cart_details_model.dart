@@ -14,47 +14,39 @@ class CartDetailModel {
   CartDetailModel({
     required this.totalItem,
     required this.totalPrice,
-    required this.totalTax,
-    required this.totalPriceIncTax,
-    required this.deliveryDays,
     required this.deliveryCharges,
     required this.applyCopunCode,
-    required this.totalBill,
     required this.couponDiscount,
+    required this.couponCode,
+    required this.totalBill,
   });
 
-  int? totalItem;
-  int? totalPrice;
-  int? totalTax;
-  int? totalPriceIncTax;
-  int? deliveryDays;
-  int? deliveryCharges;
-  int? applyCopunCode;
-  int? totalBill;
-  int? couponDiscount;
+  int totalItem;
+  int totalPrice;
+  int deliveryCharges;
+  bool applyCopunCode;
+  int couponDiscount;
+  String? couponCode;
+  int totalBill;
 
   factory CartDetailModel.fromJson(Map<String, dynamic> json) =>
       CartDetailModel(
         totalItem: json["totalItem"],
         totalPrice: json["totalPrice"],
-        totalTax: json["totalTax"],
-        totalPriceIncTax: json["totalPriceIncTax"],
-        deliveryDays: json["deliveryDays"],
         deliveryCharges: json["deliveryCharges"],
         applyCopunCode: json["applyCopunCode"],
-        totalBill: json["totalBill"],
         couponDiscount: json["couponDiscount"],
+        couponCode: json["couponCode"],
+        totalBill: json["totalBill"],
       );
 
   Map<String, dynamic> toJson() => {
         "totalItem": totalItem,
         "totalPrice": totalPrice,
-        "totalTax": totalTax,
-        "totalPriceIncTax": totalPriceIncTax,
-        "deliveryDays": deliveryDays,
         "deliveryCharges": deliveryCharges,
         "applyCopunCode": applyCopunCode,
-        "totalBill": totalBill,
         "couponDiscount": couponDiscount,
+        "couponCode": couponCode,
+        "totalBill": totalBill,
       };
 }

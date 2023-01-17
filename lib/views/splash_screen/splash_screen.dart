@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/views/home_page/navigation/navigation.dart';
 import 'package:eat_incredible_app/views/signup_page/signup_page_phone.dart';
+import 'package:logger/logger.dart';
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
@@ -39,8 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     final String? guestId = prefs.getString('guest_id');
-    log('token: $token');
-    log('guestId: $guestId');
+    Logger().i("token $token");
+    Logger().i("guestid $guestId");
     if (token != null || guestId != null) {
       Get.off(() => const Navigation());
     } else {

@@ -31,7 +31,6 @@ class UserInfoRepo {
   Future<ApiResult> getAbout() async {
     try {
       var res = await network.getAbout();
-      Logger().i(res.data);
       return ApiResult.success(data: res.data);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));

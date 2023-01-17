@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:crypto/crypto.dart';
+import 'package:eat_incredible_app/controller/address/view_address_list/view_addresslist_bloc.dart';
 import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
 import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
 import 'package:eat_incredible_app/controller/cart/cart_iteam/cart_iteams_bloc.dart';
@@ -10,15 +11,17 @@ import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dar
 import 'package:eat_incredible_app/repo/cart_repo.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/utils/messsenger.dart';
+import 'package:eat_incredible_app/views/home_page/others/add_address/add_address_page.dart';
 import 'package:eat_incredible_app/views/home_page/others/coupon_code/coupon_code.dart';
-import 'package:eat_incredible_app/views/home_page/others/location_search/location_search.dart';
+import 'package:eat_incredible_app/views/home_page/others/edit_address/edit_address_page.dart';
 import 'package:eat_incredible_app/views/home_page/others/product_details/product_details.dart';
 import 'package:eat_incredible_app/views/signup_page/signup_page_phone.dart';
 import 'package:eat_incredible_app/widgets/addtocart/cart_product.dart';
+import 'package:eat_incredible_app/widgets/addtocart/product_notavailable.dart';
 import 'package:eat_incredible_app/widgets/coupon_code/use_coupon.dart';
 import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
@@ -32,9 +35,12 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  String? pincode;
   ProductListBloc productListBloc = ProductListBloc();
   bool isGuest = true;
+  int addressIndex = 0;
   late Razorpay razorpay;
+
   Future<void> checkGuest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('token') != null) {
@@ -42,11 +48,11 @@ class _CartPageState extends State<CartPage> {
         isGuest = false;
       });
     }
+    getData();
   }
 
   @override
   void initState() {
-    getData();
     checkGuest();
     razorpay = Razorpay();
     razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlerPaymentSuccess);
@@ -63,10 +69,15 @@ class _CartPageState extends State<CartPage> {
 
   void getData() {
     BlocProvider.of<CartDetailsBloc>(context)
-        .add(const CartDetailsEvent.getCartDetails());
+        .add(const CartDetailsEvent.getCartDetails(coupon: ''));
     context.read<CartIteamsBloc>().add(const CartIteamsEvent.getCartIteams());
     productListBloc
         .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
+    !isGuest
+        ? context
+            .read<ViewAddresslistBloc>()
+            .add(const ViewAddresslistEvent.getAddressList())
+        : null;
   }
 
   //* create order #######################################################################################################
@@ -195,6 +206,7 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -229,535 +241,866 @@ class _CartPageState extends State<CartPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: BlocConsumer<CartDetailsBloc, CartDetailsState>(
-          listener: (context, state) {},
-          builder: (context, state) {
-            return state.maybeWhen(
-              orElse: (() {
-                return SizedBox(
-                  child: Shimmer.fromColors(
-                    baseColor: const Color.fromARGB(44, 222, 220, 220),
-                    highlightColor: Colors.grey[100]!,
-                    child: Image.asset(
-                      "assets/images/cart_page.png",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                );
-              }),
-              loaded: (cartDetailModel) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 15.h),
-                    Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        child: Container(
-                          height: 40.h,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: const Color.fromRGBO(2, 160, 8, 0.1),
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                              color: const Color(0xff02A008),
-                              width: 1,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          getData();
+          return Future.value();
+        },
+        child: SingleChildScrollView(
+          child: BlocConsumer<CartDetailsBloc, CartDetailsState>(
+            bloc: context.read<CartDetailsBloc>(),
+            listener: (context, state) {},
+            builder: (context, state) {
+              return state.maybeWhen(
+                orElse: () => const SizedBox(),
+                loading: (() {
+                  return const LinearProgressIndicator(
+                    backgroundColor: Color.fromARGB(80, 76, 175, 79),
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                  );
+                }),
+                loaded: (cartDetailModel) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 15.h),
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Container(
+                            height: 40.h,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(2, 160, 8, 0.1),
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                color: const Color(0xff02A008),
+                                width: 1,
+                              ),
                             ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text("Add items to it now",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xff02A008),
-                                    )),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child:
-                                    Text(cartDetailModel.totalItem.toString(),
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w700,
-                                          color: const Color(0xff02A008),
-                                        )),
-                              ),
-                            ],
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text("Add items to it now",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: const Color(0xff02A008),
+                                      )),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child:
+                                      Text(cartDetailModel.totalItem.toString(),
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 10.sp,
+                                            fontWeight: FontWeight.w700,
+                                            color: const Color(0xff02A008),
+                                          )),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 13.h),
-                    // ListTile(
-                    //   title: const Text("Delivery in 1-2 days",
-                    //       style: TextStyle(
-                    //         fontSize: 14,
-                    //         fontWeight: FontWeight.w700,
-                    //         color: Colors.black,
-                    //       )),
-                    //   subtitle: const Text("4 items",
-                    //       style: TextStyle(
-                    //         fontSize: 12,
-                    //         fontWeight: FontWeight.w400,
-                    //         color: Colors.black,
-                    //       )),
-                    //   leading: Icon(
-                    //     Icons.delivery_dining,
-                    //     color: Colors.black,
-                    //     size: 33.sp,
-                    //   ),
-                    // ),
-                    BlocConsumer<CartIteamsBloc, CartIteamsState>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        return state.maybeWhen(
-                          orElse: () {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10.w),
-                              child: SizedBox(
-                                child: Shimmer.fromColors(
-                                  baseColor:
-                                      const Color.fromARGB(44, 222, 220, 220),
-                                  highlightColor: Colors.grey[100]!,
-                                  child: Image.asset(
-                                    "assets/images/addtocart_iteam.png",
-                                    fit: BoxFit.cover,
+                      SizedBox(height: 13.h),
+                      // ListTile(
+                      //   title: const Text("Delivery in 1-2 days",
+                      //       style: TextStyle(
+                      //         fontSize: 14,
+                      //         fontWeight: FontWeight.w700,
+                      //         color: Colors.black,
+                      //       )),
+                      //   subtitle: const Text("4 items",
+                      //       style: TextStyle(
+                      //         fontSize: 12,
+                      //         fontWeight: FontWeight.w400,
+                      //         color: Colors.black,
+                      //       )),
+                      //   leading: Icon(
+                      //     Icons.delivery_dining,
+                      //     color: Colors.black,
+                      //     size: 33.sp,
+                      //   ),
+                      // ),
+                      BlocConsumer<CartIteamsBloc, CartIteamsState>(
+                        bloc: context.read<CartIteamsBloc>(),
+                        listener: (context, state) {},
+                        builder: (context, state) {
+                          return state.maybeWhen(
+                            orElse: () {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                child: SizedBox(
+                                  child: Shimmer.fromColors(
+                                    baseColor:
+                                        const Color.fromARGB(44, 222, 220, 220),
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Image.asset(
+                                      "assets/images/addtocart_iteam.png",
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                          loaded: (cartIteamsList) {
-                            return cartIteamsList.isEmpty
-                                ? Text("No items in cart",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: const Color(0xff616161),
-                                    ))
-                                : ListView.builder(
-                                    physics: const BouncingScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: cartIteamsList.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 2.2.h),
-                                        child: Dismissible(
-                                          onDismissed: ((direction) {
-                                            CartRepo.deleteCartIteam(
+                              );
+                            },
+                            loaded: (cartIteamsList) {
+                              return cartIteamsList.isEmpty
+                                  ? Text("No items in cart",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: const Color(0xff616161),
+                                      ))
+                                  : ListView.builder(
+                                      physics: const BouncingScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: cartIteamsList.length,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2.2.h),
+                                          child: Dismissible(
+                                            onDismissed: ((direction) {
+                                              CartRepo.deleteCartIteam(
+                                                      cartIteamsList[index]
+                                                          .id
+                                                          .toString())
+                                                  .then((value) => {
+                                                        BotToast.showText(
+                                                            text:
+                                                                'removed from cart',
+                                                            textStyle: GoogleFonts
+                                                                .poppins(
+                                                                    fontSize:
+                                                                        12.5.sp,
+                                                                    color: Colors
+                                                                        .white),
+                                                            duration:
+                                                                const Duration(
+                                                                    seconds:
+                                                                        1)),
+                                                        getData()
+                                                      });
+                                            }),
+                                            key: UniqueKey(),
+                                            background: Container(
+                                              color: Colors.red,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: const [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 26.0),
+                                                    child: Icon(
+                                                      Icons.delete,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 8.w,
+                                              ),
+                                              child: CartProduct(
+                                                imageUrl: cartIteamsList[index]
+                                                    .thumbnail
+                                                    .toString(),
+                                                title: cartIteamsList[index]
+                                                    .productName
+                                                    .toString(),
+                                                price: cartIteamsList[index]
+                                                    .originalPrice
+                                                    .toString(),
+                                                disprice: cartIteamsList[index]
+                                                    .salePrice
+                                                    .toString(),
+                                                quantity: cartIteamsList[index]
+                                                    .weight
+                                                    .toString(),
+                                                iteam: int.parse(
                                                     cartIteamsList[index]
-                                                        .productId
-                                                        .toString())
-                                                .then((value) => {getData()});
-                                          }),
-                                          key: UniqueKey(),
-                                          background: Container(
-                                            color: Colors.red,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: const [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 26.0),
-                                                  child: Icon(
-                                                    Icons.delete,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 26.0),
-                                                  child: Icon(
-                                                    Icons.delete,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
+                                                        .quantity
+                                                        .toString()),
+                                                onChanged: (String value) {
+                                                  CartRepo.updateCartIteam(
+                                                          cartIteamsList[index]
+                                                              .id
+                                                              .toString(),
+                                                          value)
+                                                      .then((value) => {
+                                                            getData(),
+                                                          });
+                                                },
+                                                ontap: () {},
+                                              ),
                                             ),
                                           ),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 8.w,
-                                            ),
-                                            child: CartProduct(
-                                              imageUrl: cartIteamsList[index]
-                                                  .thumbnail
-                                                  .toString(),
-                                              title: cartIteamsList[index]
-                                                  .productName
-                                                  .toString(),
-                                              price: cartIteamsList[index]
-                                                  .originalPrice
-                                                  .toString(),
-                                              disprice: cartIteamsList[index]
-                                                  .salePrice
-                                                  .toString(),
-                                              quantity: cartIteamsList[index]
-                                                  .weight
-                                                  .toString(),
-                                              iteam: int.parse(
-                                                  cartIteamsList[index]
-                                                      .quantity
-                                                      .toString()),
-                                              onChanged: (String value) {
-                                                CartRepo.updateCartIteam(
-                                                        cartIteamsList[index]
-                                                            .productId
-                                                            .toString(),
-                                                        value)
-                                                    .then((value) => {
-                                                          Logger().e(value),
-                                                          getData(),
-                                                        });
-                                              },
-                                              ontap: () {},
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    });
-                          },
-                        );
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 10.w,
-                        right: 10.w,
-                        top: 2.h,
-                        bottom: 5.h,
-                      ),
-                      child: const Divider(
-                        color: Colors.grey,
-                        thickness: 0.5,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 10.w, bottom: 15.h),
-                          child: Text("Before you checkout",
-                              style: GoogleFonts.poppins(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w600)),
-                        ),
-                      ],
-                    ),
-                    BlocConsumer<ProductListBloc, ProductListState>(
-                      bloc: productListBloc,
-                      listener: (context, state) {
-                        state.when(
-                            initial: () {},
-                            loading: () {},
-                            loaded: (_) {},
-                            failure: (e) {
-                              CustomSnackbar.flutterSnackbarWithAction(
-                                  e, 'Retry', () {
-                                context.read<ProductListBloc>().add(
-                                    const ProductListEvent.fetchProductList(
-                                        categoryId: "98989"));
-                              }, context);
-                            });
-                      },
-                      builder: (context, state) {
-                        return state.maybeWhen(orElse: () {
-                          return SizedBox(
-                            child: Shimmer.fromColors(
-                              baseColor:
-                                  const Color.fromARGB(44, 222, 220, 220),
-                              highlightColor: Colors.grey[100]!,
-                              child: Image.asset(
-                                "assets/images/itemList.png",
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
-                        }, loaded: (productList) {
-                          return SizedBox(
-                            height: 165.h,
-                            child: ListView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: productList.length,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(left: 10.w),
-                                    child: BlocConsumer<CartBloc, CartState>(
-                                      listener: (context, state) {
-                                        state.when(
-                                            initial: () {},
-                                            loading: (pid) {
-                                              if (pid ==
-                                                  productList[index].id) {
-                                                CustomSnackbar.loading();
-                                              }
-                                            },
-                                            success: (msg, pid) {
-                                              if (pid ==
-                                                  productList[index].id) {
-                                                getData();
-                                                BotToast.showText(text: msg);
-                                              }
-                                            },
-                                            failure: (e) {});
-                                      },
-                                      builder: (context, state) {
-                                        return ProductCard(
-                                          isCart: productList[index].iscart,
-                                          imageUrl: productList[index]
-                                              .thumbnail
-                                              .toString(),
-                                          title: productList[index]
-                                              .productName
-                                              .toString(),
-                                          disprice: productList[index]
-                                              .originalPrice
-                                              .toString(),
-                                          price: productList[index]
-                                              .salePrice
-                                              .toString(),
-                                          quantity: productList[index]
-                                              .weight
-                                              .toString(),
-                                          percentage: productList[index]
-                                              .discountPercentage
-                                              .toString(),
-                                          productId:
-                                              productList[index].id.toString(),
-                                          cartId: productList[index]
-                                              .categoryId
-                                              .toString(),
-                                          ontap: () {
-                                            Get.to(() => ProductDetails(
-                                                  productId: productList[index]
-                                                      .id
-                                                      .toString(),
-                                                  catId: productList[index]
-                                                      .categoryId
-                                                      .toString(),
-                                                ));
-                                          },
-                                          addtocartTap: () {
-                                            context.read<CartBloc>().add(
-                                                CartEvent.addToCart(
-                                                    productid:
-                                                        productList[index]
-                                                            .id
-                                                            .toString()));
-                                          },
                                         );
-                                      },
-                                    ),
-                                  );
-                                }),
+                                      });
+                            },
                           );
-                        });
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 13.w),
-                      child: UseCouponCard(
-                        onTap: () {
-                          Get.to(() => const CouponsCode());
-                        },
-                        isApplyCoupon: false,
-                        onTapremove: () {
-                          log("Remove Coupon");
                         },
                       ),
-                    ),
-                    SizedBox(height: 15.h),
-                    ListTile(
-                      visualDensity:
-                          const VisualDensity(horizontal: 0, vertical: -4),
-                      title: Text("total amount ",
-                          style: GoogleFonts.poppins(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          )),
-                      trailing: Text("₹ ${cartDetailModel.totalPrice}",
-                          style: GoogleFonts.poppins(fontSize: 13.sp)),
-                    ),
-                    ListTile(
-                      visualDensity:
-                          const VisualDensity(horizontal: 0, vertical: -4),
-                      title: Text("total tax ",
-                          style: GoogleFonts.poppins(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          )),
-                      trailing: Text("₹ ${cartDetailModel.totalTax}",
-                          style: GoogleFonts.poppins(fontSize: 13.sp)),
-                    ),
-                    ListTile(
-                      visualDensity:
-                          const VisualDensity(horizontal: 0, vertical: -4),
-                      title: Text("Item Total (incl. taxes)",
-                          style: GoogleFonts.poppins(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          )),
-                      trailing: Text("₹ ${cartDetailModel.totalPriceIncTax}",
-                          style: GoogleFonts.poppins(fontSize: 13.sp)),
-                    ),
-                    ListTile(
-                      visualDensity:
-                          const VisualDensity(horizontal: 0, vertical: -4),
-                      title: Text("Delivery charges",
-                          style: GoogleFonts.poppins(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          )),
-                      trailing: Text("₹ ${cartDetailModel.deliveryCharges}",
-                          style: GoogleFonts.poppins(fontSize: 13.sp)),
-                    ),
-                    ListTile(
-                      visualDensity:
-                          const VisualDensity(horizontal: 0, vertical: -2),
-                      title: Text("Bill Total",
-                          style: GoogleFonts.poppins(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
-                          )),
-                      trailing: Text("₹ ${cartDetailModel.totalBill}",
-                          style: GoogleFonts.poppins(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
-                          )),
-                    ),
-                    SizedBox(height: 15.h),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 13.w),
-                      child: SizedBox(
-                        height: 42.h,
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: isGuest
-                              ? () {
-                                  Get.dialog(
-                                    AlertDialog(
-                                      title: const Text('Log In / Sign Up'),
-                                      content: const Text(
-                                          'Please login or signup to continue shopping with us.'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () => Get.back(),
-                                          child: const Text('No'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            Get.to(() => const SignupPage());
-                                          },
-                                          child: const Text('Yes'),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }
-                              : _showBottomSheet,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff02A008),
-                          ),
-                          child: Text("Checkout",
-                              style: GoogleFonts.poppins(
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                              )),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 10.w,
+                          right: 10.w,
+                          top: 2.h,
+                          bottom: 5.h,
+                        ),
+                        child: const Divider(
+                          color: Colors.grey,
+                          thickness: 0.5,
                         ),
                       ),
-                    ),
-                    SizedBox(height: 20.h),
-                  ],
-                );
-              },
-            );
-          },
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.w, bottom: 15.h),
+                            child: Text("Before you checkout",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600)),
+                          ),
+                        ],
+                      ),
+                      BlocConsumer<ProductListBloc, ProductListState>(
+                        bloc: productListBloc,
+                        listener: (context, state) {
+                          state.when(
+                              initial: () {},
+                              loading: () {},
+                              loaded: (_) {},
+                              failure: (e) {
+                                CustomSnackbar.flutterSnackbarWithAction(
+                                    e, 'Retry', () {
+                                  context.read<ProductListBloc>().add(
+                                      const ProductListEvent.fetchProductList(
+                                          categoryId: "98989"));
+                                }, context);
+                              });
+                        },
+                        builder: (context, state) {
+                          return state.maybeWhen(
+                              orElse: () => SizedBox(
+                                  height: 165.h,
+                                  child: const Text('something went wrong')),
+                              loading: () {
+                                return SizedBox(
+                                  height: 165.h,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Shimmer.fromColors(
+                                      baseColor: const Color.fromARGB(
+                                          44, 222, 220, 220),
+                                      highlightColor: Colors.grey[100]!,
+                                      child: Image.asset(
+                                        "assets/images/itemList.png",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              loaded: (productList) {
+                                return productList.isEmpty
+                                    ? Text(
+                                        "No Product Found",
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 14.sp,
+                                            color: const Color.fromARGB(
+                                                30, 0, 0, 0),
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    : SizedBox(
+                                        height: 165.h,
+                                        child: ListView.builder(
+                                            physics:
+                                                const BouncingScrollPhysics(),
+                                            shrinkWrap: true,
+                                            itemCount: productList.length,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 10.w),
+                                                child: BlocConsumer<CartBloc,
+                                                    CartState>(
+                                                  listener: (context, state) {
+                                                    state.when(
+                                                        initial: () {},
+                                                        loading: (pid) {
+                                                          if (pid ==
+                                                              productList[index]
+                                                                  .variantId) {
+                                                            CustomSnackbar
+                                                                .loading();
+                                                          }
+                                                        },
+                                                        success: (msg, pid) {
+                                                          if (pid ==
+                                                              productList[index]
+                                                                  .variantId) {
+                                                            context
+                                                                .read<
+                                                                    ProductListBloc>()
+                                                                .add(const ProductListEvent
+                                                                        .fetchProductList(
+                                                                    categoryId:
+                                                                        "98989"));
+                                                            BotToast.showText(
+                                                                text: msg);
+                                                          }
+                                                        },
+                                                        failure: (e) {});
+                                                  },
+                                                  builder: (context, state) {
+                                                    return ProductCard(
+                                                      isCart: productList[index]
+                                                          .iscart,
+                                                      imageUrl:
+                                                          productList[index]
+                                                              .thumbnail
+                                                              .toString(),
+                                                      title: productList[index]
+                                                          .productName
+                                                          .toString(),
+                                                      disprice:
+                                                          productList[index]
+                                                              .originalPrice
+                                                              .toString(),
+                                                      price: productList[index]
+                                                          .salePrice
+                                                          .toString(),
+                                                      quantity:
+                                                          productList[index]
+                                                              .weight
+                                                              .toString(),
+                                                      percentage: productList[
+                                                              index]
+                                                          .discountPercentage
+                                                          .toString(),
+                                                      productId:
+                                                          productList[index]
+                                                              .id
+                                                              .toString(),
+                                                      cartId: productList[index]
+                                                          .categoryId
+                                                          .toString(),
+                                                      ontap: () {
+                                                        Get.to(() =>
+                                                            ProductDetails(
+                                                              productId:
+                                                                  productList[
+                                                                          index]
+                                                                      .id
+                                                                      .toString(),
+                                                              catId: productList[
+                                                                      index]
+                                                                  .categoryId
+                                                                  .toString(),
+                                                            ));
+                                                      },
+                                                      addtocartTap: () {
+                                                        context.read<CartBloc>().add(
+                                                            CartEvent.addToCart(
+                                                                productid: productList[
+                                                                        index]
+                                                                    .variantId
+                                                                    .toString()));
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            }),
+                                      );
+                              });
+                        },
+                      ),
+                      SizedBox(height: 15.h),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 13.w),
+                        child: UseCouponCard(
+                          onTap: () {
+                            Get.to(() => const CouponsCode());
+                          },
+                          isApplyCoupon: cartDetailModel.applyCopunCode,
+                          onTapremove: () {
+                            HapticFeedback.lightImpact();
+                            getData();
+                          },
+                          couponCode: cartDetailModel.couponCode.toString(),
+                        ),
+                      ),
+                      SizedBox(height: 15.h),
+                      ListTile(
+                        visualDensity:
+                            const VisualDensity(horizontal: 0, vertical: -4),
+                        title: Text("total amount ",
+                            style: GoogleFonts.poppins(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            )),
+                        trailing: Text("₹ ${cartDetailModel.totalPrice}",
+                            style: GoogleFonts.poppins(fontSize: 13.sp)),
+                      ),
+                      ListTile(
+                        visualDensity:
+                            const VisualDensity(horizontal: 0, vertical: -4),
+                        title: Text("Coupon discount",
+                            style: GoogleFonts.poppins(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            )),
+                        trailing: Text("₹ ${cartDetailModel.couponDiscount}",
+                            style: GoogleFonts.poppins(fontSize: 13.sp)),
+                      ),
+                      ListTile(
+                        visualDensity:
+                            const VisualDensity(horizontal: 0, vertical: -4),
+                        title: Text("Delivery charges",
+                            style: GoogleFonts.poppins(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            )),
+                        trailing: Text("₹ ${cartDetailModel.deliveryCharges}",
+                            style: GoogleFonts.poppins(fontSize: 13.sp)),
+                      ),
+                      ListTile(
+                        visualDensity:
+                            const VisualDensity(horizontal: 0, vertical: -2),
+                        title: Text("Bill Total",
+                            style: GoogleFonts.poppins(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            )),
+                        trailing: Text("₹ ${cartDetailModel.totalBill}",
+                            style: GoogleFonts.poppins(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            )),
+                      ),
+                      SizedBox(height: 15.h),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 13.w),
+                        child: SizedBox(
+                          height: 42.h,
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: isGuest
+                                ? () {
+                                    Get.dialog(
+                                      AlertDialog(
+                                        title: const Text('Log In / Sign Up'),
+                                        content: const Text(
+                                            'Please login or signup to continue shopping with us.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Get.back(),
+                                            child: const Text('No'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              Get.to(() => const SignupPage());
+                                            },
+                                            child: const Text('Yes'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                : () {
+                                    showbottomsheet(context);
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xff02A008),
+                            ),
+                            child: Text("Checkout",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                )),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20.h),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );
   }
 
-  // create a method to show the bottom sheet
-  void _showBottomSheet() {
-    showModalBottomSheet(
+  Future<dynamic> showbottomsheet(BuildContext context) {
+    return showModalBottomSheet(
         context: context,
         builder: (context) {
-          return SizedBox(
-              height: 160.h,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ListTile(
-                      leading: Icon(
-                        Icons.home,
-                        color: const Color(0xffE20A13),
-                        size: 25.sp,
-                      ),
-                      title: Text("Home",
-                          style: GoogleFonts.poppins(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          )),
-                      subtitle: Text(
-                          "B-1/2, 2nd Floor, Sector 63, Noida 201301  Sector 63, Noida 201301   ",
-                          style: GoogleFonts.poppins(fontSize: 12.sp)),
-                      trailing: TextButton(
-                          onPressed: () {
-                            Get.to(() => const LocationSearchPage());
-                          },
-                          child: Text("Change",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
-                                color: const Color.fromARGB(255, 240, 0, 0),
-                              ))),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(
-                        left: 10.w,
-                        right: 10.w,
-                        bottom: 1.h,
-                      ),
-                      child: SizedBox(
-                        height: 35.h,
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            createOrder();
-                            // Get.offAll(() => const OrderConfirmPage());
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff02A008),
-                          ),
-                          child: Text("Select Payment",
-                              style: GoogleFonts.poppins(
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              )),
-                        ),
-                      ),
-                    ),
-                  ]));
+          return Builder(builder: (context) {
+            return StatefulBuilder(
+                builder: (context, setState) => SingleChildScrollView(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 4.h),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              child: TextButton.icon(
+                                onPressed: () {
+                                  Get.to(() => const AddAddressPage());
+                                },
+                                icon: const Icon(Icons.add,
+                                    color: Color(0xffE20A13)),
+                                label: Text('Add new address',
+                                    style: TextStyle(
+                                      color: const Color(0xff000000),
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w700,
+                                    )),
+                              ),
+                            ),
+                            const Divider(
+                              color: Colors.grey,
+                            ),
+                            BlocConsumer<ViewAddresslistBloc,
+                                ViewAddresslistState>(
+                              listener: (context, state) {},
+                              builder: (context, state) {
+                                return state.maybeWhen(orElse: () {
+                                  return const Text('something went wrong');
+                                }, loading: () {
+                                  return const Center(
+                                      child: LinearProgressIndicator(
+                                    color: Color(0xffE20A13),
+                                    backgroundColor:
+                                        Color.fromARGB(72, 226, 10, 17),
+                                  ));
+                                }, loaded: (addressList) {
+                                  return addressList.isEmpty
+                                      ? Padding(
+                                          padding: EdgeInsets.only(top: 120.h),
+                                          child: Center(
+                                            child: Text('No address found',
+                                                style: TextStyle(
+                                                  color: const Color.fromARGB(
+                                                      47, 0, 0, 0),
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w700,
+                                                )),
+                                          ),
+                                        )
+                                      : ListView.builder(
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount: addressList.length,
+                                          itemBuilder: (context, index) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                decoration: addressIndex ==
+                                                        index
+                                                    ? BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5.r),
+                                                        border: Border.all(
+                                                          color: const Color(
+                                                              0xffE20A13),
+                                                          width: 1,
+                                                        ),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.grey
+                                                                .withOpacity(
+                                                                    0.2),
+                                                            spreadRadius: 1,
+                                                            blurRadius: 1,
+                                                            offset:
+                                                                const Offset(
+                                                                    0, 1),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : null,
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 16.w,
+                                                    vertical: 8.h),
+                                                child: ListTile(
+                                                    onTap: () {
+                                                      addressIndex = index;
+                                                      setState(() {});
+                                                    },
+                                                    contentPadding:
+                                                        EdgeInsets.zero,
+                                                    visualDensity:
+                                                        const VisualDensity(
+                                                            horizontal: 0,
+                                                            vertical: -4),
+                                                    leading: Icon(
+                                                      Icons
+                                                          .location_on_outlined,
+                                                      color: const Color(
+                                                          0xffE20A13),
+                                                      size: 20.sp,
+                                                    ),
+                                                    title: Text(
+                                                        addressList[index]
+                                                            .locality
+                                                            .toString(),
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                          fontSize: 13.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors.black,
+                                                        )),
+                                                    subtitle: Text(
+                                                        addressList[index]
+                                                            .address
+                                                            .toString(),
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                fontSize:
+                                                                    10.sp)),
+                                                    trailing: TextButton(
+                                                        onPressed: () {
+                                                          Get.to(() =>
+                                                              EditAddressPage(
+                                                                addressId:
+                                                                    addressList[
+                                                                            index]
+                                                                        .id
+                                                                        .toString(),
+                                                                address: addressList[
+                                                                        index]
+                                                                    .address
+                                                                    .toString(),
+                                                                city: addressList[
+                                                                        index]
+                                                                    .city
+                                                                    .toString(),
+                                                                state: addressList[
+                                                                        index]
+                                                                    .location
+                                                                    .toString(),
+                                                                pincode: addressList[
+                                                                        index]
+                                                                    .pincode
+                                                                    .toString(),
+                                                                locality: addressList[
+                                                                        index]
+                                                                    .locality
+                                                                    .toString(),
+                                                                landmark: addressList[
+                                                                        index]
+                                                                    .landmark
+                                                                    .toString(),
+                                                              ));
+                                                        },
+                                                        child: Text(
+                                                          'Edit',
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                            fontSize: 10.sp,
+                                                            color: const Color
+                                                                    .fromARGB(
+                                                                244,
+                                                                226,
+                                                                10,
+                                                                17),
+                                                          ),
+                                                        ))),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                }, error: (message) {
+                                  return Center(
+                                    child: Text(message),
+                                  );
+                                });
+                              },
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(
+                                  left: 10.w,
+                                  right: 10.w,
+                                  bottom: 3.h,
+                                  top: 3.h),
+                              child: SizedBox(
+                                height: 35.h,
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    dialogbox(context);
+
+                                    // createOrder();
+                                    // Get.offAll(() => const OrderConfirmPage());
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xff02A008),
+                                  ),
+                                  child: Text("Next Step",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      )),
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ));
+          });
         });
+  }
+
+  Future<dynamic> dialogbox(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Ok"),
+            ),
+          ],
+          title: Text(
+            "This Product is not available in your area please remove it from your cart !!",
+            style: GoogleFonts.poppins(
+                color: const Color.fromARGB(143, 11, 11, 11),
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600),
+            textAlign: TextAlign.left,
+          ),
+          content: SizedBox(
+            height: 200.h,
+            child: BlocConsumer<CartIteamsBloc, CartIteamsState>(
+              bloc: context.read<CartIteamsBloc>(),
+              listener: (context, state) {},
+              builder: (context, state) {
+                return state.maybeWhen(
+                  orElse: () {
+                    return const Text("");
+                  },
+                  loading: () {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                  loaded: (cartIteamsList) {
+                    return ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: cartIteamsList.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 2.2.h),
+                            child: Dismissible(
+                              onDismissed: ((direction) {
+                                CartRepo.deleteCartIteam(
+                                        cartIteamsList[index].id.toString())
+                                    .then((value) => {getData()});
+                              }),
+                              key: UniqueKey(),
+                              background: Container(
+                                color: Colors.red,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: const [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 26.0),
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 1.w,
+                                ),
+                                child: ProductNotAvailable(
+                                  imageUrl: cartIteamsList[index]
+                                      .thumbnail
+                                      .toString(),
+                                  title: cartIteamsList[index]
+                                      .productName
+                                      .toString(),
+                                  price: cartIteamsList[index]
+                                      .originalPrice
+                                      .toString(),
+                                  disprice: cartIteamsList[index]
+                                      .salePrice
+                                      .toString(),
+                                  quantity:
+                                      cartIteamsList[index].weight.toString(),
+                                  iteam: int.parse(cartIteamsList[index]
+                                      .quantity
+                                      .toString()),
+                                  onChanged: (String value) {
+                                    CartRepo.updateCartIteam(
+                                            cartIteamsList[index].id.toString(),
+                                            value)
+                                        .then((value) => {
+                                              BotToast.showText(
+                                                  text: 'removed from cart',
+                                                  textStyle:
+                                                      GoogleFonts.poppins(
+                                                          fontSize: 12.5.sp,
+                                                          color: Colors.white),
+                                                  duration: const Duration(
+                                                      seconds: 1)),
+                                              getData(),
+                                            });
+                                  },
+                                  ontap: () {},
+                                ),
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 }

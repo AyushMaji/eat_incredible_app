@@ -14,7 +14,7 @@ class CartDetailsBloc extends Bloc<CartDetailsEvent, CartDetailsState> {
   CartDetailsBloc() : super(const _Initial()) {
     on<_GetCartDetails>((event, emit) async {
       emit(const _Loading());
-      var result = await CartRepo.getCartDetails();
+      var result = await CartRepo.getCartDetails(event.coupon);
       log(result.toString());
       result.when(
         success: (data) {

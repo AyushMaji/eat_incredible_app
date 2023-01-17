@@ -33,7 +33,7 @@ class _SearchProductListState extends State<SearchProductList> {
     searchBloc.add(SearchEvent.searchProduct(search: widget.search));
     context
         .read<CartDetailsBloc>()
-        .add(const CartDetailsEvent.getCartDetails());
+        .add(const CartDetailsEvent.getCartDetails(coupon: ''));
   }
 
   @override
@@ -115,7 +115,7 @@ class _SearchProductListState extends State<SearchProductList> {
                                                   initial: () {},
                                                   loading: (pid) {
                                                     if (pid ==
-                                                        productList[index].id) {
+                                                        productList[index]) {
                                                       CustomSnackbar.loading();
                                                     }
                                                   },
@@ -205,11 +205,11 @@ class _SearchProductListState extends State<SearchProductList> {
                       bottom: 10.h,
                       child: SlideInUp(
                         child: AddtocartBar(
-                          iteamCount: cartDetails.totalItem ?? 0,
+                          iteamCount: cartDetails.totalItem,
                           onTap: () {
                             Get.to(() => const CartPage());
                           },
-                          totalAmount: cartDetails.totalPrice ?? 0,
+                          totalAmount: cartDetails.totalPrice,
                         ),
                       ));
                 });

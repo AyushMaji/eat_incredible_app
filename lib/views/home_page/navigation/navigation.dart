@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:eat_incredible_app/controller/about/about_bloc.dart';
+import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
 import 'package:eat_incredible_app/controller/category/category_bloc.dart';
 import 'package:eat_incredible_app/controller/coupon/coupon_bloc.dart';
 import 'package:eat_incredible_app/controller/orderlist/orderlist_bloc.dart';
@@ -28,9 +29,9 @@ class _NavigationState extends State<Navigation> {
   void getData() {
     context.read<OrderlistBloc>().add(const OrderlistEvent.orderList());
     context.read<CategoryBloc>().add(const CategoryEvent.getCategory());
-    // context
-    //     .read<CartDetailsBloc>()
-    //     .add(const CartDetailsEvent.getCartDetails());
+    context
+        .read<CartDetailsBloc>()
+        .add(const CartDetailsEvent.getCartDetails(coupon: ''));
     context
         .read<ProductListBloc>()
         .add(const ProductListEvent.fetchProductList(categoryId: "98989"));

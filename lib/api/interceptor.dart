@@ -40,10 +40,7 @@ class Interceptors extends InterceptorsWrapper {
             };
     }
 
-    if (options.path.contains('each_product.php') ||
-        options.path.contains('add_to_cart.php') ||
-        options.path.contains(UrlRepo.cartDetails) ||
-        options.path.contains(UrlRepo.cartIteam) ||
+    if (options.path.contains('add_to_cart.php') ||
         options.path.contains('remove_cart.php')) {
       String token = prefs.getString('token') ?? '';
       String guestId = prefs.getString('guest_id') ?? '';

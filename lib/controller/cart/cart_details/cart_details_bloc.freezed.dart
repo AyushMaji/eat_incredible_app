@@ -19,19 +19,19 @@ mixin _$CartDetailsEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function() getCartDetails,
+    required TResult Function(String coupon) getCartDetails,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function()? getCartDetails,
+    TResult Function(String coupon)? getCartDetails,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function()? getCartDetails,
+    TResult Function(String coupon)? getCartDetails,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -114,7 +114,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function() getCartDetails,
+    required TResult Function(String coupon) getCartDetails,
   }) {
     return started();
   }
@@ -123,7 +123,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function()? getCartDetails,
+    TResult Function(String coupon)? getCartDetails,
   }) {
     return started?.call();
   }
@@ -132,7 +132,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function()? getCartDetails,
+    TResult Function(String coupon)? getCartDetails,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -182,6 +182,7 @@ abstract class _$$_GetCartDetailsCopyWith<$Res> {
   factory _$$_GetCartDetailsCopyWith(
           _$_GetCartDetails value, $Res Function(_$_GetCartDetails) then) =
       __$$_GetCartDetailsCopyWithImpl<$Res>;
+  $Res call({String coupon});
 }
 
 /// @nodoc
@@ -194,54 +195,77 @@ class __$$_GetCartDetailsCopyWithImpl<$Res>
 
   @override
   _$_GetCartDetails get _value => super._value as _$_GetCartDetails;
+
+  @override
+  $Res call({
+    Object? coupon = freezed,
+  }) {
+    return _then(_$_GetCartDetails(
+      coupon: coupon == freezed
+          ? _value.coupon
+          : coupon // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$_GetCartDetails implements _GetCartDetails {
-  const _$_GetCartDetails();
+  const _$_GetCartDetails({required this.coupon});
+
+  @override
+  final String coupon;
 
   @override
   String toString() {
-    return 'CartDetailsEvent.getCartDetails()';
+    return 'CartDetailsEvent.getCartDetails(coupon: $coupon)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_GetCartDetails);
+        (other.runtimeType == runtimeType &&
+            other is _$_GetCartDetails &&
+            const DeepCollectionEquality().equals(other.coupon, coupon));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(coupon));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_GetCartDetailsCopyWith<_$_GetCartDetails> get copyWith =>
+      __$$_GetCartDetailsCopyWithImpl<_$_GetCartDetails>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function() getCartDetails,
+    required TResult Function(String coupon) getCartDetails,
   }) {
-    return getCartDetails();
+    return getCartDetails(coupon);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function()? getCartDetails,
+    TResult Function(String coupon)? getCartDetails,
   }) {
-    return getCartDetails?.call();
+    return getCartDetails?.call(coupon);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function()? getCartDetails,
+    TResult Function(String coupon)? getCartDetails,
     required TResult orElse(),
   }) {
     if (getCartDetails != null) {
-      return getCartDetails();
+      return getCartDetails(coupon);
     }
     return orElse();
   }
@@ -279,7 +303,13 @@ class _$_GetCartDetails implements _GetCartDetails {
 }
 
 abstract class _GetCartDetails implements CartDetailsEvent {
-  const factory _GetCartDetails() = _$_GetCartDetails;
+  const factory _GetCartDetails({required final String coupon}) =
+      _$_GetCartDetails;
+
+  String get coupon;
+  @JsonKey(ignore: true)
+  _$$_GetCartDetailsCopyWith<_$_GetCartDetails> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

@@ -9,16 +9,17 @@ class CartRepo {
   static Future addToCart(String productid) async {
     try {
       var res = await network.addToCart(productid);
-      Logger().i(res.data);
+      Logger().d(res.data);
       return ApiResult.success(data: res.data);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
     }
   }
 
-  static Future getCartDetails() async {
+  static Future getCartDetails(String couponCode) async {
     try {
-      var res = await network.getCartDetails();
+      var res = await network.getCartDetails(couponCode);
+
       return ApiResult.success(data: res.data);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
@@ -28,6 +29,7 @@ class CartRepo {
   static Future getCartIteam() async {
     try {
       var res = await network.getCartIteam();
+      Logger().i(res.data);
       return ApiResult.success(data: res.data);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
@@ -63,7 +65,7 @@ class CartRepo {
   }
 
   //! orderlist ==>
-   Future<ApiResult> orderList() async {
+  Future<ApiResult> orderList() async {
     try {
       var res = await network.orderList();
       return ApiResult.success(data: res.data);

@@ -4,12 +4,14 @@ class UseCouponCard extends StatelessWidget {
   final bool isApplyCoupon;
   final GestureTapCallback onTap;
   final GestureTapCallback onTapremove;
+  final String couponCode;
 
   const UseCouponCard(
       {super.key,
       required this.onTap,
       required this.isApplyCoupon,
-      required this.onTapremove});
+      required this.onTapremove,
+      required this.couponCode});
 
   @override
   Widget build(BuildContext context) {
@@ -80,10 +82,10 @@ class UseCouponCard extends StatelessWidget {
               Visibility(
                 visible: isApplyCoupon,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 0.7.h, left: 10.w),
-                  child: Text("Apply Offer applied on the bill",
+                  padding: EdgeInsets.only(top: 0.7.h, left: 33.w),
+                  child: Text("Coupon ($couponCode) Applied",
                       style: GoogleFonts.poppins(
-                        fontSize: 13.sp,
+                        fontSize: 10.sp,
                         fontWeight: FontWeight.normal,
                         color: Colors.black,
                       )),

@@ -43,7 +43,7 @@ class _FilterPageState extends State<FilterPage> {
         .add(ProductListEvent.fetchProductList(categoryId: filterIteamId));
     context
         .read<CartDetailsBloc>()
-        .add(const CartDetailsEvent.getCartDetails());
+        .add(const CartDetailsEvent.getCartDetails(coupon: ''));
   }
 
   @override
@@ -237,8 +237,6 @@ class _FilterPageState extends State<FilterPage> {
                                                         ));
                                                   },
                                                   addtocartTap: () {
-                                                    Logger().i(
-                                                        "product id ${productList[index].variantId}");
                                                     context.read<CartBloc>().add(
                                                         CartEvent.addToCart(
                                                             productid:
@@ -272,11 +270,11 @@ class _FilterPageState extends State<FilterPage> {
                     child: cartDetails.totalItem != 0 && _show == true
                         ? SlideInUp(
                             child: AddtocartBar(
-                              iteamCount: cartDetails.totalItem ?? 0,
+                              iteamCount: cartDetails.totalItem,
                               onTap: () {
                                 Get.to(() => const CartPage());
                               },
-                              totalAmount: cartDetails.totalPrice ?? 0,
+                              totalAmount: cartDetails.totalPrice,
                             ),
                           )
                         : const Opacity(

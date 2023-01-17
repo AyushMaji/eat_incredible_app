@@ -241,10 +241,12 @@ class _HomePageState extends State<HomePage> {
                           },
                           builder: (context, state) {
                             return state.maybeWhen(
-                                orElse: () =>
-                                    const Text('something went wrong'),
+                                orElse: () => SizedBox(
+                                    height: 165.h,
+                                    child: const Text('something went wrong')),
                                 loading: () {
                                   return SizedBox(
+                                    height: 165.h,
                                     child: Shimmer.fromColors(
                                       baseColor: const Color.fromARGB(
                                           44, 222, 220, 220),
@@ -287,7 +289,7 @@ class _HomePageState extends State<HomePage> {
                                                             if (pid ==
                                                                 productList[
                                                                         index]
-                                                                    .id) {
+                                                                    .variantId) {
                                                               CustomSnackbar
                                                                   .loading();
                                                             }
@@ -296,7 +298,7 @@ class _HomePageState extends State<HomePage> {
                                                             if (pid ==
                                                                 productList[
                                                                         index]
-                                                                    .id) {
+                                                                    .variantId) {
                                                               context
                                                                   .read<
                                                                       ProductListBloc>()
@@ -367,7 +369,7 @@ class _HomePageState extends State<HomePage> {
                                                               .add(CartEvent.addToCart(
                                                                   productid: productList[
                                                                           index]
-                                                                      .id
+                                                                      .variantId
                                                                       .toString()));
                                                         },
                                                       );

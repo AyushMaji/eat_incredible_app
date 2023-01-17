@@ -1,7 +1,10 @@
-import 'dart:developer';
-
+import 'package:bot_toast/bot_toast.dart';
+import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
+import 'package:eat_incredible_app/controller/coupon/coupon_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CouponsCode extends StatefulWidget {
   const CouponsCode({super.key});
@@ -11,6 +14,22 @@ class CouponsCode extends StatefulWidget {
 }
 
 class _CouponsCodeState extends State<CouponsCode> {
+  @override
+  void initState() {
+    getData();
+    // paste clipboard data
+    Clipboard.getData('text/plain').then((value) {
+      if (value != null) {
+        cupponcodeController.text = value.text!;
+      }
+    });
+    super.initState();
+  }
+
+  getData() {
+    context.read<CouponBloc>().add(const CouponEvent.getCouponList());
+  }
+
   TextEditingController cupponcodeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -47,86 +66,143 @@ class _CouponsCodeState extends State<CouponsCode> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-            child: Column(children: [
-          SizedBox(height: 10.h),
-          Container(
-            height: 45.h,
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextFormField(
-              controller: cupponcodeController,
-              decoration: InputDecoration(
-                hintText: 'Enter coupon code',
-                hintStyle: GoogleFonts.poppins(
-                  color: const Color.fromRGBO(60, 60, 67, 1),
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.sp),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: const Color.fromARGB(255, 235, 234, 234),
-                suffix: InkWell(
-                  onTap: () {
-                    log('cupponcode: ${cupponcodeController.text}');
-                    Get.back();
-                  },
-                  child: Text(
-                    'Apply',
-                    style: TextStyle(
-                      color: const Color(0xff787878),
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w700,
+        body: RefreshIndicator(
+          onRefresh: () {
+            getData();
+            return Future.value();
+          },
+          child: SingleChildScrollView(
+              child: Column(children: [
+            SizedBox(height: 10.h),
+            Container(
+              height: 45.h,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: TextFormField(
+                controller: cupponcodeController,
+                decoration: InputDecoration(
+                  hintText: 'Enter coupon code',
+                  hintStyle: GoogleFonts.poppins(
+                    color: const Color.fromRGBO(60, 60, 67, 1),
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.sp),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 235, 234, 234),
+                  suffix: InkWell(
+                    onTap: () {
+                      BlocProvider.of<CartDetailsBloc>(context).add(
+                          const CartDetailsEvent.getCartDetails(coupon: '2'));
+                      Get.back();
+                    },
+                    child: Text(
+                      'Apply',
+                      style: TextStyle(
+                        color: const Color(0xff787878),
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Avalible Coupons',
-                  style: TextStyle(
-                    color: const Color.fromRGBO(4, 4, 4, 1),
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
+            const SizedBox(height: 20),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Avalible Coupons',
+                    style: TextStyle(
+                      color: const Color.fromRGBO(4, 4, 4, 1),
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: 15.h),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 5,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 8.h),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      cupponcodeController.text = 'G4A5$index';
-                    });
+            SizedBox(height: 15.h),
+            BlocConsumer<CouponBloc, CouponState>(
+              bloc: context.read<CouponBloc>(),
+              listener: (context, state) {},
+              builder: (context, state) {
+                return state.maybeMap(
+                  orElse: () {
+                    return const Text("Something went wrong");
                   },
-                  child: CustomPic(
-                    imageUrl:
-                        'https://i.imgur.com/0cbymTF_d.webp?maxwidth=760&fidelity=grand',
-                    height: 155.h,
-                    width: double.infinity,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              );
-            },
-          ),
-        ])));
+                  loading: (j) {
+                    return const LinearProgressIndicator(
+                      color: Colors.red,
+                      backgroundColor: Color.fromARGB(69, 244, 67, 54),
+                    );
+                  },
+                  success: (value) {
+                    return value.couponList.isEmpty
+                        ? SizedBox(
+                            height: 200.h,
+                            child: Center(
+                              child: Text(
+                                'No Coupons Available',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.black,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ))
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: value.couponList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15.w, vertical: 8.h),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    HapticFeedback.lightImpact();
+                                    setState(() {
+                                      cupponcodeController.text = value
+                                          .couponList[index].couponCode
+                                          .toString();
+                                      BotToast.showText(
+                                          text:
+                                              "${value.couponList[index].couponCode} Copied",
+                                          textStyle: GoogleFonts.poppins(
+                                              fontSize: 12.5.sp,
+                                              color: Colors.white),
+                                          duration: const Duration(seconds: 1));
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 12.w),
+                                    child: ClipRRect(
+                                      borderRadius:
+                                          BorderRadius.circular(10.sp),
+                                      child: CustomPic(
+                                        imageUrl:
+                                            value.couponList[index].couponImg,
+                                        height: 125.h,
+                                        width: double.infinity,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                  },
+                );
+              },
+            ),
+          ])),
+        ));
   }
 }
