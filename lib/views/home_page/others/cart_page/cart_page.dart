@@ -83,6 +83,7 @@ class _CartPageState extends State<CartPage> {
   }
 
   //* create order #######################################################################################################
+
   void createOrder() async {
     String username = 'rzp_live_vqdCt0dXhP4PHg'; // razorpay pay key
     String password = "NgDLPyiDRPuQpcXy1E3GKTDv"; // razoepay secret key
@@ -90,7 +91,7 @@ class _CartPageState extends State<CartPage> {
         'Basic ${base64Encode(utf8.encode('$username:$password'))}';
 
     Map<String, dynamic> body = {
-      "amount": 1 * 100,
+      "amount": 870 * 100,
       "currency": "INR",
       "receipt": "rcptid_11",
       "payment_capture": 1,
@@ -142,7 +143,7 @@ class _CartPageState extends State<CartPage> {
     final hmacSha256 = Hmac(sha256, key);
     final generatedSignature = hmacSha256.convert(bytes);
     if (generatedSignature.toString() == response.signature) {
-      log("Payment was successful!");
+      // log("Payment was successful!");
       //Handle what to do after a successful payment.
       showDialog(
         context: context,
@@ -975,7 +976,7 @@ class _CartPageState extends State<CartPage> {
                                   loaded: (cartIteamList) async {
                                     if (cartIteamList.isEmpty) {
                                       createOrder();
-                                      Logger().e(pincode);
+                                       Logger().e(pincode);
                                       // another api
                                     } else {
                                       dialogbox(context);

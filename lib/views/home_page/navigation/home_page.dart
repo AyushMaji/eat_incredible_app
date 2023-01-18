@@ -20,12 +20,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // ProductListBloc productListOfferBloc = ProductListBloc();
+  // ProductListBloc productListsugessionBloc = ProductListBloc();
+
   void getData() {
     context.read<CategoryBloc>().add(const CategoryEvent.getCategory());
     context.read<AboutBloc>().add(const AboutEvent.aboutUs());
     context
         .read<ProductListBloc>()
         .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
+    // productListOfferBloc
+    //     .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
   }
 
   @override
@@ -149,65 +154,95 @@ class _HomePageState extends State<HomePage> {
                           child: SizedBox(
                             height: 100.h,
                             width: double.infinity,
-                            child: ListView.builder(
-                              physics: const BouncingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemCount: 40,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Padding(
-                                  padding: EdgeInsets.only(right: 6.w),
-                                  child: ClipPath(
-                                    clipper: ShapeBorderClipper(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10))),
-                                    child: Stack(
-                                      children: [
-                                        CustomPic(
-                                          imageUrl:
-                                              "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=60",
-                                          height: 100.h,
-                                          width: 80.w,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        Positioned(
-                                          child: Container(
-                                            height: 100.h,
-                                            width: 75.w,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(0),
-                                              gradient: const LinearGradient(
-                                                begin: Alignment.bottomCenter,
-                                                end: Alignment.topCenter,
-                                                colors: [
-                                                  Color(0xFF040404),
-                                                  Colors.transparent,
-                                                ],
-                                              ),
+                            child:
+                                BlocConsumer<ProductListBloc, ProductListState>(
+                              bloc: context.read<ProductListBloc>(),
+                              listener: (context, state) {},
+                              builder: (context, state) {
+                                return state.maybeWhen(
+                                  orElse: () {
+                                    return SizedBox(
+                                        height: 70.h,
+                                        child: const Center(
+                                            child:
+                                                CircularProgressIndicator()));
+                                  },
+                                  loaded: (productList) {
+                                    return ListView.builder(
+                                      physics: const BouncingScrollPhysics(),
+                                      scrollDirection: Axis.horizontal,
+                                      shrinkWrap: true,
+                                      itemCount: productList.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(right: 6.w),
+                                          child: ClipPath(
+                                            clipper: ShapeBorderClipper(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10))),
+                                            child: Stack(
+                                              children: [
+                                                Positioned(
+                                                  left: 9.h,
+                                                  child: CustomPic(
+                                                    imageUrl: productList[index]
+                                                        .thumbnail,
+                                                    height: 85.h,
+                                                    width: 60.w,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  child: Container(
+                                                    height: 100.h,
+                                                    width: 85.w,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              0),
+                                                      gradient:
+                                                          const LinearGradient(
+                                                        begin: Alignment
+                                                            .bottomCenter,
+                                                        end:
+                                                            Alignment.topCenter,
+                                                        colors: [
+                                                          Color(0xFF040404),
+                                                          Color.fromARGB(
+                                                              56, 0, 0, 0),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  bottom: 9.h,
+                                                  left: 10.w,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "${productList[index].discountPercentage}% OFF",
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 13.sp,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
                                           ),
-                                        ),
-                                        Positioned(
-                                          bottom: 9.h,
-                                          left: 10.w,
-                                          child: Center(
-                                            child: Text(
-                                              "20% OFF",
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontFamily: 'Poppins',
-                                                  fontSize: 13.sp,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                                        );
+                                      },
+                                    );
+                                  },
                                 );
                               },
                             ),

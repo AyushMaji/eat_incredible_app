@@ -100,7 +100,7 @@ class Network {
     return token != ''
         ? await client.postRequest(UrlRepo.cartDetails, data: {
             "token": token,
-            "coupon_code": couponCode,
+            "coupon": couponCode,
           })
         : await client.postRequest(UrlRepo.cartDetails, data: {
             "guest_id": guestId,
@@ -125,10 +125,9 @@ class Network {
   Future<Response> checkProduct(String pincode) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token') ?? '';
-    return await client.postRequest(UrlRepo.isAvailable, data: {
-      "token": token,
-      "pincode": pincode,
-    });
+    String coupon = prefs.getString('coupon') ?? '';
+    return await client.postRequest(UrlRepo.isAvailable,
+        data: {"token": token, "pincode": pincode, "coupon": coupon});
   }
 
   Future<Response> deleteCartIteam(String pid) async {

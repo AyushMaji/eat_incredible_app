@@ -5,6 +5,7 @@ import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CouponsCode extends StatefulWidget {
   const CouponsCode({super.key});
@@ -93,9 +94,14 @@ class _CouponsCodeState extends State<CouponsCode> {
                   filled: true,
                   fillColor: const Color.fromARGB(255, 235, 234, 234),
                   suffix: InkWell(
-                    onTap: () {
+                    onTap: () async {
                       BlocProvider.of<CartDetailsBloc>(context).add(
-                          const CartDetailsEvent.getCartDetails(coupon: '2'));
+                          CartDetailsEvent.getCartDetails(
+                              coupon: cupponcodeController.text));
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.setString('coupon', cupponcodeController.text);
+
                       Get.back();
                     },
                     child: Text(
