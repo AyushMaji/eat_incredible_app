@@ -20,18 +20,21 @@ mixin _$CartIteamsEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getCartIteams,
+    required TResult Function(String pincode) isAvailable,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getCartIteams,
+    TResult Function(String pincode)? isAvailable,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getCartIteams,
+    TResult Function(String pincode)? isAvailable,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -39,18 +42,21 @@ mixin _$CartIteamsEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetCartIteams value) getCartIteams,
+    required TResult Function(_IsAvailable value) isAvailable,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetCartIteams value)? getCartIteams,
+    TResult Function(_IsAvailable value)? isAvailable,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetCartIteams value)? getCartIteams,
+    TResult Function(_IsAvailable value)? isAvailable,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -114,6 +120,7 @@ class _$_Started implements _Started {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getCartIteams,
+    required TResult Function(String pincode) isAvailable,
   }) {
     return started();
   }
@@ -123,6 +130,7 @@ class _$_Started implements _Started {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getCartIteams,
+    TResult Function(String pincode)? isAvailable,
   }) {
     return started?.call();
   }
@@ -132,6 +140,7 @@ class _$_Started implements _Started {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getCartIteams,
+    TResult Function(String pincode)? isAvailable,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -145,6 +154,7 @@ class _$_Started implements _Started {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetCartIteams value) getCartIteams,
+    required TResult Function(_IsAvailable value) isAvailable,
   }) {
     return started(this);
   }
@@ -154,6 +164,7 @@ class _$_Started implements _Started {
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetCartIteams value)? getCartIteams,
+    TResult Function(_IsAvailable value)? isAvailable,
   }) {
     return started?.call(this);
   }
@@ -163,6 +174,7 @@ class _$_Started implements _Started {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetCartIteams value)? getCartIteams,
+    TResult Function(_IsAvailable value)? isAvailable,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -219,6 +231,7 @@ class _$_GetCartIteams implements _GetCartIteams {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function() getCartIteams,
+    required TResult Function(String pincode) isAvailable,
   }) {
     return getCartIteams();
   }
@@ -228,6 +241,7 @@ class _$_GetCartIteams implements _GetCartIteams {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getCartIteams,
+    TResult Function(String pincode)? isAvailable,
   }) {
     return getCartIteams?.call();
   }
@@ -237,6 +251,7 @@ class _$_GetCartIteams implements _GetCartIteams {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function()? getCartIteams,
+    TResult Function(String pincode)? isAvailable,
     required TResult orElse(),
   }) {
     if (getCartIteams != null) {
@@ -250,6 +265,7 @@ class _$_GetCartIteams implements _GetCartIteams {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_GetCartIteams value) getCartIteams,
+    required TResult Function(_IsAvailable value) isAvailable,
   }) {
     return getCartIteams(this);
   }
@@ -259,6 +275,7 @@ class _$_GetCartIteams implements _GetCartIteams {
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetCartIteams value)? getCartIteams,
+    TResult Function(_IsAvailable value)? isAvailable,
   }) {
     return getCartIteams?.call(this);
   }
@@ -268,6 +285,7 @@ class _$_GetCartIteams implements _GetCartIteams {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_GetCartIteams value)? getCartIteams,
+    TResult Function(_IsAvailable value)? isAvailable,
     required TResult orElse(),
   }) {
     if (getCartIteams != null) {
@@ -279,6 +297,146 @@ class _$_GetCartIteams implements _GetCartIteams {
 
 abstract class _GetCartIteams implements CartIteamsEvent {
   const factory _GetCartIteams() = _$_GetCartIteams;
+}
+
+/// @nodoc
+abstract class _$$_IsAvailableCopyWith<$Res> {
+  factory _$$_IsAvailableCopyWith(
+          _$_IsAvailable value, $Res Function(_$_IsAvailable) then) =
+      __$$_IsAvailableCopyWithImpl<$Res>;
+  $Res call({String pincode});
+}
+
+/// @nodoc
+class __$$_IsAvailableCopyWithImpl<$Res>
+    extends _$CartIteamsEventCopyWithImpl<$Res>
+    implements _$$_IsAvailableCopyWith<$Res> {
+  __$$_IsAvailableCopyWithImpl(
+      _$_IsAvailable _value, $Res Function(_$_IsAvailable) _then)
+      : super(_value, (v) => _then(v as _$_IsAvailable));
+
+  @override
+  _$_IsAvailable get _value => super._value as _$_IsAvailable;
+
+  @override
+  $Res call({
+    Object? pincode = freezed,
+  }) {
+    return _then(_$_IsAvailable(
+      pincode == freezed
+          ? _value.pincode
+          : pincode // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_IsAvailable implements _IsAvailable {
+  const _$_IsAvailable(this.pincode);
+
+  @override
+  final String pincode;
+
+  @override
+  String toString() {
+    return 'CartIteamsEvent.isAvailable(pincode: $pincode)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_IsAvailable &&
+            const DeepCollectionEquality().equals(other.pincode, pincode));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(pincode));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_IsAvailableCopyWith<_$_IsAvailable> get copyWith =>
+      __$$_IsAvailableCopyWithImpl<_$_IsAvailable>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function() getCartIteams,
+    required TResult Function(String pincode) isAvailable,
+  }) {
+    return isAvailable(pincode);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function()? getCartIteams,
+    TResult Function(String pincode)? isAvailable,
+  }) {
+    return isAvailable?.call(pincode);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function()? getCartIteams,
+    TResult Function(String pincode)? isAvailable,
+    required TResult orElse(),
+  }) {
+    if (isAvailable != null) {
+      return isAvailable(pincode);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_GetCartIteams value) getCartIteams,
+    required TResult Function(_IsAvailable value) isAvailable,
+  }) {
+    return isAvailable(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_GetCartIteams value)? getCartIteams,
+    TResult Function(_IsAvailable value)? isAvailable,
+  }) {
+    return isAvailable?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_GetCartIteams value)? getCartIteams,
+    TResult Function(_IsAvailable value)? isAvailable,
+    required TResult orElse(),
+  }) {
+    if (isAvailable != null) {
+      return isAvailable(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _IsAvailable implements CartIteamsEvent {
+  const factory _IsAvailable(final String pincode) = _$_IsAvailable;
+
+  String get pincode;
+  @JsonKey(ignore: true)
+  _$$_IsAvailableCopyWith<_$_IsAvailable> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

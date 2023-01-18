@@ -18,6 +18,7 @@ class Network {
     });
   }
 
+  //!
   Future<Response> postloginwithEmail(String email, String password) async {
     return await client.postRequest(UrlRepo.loginwithemail, data: {
       'email': email,
@@ -25,10 +26,14 @@ class Network {
     });
   }
 
+  //!
   Future<Response> verifyOtp(String phone, String otp) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String guestId = prefs.getString('guest_id') ?? '';
     return await client.postRequest(UrlRepo.verifyOtp, data: {
       "phone": phone,
       "otp": int.parse(otp),
+      "guest_id": guestId,
     });
   }
 
@@ -116,6 +121,16 @@ class Network {
           });
   }
 
+  // check product
+  Future<Response> checkProduct(String pincode) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+    return await client.postRequest(UrlRepo.isAvailable, data: {
+      "token": token,
+      "pincode": pincode,
+    });
+  }
+
   Future<Response> deleteCartIteam(String pid) async {
     return await client.postRequest(UrlRepo.removecart(pid), data: {});
   }
@@ -191,7 +206,7 @@ class Network {
       "locality": locality,
       "pincode": pincode,
       "location": location,
-      'token': prefs.getString('token') ?? ''
+      'token': prefs.getString('token')
     });
   }
 

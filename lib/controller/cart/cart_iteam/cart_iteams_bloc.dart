@@ -26,5 +26,22 @@ class CartIteamsBloc extends Bloc<CartIteamsEvent, CartIteamsState> {
         },
       );
     });
+
+    on<_IsAvailable>((event, emit) async {
+      emit(const _Loading());
+      List<CartIteamModel> cartIteamDataList = [];
+      var result = await CartRepo.isAvailable(event.pincode);
+      result.when(
+        success: (data) {
+          for (var element in data) {
+            cartIteamDataList.add(CartIteamModel.fromJson(element));
+          }
+          emit(_Loaded(cartIteamList: cartIteamDataList));
+        },
+        failure: (error) {
+          emit(_Error(message: NetworkExceptions.getErrorMessage(error)));
+        },
+      );
+    });
   }
 }

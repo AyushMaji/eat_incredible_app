@@ -18,6 +18,7 @@ import 'package:logger/logger.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 class ProductDetails extends StatefulWidget {
   final String productId;
@@ -690,17 +691,25 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                                 .categoryId
                                                                 .toString(),
                                                             ontap: () {
-                                                              Get.to(() =>
-                                                                  ProductDetails(
-                                                                    productId: productList[
-                                                                            index]
-                                                                        .id
-                                                                        .toString(),
-                                                                    catId: productList[
-                                                                            index]
-                                                                        .categoryId
-                                                                        .toString(),
-                                                                  ));
+                                                              // add swaipable navigation
+
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .push(
+                                                                      SwipeablePageRoute(
+                                                                builder: (BuildContext
+                                                                        context) =>
+                                                                    ProductDetails(
+                                                                  productId: productList[
+                                                                          index]
+                                                                      .id
+                                                                      .toString(),
+                                                                  catId: productList[
+                                                                          index]
+                                                                      .categoryId
+                                                                      .toString(),
+                                                                ),
+                                                              ));
                                                             },
                                                             addtocartTap: () {
                                                               context

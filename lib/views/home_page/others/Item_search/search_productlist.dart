@@ -11,6 +11,7 @@ import 'package:eat_incredible_app/views/home_page/others/product_details/produc
 import 'package:eat_incredible_app/widgets/addtocart/addtocart_bar.dart';
 import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SearchProductList extends StatefulWidget {
@@ -71,7 +72,14 @@ class _SearchProductListState extends State<SearchProductList> {
                   Expanded(
                     child: BlocConsumer<SearchBloc, SearchState>(
                       bloc: searchBloc,
-                      listener: (context, state) {},
+                      listener: (context, state) {
+                        state.maybeWhen(
+                          orElse: () {},
+                          success: (productList) {
+                            Logger().e(productList.length);
+                          },
+                        );
+                      },
                       builder: (context, state) {
                         return state.maybeWhen(
                           orElse: () {
@@ -115,13 +123,15 @@ class _SearchProductListState extends State<SearchProductList> {
                                                   initial: () {},
                                                   loading: (pid) {
                                                     if (pid ==
-                                                        productList[index]) {
+                                                        productList[index]
+                                                            .variantId) {
                                                       CustomSnackbar.loading();
                                                     }
                                                   },
                                                   success: (msg, pid) {
                                                     if (pid ==
-                                                        productList[index].id) {
+                                                        productList[index]
+                                                            .variantId) {
                                                       getData();
                                                       BotToast.showText(
                                                           text: msg);
@@ -176,7 +186,7 @@ class _SearchProductListState extends State<SearchProductList> {
                                                             productid:
                                                                 productList[
                                                                         index]
-                                                                    .id
+                                                                    .variantId
                                                                     .toString()));
                                                   },
                                                   cartId: productList[index]

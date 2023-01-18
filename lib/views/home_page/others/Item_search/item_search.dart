@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
@@ -9,6 +8,7 @@ import 'package:eat_incredible_app/views/home_page/navigation/navigation.dart';
 import 'package:eat_incredible_app/views/home_page/others/Item_search/search_productlist.dart';
 import 'package:eat_incredible_app/views/home_page/others/product_details/product_details.dart';
 import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:shimmer/shimmer.dart';
@@ -73,7 +73,9 @@ class _ItemSearchState extends State<ItemSearch> {
                         ),
                       ),
                       suffixIcon: searchKey == ''
-                          ? const Icon(Icons.search)
+                          ? const Icon(
+                              Icons.search,
+                            )
                           : IconButton(
                               onPressed: () {
                                 setState(() {
@@ -278,34 +280,57 @@ class _ItemSearchState extends State<ItemSearch> {
                       ),
                       SizedBox(
                         height: 50.h,
-                        child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: 4,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(left: 8.w, top: 1.h),
-                                child: FilterChip(
-                                  side: const BorderSide(color: Colors.grey),
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                  ),
-                                  backgroundColor: Colors.transparent,
-                                  label: Text('Vegetables',
-                                      style: GoogleFonts.poppins(
-                                          color: const Color.fromRGBO(
-                                              120, 120, 120, 1),
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w400)),
-                                  onSelected: (bool value) {
-                                    log("$index iteam$value");
-                                  },
-                                ),
-                              );
-                            }),
+                        child: BlocConsumer<SearchBloc, SearchState>(
+                          bloc: context.read<SearchBloc>(),
+                          listener: (context, state) {},
+                          builder: (context, state) {
+                            return state.maybeWhen(
+                              orElse: () {
+                                return Container();
+                              },
+                              success: (search) {
+                                return ListView.builder(
+                                    physics: const BouncingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: search.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 8.w, top: 1.h),
+                                        child: FilterChip(
+                                          side: const BorderSide(
+                                              color: Colors.grey),
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(20),
+                                            ),
+                                          ),
+                                          backgroundColor: Colors.transparent,
+                                          label: Text(search[index],
+                                              style: GoogleFonts.poppins(
+                                                  color: const Color.fromRGBO(
+                                                      120, 120, 120, 1),
+                                                  fontSize: 10.sp,
+                                                  fontWeight: FontWeight.w400)),
+                                          onSelected: (bool value) {
+                                            HapticFeedback.lightImpact();
+                                            _searchController.text =
+                                                search[index];
+                                            searchKey = search[index];
+                                            searchBloc.add(
+                                              SearchEvent.searchKey(
+                                                  search: searchKey),
+                                            );
+                                            setState(() {});
+                                          },
+                                        ),
+                                      );
+                                    });
+                              },
+                            );
+                          },
+                        ),
                       ),
                     ],
                   )

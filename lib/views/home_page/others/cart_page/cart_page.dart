@@ -22,6 +22,7 @@ import 'package:eat_incredible_app/widgets/coupon_code/use_coupon.dart';
 import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
@@ -40,6 +41,7 @@ class _CartPageState extends State<CartPage> {
   bool isGuest = true;
   int addressIndex = 0;
   late Razorpay razorpay;
+  CartIteamsBloc isAvailableIteamsBloc = CartIteamsBloc();
 
   Future<void> checkGuest() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -90,7 +92,11 @@ class _CartPageState extends State<CartPage> {
     Map<String, dynamic> body = {
       "amount": 1 * 100,
       "currency": "INR",
-      "receipt": "rcptid_11"
+      "receipt": "rcptid_11",
+      "payment_capture": 1,
+      // "notes": {
+      //   "address": "Hello World",
+      // },
     };
     var res = await http.post(
       Uri.https("api.razorpay.com",
@@ -549,13 +555,8 @@ class _CartPageState extends State<CartPage> {
                                                           if (pid ==
                                                               productList[index]
                                                                   .variantId) {
-                                                            context
-                                                                .read<
-                                                                    ProductListBloc>()
-                                                                .add(const ProductListEvent
-                                                                        .fetchProductList(
-                                                                    categoryId:
-                                                                        "98989"));
+                                                            getData();
+
                                                             BotToast.showText(
                                                                 text: msg);
                                                           }
@@ -723,9 +724,19 @@ class _CartPageState extends State<CartPage> {
                                       ),
                                     );
                                   }
-                                : () {
-                                    showbottomsheet(context);
-                                  },
+                                : cartDetailModel.totalItem.toString() != '0'
+                                    ? () {
+                                        showbottomsheet(context);
+                                      }
+                                    : () {
+                                        Get.snackbar(
+                                          "Cart is empty",
+                                          "Please add some items to cart",
+                                          snackPosition: SnackPosition.TOP,
+                                          backgroundColor: Colors.red,
+                                          colorText: Colors.white,
+                                        );
+                                      },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xff02A008),
                             ),
@@ -782,7 +793,17 @@ class _CartPageState extends State<CartPage> {
                             ),
                             BlocConsumer<ViewAddresslistBloc,
                                 ViewAddresslistState>(
-                              listener: (context, state) {},
+                              listener: (context, state) {
+                                state.maybeWhen(
+                                  orElse: () {},
+                                  loaded: (addressList) {
+                                    setState(() {
+                                      pincode =
+                                          addressList[0].pincode.toString();
+                                    });
+                                  },
+                                );
+                              },
                               builder: (context, state) {
                                 return state.maybeWhen(orElse: () {
                                   return const Text('something went wrong');
@@ -796,9 +817,9 @@ class _CartPageState extends State<CartPage> {
                                 }, loaded: (addressList) {
                                   return addressList.isEmpty
                                       ? Padding(
-                                          padding: EdgeInsets.only(top: 120.h),
+                                          padding: EdgeInsets.only(top: 10.h),
                                           child: Center(
-                                            child: Text('No address found',
+                                            child: Text('',
                                                 style: TextStyle(
                                                   color: const Color.fromARGB(
                                                       47, 0, 0, 0),
@@ -849,6 +870,10 @@ class _CartPageState extends State<CartPage> {
                                                 child: ListTile(
                                                     onTap: () {
                                                       addressIndex = index;
+                                                      pincode =
+                                                          addressList[index]
+                                                              .pincode
+                                                              .toString();
                                                       setState(() {});
                                                     },
                                                     contentPadding:
@@ -942,34 +967,74 @@ class _CartPageState extends State<CartPage> {
                                 });
                               },
                             ),
-                            Container(
-                              padding: EdgeInsets.only(
-                                  left: 10.w,
-                                  right: 10.w,
-                                  bottom: 3.h,
-                                  top: 3.h),
-                              child: SizedBox(
-                                height: 35.h,
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    dialogbox(context);
-
-                                    // createOrder();
-                                    // Get.offAll(() => const OrderConfirmPage());
+                            BlocConsumer<CartIteamsBloc, CartIteamsState>(
+                              bloc: isAvailableIteamsBloc,
+                              listener: (context, state) {
+                                state.maybeWhen(
+                                  orElse: () {},
+                                  loaded: (cartIteamList) async {
+                                    if (cartIteamList.isEmpty) {
+                                      createOrder();
+                                      Logger().e(pincode);
+                                      // another api
+                                    } else {
+                                      dialogbox(context);
+                                    }
                                   },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xff02A008),
-                                  ),
-                                  child: Text("Next Step",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 13.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      )),
-                                ),
-                              ),
+                                );
+                              },
+                              builder: (context, state) {
+                                return state.maybeWhen(
+                                  orElse: () {
+                                    return Container(
+                                      padding: EdgeInsets.only(
+                                          left: 10.w,
+                                          right: 10.w,
+                                          bottom: 10.h,
+                                          top: 5.h),
+                                      child: SizedBox(
+                                        height: 40.h,
+                                        width: double.infinity,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            isAvailableIteamsBloc.add(
+                                                CartIteamsEvent.isAvailable(
+                                                    pincode.toString()));
+                                            // dialogbox(context);
+
+                                            //  createOrder();
+                                            // Get.offAll(() => const OrderConfirmPage());
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xff02A008),
+                                          ),
+                                          child: Text("Next Step",
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 13.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white,
+                                              )),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  loading: () {
+                                    return Center(
+                                      child: Container(
+                                          padding: EdgeInsets.only(
+                                              left: 10.w,
+                                              right: 10.w,
+                                              bottom: 12.h,
+                                              top: 11.h),
+                                          child:
+                                              const CircularProgressIndicator(
+                                            color: Color(0xff02A008),
+                                          )),
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           ]),
                     ));
@@ -982,32 +1047,49 @@ class _CartPageState extends State<CartPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          elevation: 5,
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text("Cancel"),
+              child: const Text("Cancel",
+                  style: TextStyle(
+                    color: Color(0xff02A008),
+                  )),
             ),
             TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: const Color(0xff02A008),
+              ),
               onPressed: () {
                 Navigator.pop(context);
+                Navigator.pop(context);
               },
-              child: const Text("Ok"),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                child: Text(
+                  "Go to Cart",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12.sp,
+                  ),
+                ),
+              ),
             ),
           ],
           title: Text(
-            "This Product is not available in your area please remove it from your cart !!",
+            "Not available in your area.",
             style: GoogleFonts.poppins(
-                color: const Color.fromARGB(143, 11, 11, 11),
-                fontSize: 12.sp,
+                color: const Color.fromARGB(179, 212, 3, 3),
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w600),
-            textAlign: TextAlign.left,
+            textAlign: TextAlign.center,
           ),
           content: SizedBox(
             height: 200.h,
             child: BlocConsumer<CartIteamsBloc, CartIteamsState>(
-              bloc: context.read<CartIteamsBloc>(),
+              bloc: isAvailableIteamsBloc,
               listener: (context, state) {},
               builder: (context, state) {
                 return state.maybeWhen(
@@ -1020,80 +1102,65 @@ class _CartPageState extends State<CartPage> {
                     );
                   },
                   loaded: (cartIteamsList) {
-                    return ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: cartIteamsList.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 2.2.h),
-                            child: Dismissible(
-                              onDismissed: ((direction) {
-                                CartRepo.deleteCartIteam(
-                                        cartIteamsList[index].id.toString())
-                                    .then((value) => {getData()});
-                              }),
-                              key: UniqueKey(),
-                              background: Container(
-                                color: Colors.red,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: const [
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 26.0),
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: Colors.white,
-                                      ),
+                    return cartIteamsList.isEmpty
+                        ? const Text('noData')
+                        : ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: cartIteamsList.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 2.2.h),
+                                child: Dismissible(
+                                  onDismissed: ((direction) {
+                                    CartRepo.deleteCartIteam(
+                                            cartIteamsList[index].id.toString())
+                                        .then((value) => {getData()});
+                                  }),
+                                  key: UniqueKey(),
+                                  background: Container(
+                                    color: Colors.red,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: const [
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 26.0),
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 1.w,
+                                    ),
+                                    child: ProductNotAvailable(
+                                      imageUrl: cartIteamsList[index]
+                                          .thumbnail
+                                          .toString(),
+                                      title: cartIteamsList[index]
+                                          .productName
+                                          .toString(),
+                                      price: cartIteamsList[index]
+                                          .originalPrice
+                                          .toString(),
+                                      disprice: cartIteamsList[index]
+                                          .salePrice
+                                          .toString(),
+                                      quantity: cartIteamsList[index]
+                                          .weight
+                                          .toString(),
+                                      iteam: 0,
+                                      onChanged: () {},
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 1.w,
-                                ),
-                                child: ProductNotAvailable(
-                                  imageUrl: cartIteamsList[index]
-                                      .thumbnail
-                                      .toString(),
-                                  title: cartIteamsList[index]
-                                      .productName
-                                      .toString(),
-                                  price: cartIteamsList[index]
-                                      .originalPrice
-                                      .toString(),
-                                  disprice: cartIteamsList[index]
-                                      .salePrice
-                                      .toString(),
-                                  quantity:
-                                      cartIteamsList[index].weight.toString(),
-                                  iteam: int.parse(cartIteamsList[index]
-                                      .quantity
-                                      .toString()),
-                                  onChanged: (String value) {
-                                    CartRepo.updateCartIteam(
-                                            cartIteamsList[index].id.toString(),
-                                            value)
-                                        .then((value) => {
-                                              BotToast.showText(
-                                                  text: 'removed from cart',
-                                                  textStyle:
-                                                      GoogleFonts.poppins(
-                                                          fontSize: 12.5.sp,
-                                                          color: Colors.white),
-                                                  duration: const Duration(
-                                                      seconds: 1)),
-                                              getData(),
-                                            });
-                                  },
-                                  ontap: () {},
-                                ),
-                              ),
-                            ),
-                          );
-                        });
+                              );
+                            });
                   },
                 );
               },

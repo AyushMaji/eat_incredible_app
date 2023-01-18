@@ -23,6 +23,19 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         },
       );
     });
+    on<_TrendingSearch>((event, emit) async {
+      emit(const _Loading());
+      var result = await SearchRepo().treadingSearch();
+      result.when(
+        success: (data) {
+          Logger().i(data);
+          emit(_Success(search: data));
+        },
+        failure: (error) {
+          emit(_Failure(message: error.toString()));
+        },
+      );
+    });
 
     on<_SearchProduct>((event, emit) async {
       List<ProductlistModel> searchData = [];

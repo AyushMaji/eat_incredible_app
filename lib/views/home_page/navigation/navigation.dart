@@ -5,6 +5,7 @@ import 'package:eat_incredible_app/controller/category/category_bloc.dart';
 import 'package:eat_incredible_app/controller/coupon/coupon_bloc.dart';
 import 'package:eat_incredible_app/controller/orderlist/orderlist_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
+import 'package:eat_incredible_app/controller/search/search_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/views/home_page/navigation/acount_page.dart';
 import 'package:eat_incredible_app/views/home_page/navigation/home_page.dart';
@@ -37,6 +38,7 @@ class _NavigationState extends State<Navigation> {
         .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
     context.read<AboutBloc>().add(const AboutEvent.aboutUs());
     context.read<CouponBloc>().add(const CouponEvent.getCouponList());
+    context.read<SearchBloc>().add(const SearchEvent.trendingSearch());
   }
 
   int pageIndex = 0;

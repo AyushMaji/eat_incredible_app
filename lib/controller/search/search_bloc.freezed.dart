@@ -21,6 +21,7 @@ mixin _$SearchEvent {
     required TResult Function() started,
     required TResult Function(String search) searchProduct,
     required TResult Function(String search) searchKey,
+    required TResult Function() trendingSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -28,6 +29,7 @@ mixin _$SearchEvent {
     TResult Function()? started,
     TResult Function(String search)? searchProduct,
     TResult Function(String search)? searchKey,
+    TResult Function()? trendingSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +37,7 @@ mixin _$SearchEvent {
     TResult Function()? started,
     TResult Function(String search)? searchProduct,
     TResult Function(String search)? searchKey,
+    TResult Function()? trendingSearch,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +46,7 @@ mixin _$SearchEvent {
     required TResult Function(_Started value) started,
     required TResult Function(_SearchProduct value) searchProduct,
     required TResult Function(_SearchKey value) searchKey,
+    required TResult Function(_TrendingSearch value) trendingSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +54,7 @@ mixin _$SearchEvent {
     TResult Function(_Started value)? started,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_SearchKey value)? searchKey,
+    TResult Function(_TrendingSearch value)? trendingSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +62,7 @@ mixin _$SearchEvent {
     TResult Function(_Started value)? started,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_SearchKey value)? searchKey,
+    TResult Function(_TrendingSearch value)? trendingSearch,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -120,6 +126,7 @@ class _$_Started implements _Started {
     required TResult Function() started,
     required TResult Function(String search) searchProduct,
     required TResult Function(String search) searchKey,
+    required TResult Function() trendingSearch,
   }) {
     return started();
   }
@@ -130,6 +137,7 @@ class _$_Started implements _Started {
     TResult Function()? started,
     TResult Function(String search)? searchProduct,
     TResult Function(String search)? searchKey,
+    TResult Function()? trendingSearch,
   }) {
     return started?.call();
   }
@@ -140,6 +148,7 @@ class _$_Started implements _Started {
     TResult Function()? started,
     TResult Function(String search)? searchProduct,
     TResult Function(String search)? searchKey,
+    TResult Function()? trendingSearch,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -154,6 +163,7 @@ class _$_Started implements _Started {
     required TResult Function(_Started value) started,
     required TResult Function(_SearchProduct value) searchProduct,
     required TResult Function(_SearchKey value) searchKey,
+    required TResult Function(_TrendingSearch value) trendingSearch,
   }) {
     return started(this);
   }
@@ -164,6 +174,7 @@ class _$_Started implements _Started {
     TResult Function(_Started value)? started,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_SearchKey value)? searchKey,
+    TResult Function(_TrendingSearch value)? trendingSearch,
   }) {
     return started?.call(this);
   }
@@ -174,6 +185,7 @@ class _$_Started implements _Started {
     TResult Function(_Started value)? started,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_SearchKey value)? searchKey,
+    TResult Function(_TrendingSearch value)? trendingSearch,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -255,6 +267,7 @@ class _$_SearchProduct implements _SearchProduct {
     required TResult Function() started,
     required TResult Function(String search) searchProduct,
     required TResult Function(String search) searchKey,
+    required TResult Function() trendingSearch,
   }) {
     return searchProduct(search);
   }
@@ -265,6 +278,7 @@ class _$_SearchProduct implements _SearchProduct {
     TResult Function()? started,
     TResult Function(String search)? searchProduct,
     TResult Function(String search)? searchKey,
+    TResult Function()? trendingSearch,
   }) {
     return searchProduct?.call(search);
   }
@@ -275,6 +289,7 @@ class _$_SearchProduct implements _SearchProduct {
     TResult Function()? started,
     TResult Function(String search)? searchProduct,
     TResult Function(String search)? searchKey,
+    TResult Function()? trendingSearch,
     required TResult orElse(),
   }) {
     if (searchProduct != null) {
@@ -289,6 +304,7 @@ class _$_SearchProduct implements _SearchProduct {
     required TResult Function(_Started value) started,
     required TResult Function(_SearchProduct value) searchProduct,
     required TResult Function(_SearchKey value) searchKey,
+    required TResult Function(_TrendingSearch value) trendingSearch,
   }) {
     return searchProduct(this);
   }
@@ -299,6 +315,7 @@ class _$_SearchProduct implements _SearchProduct {
     TResult Function(_Started value)? started,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_SearchKey value)? searchKey,
+    TResult Function(_TrendingSearch value)? trendingSearch,
   }) {
     return searchProduct?.call(this);
   }
@@ -309,6 +326,7 @@ class _$_SearchProduct implements _SearchProduct {
     TResult Function(_Started value)? started,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_SearchKey value)? searchKey,
+    TResult Function(_TrendingSearch value)? trendingSearch,
     required TResult orElse(),
   }) {
     if (searchProduct != null) {
@@ -395,6 +413,7 @@ class _$_SearchKey implements _SearchKey {
     required TResult Function() started,
     required TResult Function(String search) searchProduct,
     required TResult Function(String search) searchKey,
+    required TResult Function() trendingSearch,
   }) {
     return searchKey(search);
   }
@@ -405,6 +424,7 @@ class _$_SearchKey implements _SearchKey {
     TResult Function()? started,
     TResult Function(String search)? searchProduct,
     TResult Function(String search)? searchKey,
+    TResult Function()? trendingSearch,
   }) {
     return searchKey?.call(search);
   }
@@ -415,6 +435,7 @@ class _$_SearchKey implements _SearchKey {
     TResult Function()? started,
     TResult Function(String search)? searchProduct,
     TResult Function(String search)? searchKey,
+    TResult Function()? trendingSearch,
     required TResult orElse(),
   }) {
     if (searchKey != null) {
@@ -429,6 +450,7 @@ class _$_SearchKey implements _SearchKey {
     required TResult Function(_Started value) started,
     required TResult Function(_SearchProduct value) searchProduct,
     required TResult Function(_SearchKey value) searchKey,
+    required TResult Function(_TrendingSearch value) trendingSearch,
   }) {
     return searchKey(this);
   }
@@ -439,6 +461,7 @@ class _$_SearchKey implements _SearchKey {
     TResult Function(_Started value)? started,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_SearchKey value)? searchKey,
+    TResult Function(_TrendingSearch value)? trendingSearch,
   }) {
     return searchKey?.call(this);
   }
@@ -449,6 +472,7 @@ class _$_SearchKey implements _SearchKey {
     TResult Function(_Started value)? started,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_SearchKey value)? searchKey,
+    TResult Function(_TrendingSearch value)? trendingSearch,
     required TResult orElse(),
   }) {
     if (searchKey != null) {
@@ -465,6 +489,123 @@ abstract class _SearchKey implements SearchEvent {
   @JsonKey(ignore: true)
   _$$_SearchKeyCopyWith<_$_SearchKey> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_TrendingSearchCopyWith<$Res> {
+  factory _$$_TrendingSearchCopyWith(
+          _$_TrendingSearch value, $Res Function(_$_TrendingSearch) then) =
+      __$$_TrendingSearchCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_TrendingSearchCopyWithImpl<$Res>
+    extends _$SearchEventCopyWithImpl<$Res>
+    implements _$$_TrendingSearchCopyWith<$Res> {
+  __$$_TrendingSearchCopyWithImpl(
+      _$_TrendingSearch _value, $Res Function(_$_TrendingSearch) _then)
+      : super(_value, (v) => _then(v as _$_TrendingSearch));
+
+  @override
+  _$_TrendingSearch get _value => super._value as _$_TrendingSearch;
+}
+
+/// @nodoc
+
+class _$_TrendingSearch implements _TrendingSearch {
+  const _$_TrendingSearch();
+
+  @override
+  String toString() {
+    return 'SearchEvent.trendingSearch()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_TrendingSearch);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function(String search) searchProduct,
+    required TResult Function(String search) searchKey,
+    required TResult Function() trendingSearch,
+  }) {
+    return trendingSearch();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(String search)? searchProduct,
+    TResult Function(String search)? searchKey,
+    TResult Function()? trendingSearch,
+  }) {
+    return trendingSearch?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(String search)? searchProduct,
+    TResult Function(String search)? searchKey,
+    TResult Function()? trendingSearch,
+    required TResult orElse(),
+  }) {
+    if (trendingSearch != null) {
+      return trendingSearch();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_SearchProduct value) searchProduct,
+    required TResult Function(_SearchKey value) searchKey,
+    required TResult Function(_TrendingSearch value) trendingSearch,
+  }) {
+    return trendingSearch(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_SearchProduct value)? searchProduct,
+    TResult Function(_SearchKey value)? searchKey,
+    TResult Function(_TrendingSearch value)? trendingSearch,
+  }) {
+    return trendingSearch?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_SearchProduct value)? searchProduct,
+    TResult Function(_SearchKey value)? searchKey,
+    TResult Function(_TrendingSearch value)? trendingSearch,
+    required TResult orElse(),
+  }) {
+    if (trendingSearch != null) {
+      return trendingSearch(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _TrendingSearch implements SearchEvent {
+  const factory _TrendingSearch() = _$_TrendingSearch;
 }
 
 /// @nodoc

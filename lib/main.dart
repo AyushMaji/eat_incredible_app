@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
               navigatorObservers: [BotToastNavigatorObserver()],
               theme: ThemeData(useMaterial3: true),
               debugShowCheckedModeBanner: false,
-              title: 'Eat incredible App',
+              title: 'Eat incredible',
               home: const SplashScreen(),
             ),
           );

@@ -36,6 +36,18 @@ class CartRepo {
     }
   }
 
+  // check cart item is available or not
+
+  static Future isAvailable(String pincode) async {
+    try {
+      var res = await network.checkProduct(pincode);
+      Logger().i(res.data);
+      return ApiResult.success(data: res.data);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
+
   static Future deleteCartIteam(String cartid) async {
     try {
       var res = await network.deleteCartIteam(cartid);

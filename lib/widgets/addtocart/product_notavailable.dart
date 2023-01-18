@@ -8,19 +8,18 @@ class ProductNotAvailable extends StatefulWidget {
   final String price;
   final String quantity;
   final int iteam;
-  final ValueChanged<String>? onChanged;
-  final GestureTapCallback? ontap;
+  final GestureTapCallback? onChanged;
 
-  const ProductNotAvailable(
-      {super.key,
-      required this.imageUrl,
-      required this.title,
-      required this.disprice,
-      required this.price,
-      required this.quantity,
-      required this.iteam,
-      required this.onChanged,
-      required this.ontap});
+  const ProductNotAvailable({
+    super.key,
+    required this.imageUrl,
+    required this.title,
+    required this.disprice,
+    required this.price,
+    required this.quantity,
+    required this.iteam,
+    required this.onChanged,
+  });
 
   @override
   State<ProductNotAvailable> createState() => _ProductNotAvailableState();
@@ -91,8 +90,16 @@ class _ProductNotAvailableState extends State<ProductNotAvailable> {
                   ),
                 ],
               ),
+              // add icon
             ],
           ),
+          // GestureDetector(
+          //   onTap:  onch ,
+          //   child: const Icon(
+          //     Icons.delete_outline_outlined,
+          //     color: Colors.red,
+          //   ),
+          // ),
         ],
       ),
     );
