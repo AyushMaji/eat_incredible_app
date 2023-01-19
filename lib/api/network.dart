@@ -282,10 +282,30 @@ class Network {
     });
   }
 
-  // weight list
+  //! weight list
   Future<Response> weightList(String pid) async {
     return await client.postRequest(UrlRepo.weightlist, data: {
       'pid': pid,
+    });
+  }
+
+  //! cancel apis
+
+  Future<Response> cancelOrder(String orderId, String reason) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return await client.postRequest(UrlRepo.cancelorder, data: {
+      "token": prefs.getString('token') ?? '',
+      "oid": orderId,
+    });
+  }
+
+  //! repeat order
+  Future<Response> repeatOrder(String orderId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await client.postRequest(UrlRepo.repeatorder, data: {
+      "token": prefs.getString('token') ?? '',
+      "oid": orderId,
     });
   }
 }

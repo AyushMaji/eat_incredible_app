@@ -1,6 +1,10 @@
+import 'package:eat_incredible_app/api/network_exception.dart';
 import 'package:eat_incredible_app/controller/orderdetails/orderdetails_bloc.dart';
 import 'package:eat_incredible_app/controller/orderitems/orderitems_bloc.dart';
+import 'package:eat_incredible_app/repo/cart_repo.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
+import 'package:eat_incredible_app/utils/messsenger.dart';
+import 'package:eat_incredible_app/views/home_page/others/cart_page/cart_page.dart';
 import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
 import 'package:eat_incredible_app/widgets/track_order/track_order_timeline.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +22,7 @@ class OrderViewPage extends StatefulWidget {
 
 class _OrderViewPageState extends State<OrderViewPage> {
   String isUrl = "";
+  int status = -1;
   @override
   void initState() {
     getData();
@@ -57,6 +62,57 @@ class _OrderViewPageState extends State<OrderViewPage> {
           ),
         ),
         actions: [
+          (status != -1 && status != 4)
+              ? IconButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Cancel Order"),
+                            content: const Text(
+                                "Are you sure you want to cancel this order?"),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: const Text("No")),
+                              TextButton(
+                                  onPressed: () async {
+                                    CustomSnackbar.loading();
+                                    var res = await CartRepo()
+                                        .cancelOrder(widget.id, '');
+                                    res.when(success: (value) {
+                                      Get.back();
+                                      getData();
+                                      CustomSnackbar.successSnackbar(
+                                          'Order Cancelled',
+                                          "Your order has been cancelled");
+                                    }, failure: (error) {
+                                      Get.back();
+                                      CustomSnackbar.errorSnackbar(
+                                          'Error',
+                                          NetworkExceptions.getErrorMessage(
+                                              error));
+                                    });
+                                    // Get.back();
+                                  },
+                                  child: const Text("Yes")),
+                            ],
+                          );
+                        });
+                  },
+                  icon: Text(
+                    "Cancel Order",
+                    style: GoogleFonts.poppins(
+                      color: const Color.fromARGB(255, 246, 4, 4),
+                      fontSize: 9.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                )
+              : const SizedBox(),
           IconButton(
               onPressed: () async {
                 String url = isUrl.toString();
@@ -66,7 +122,7 @@ class _OrderViewPageState extends State<OrderViewPage> {
                 Icons.share,
                 color: const Color.fromRGBO(0, 0, 0, 1),
                 size: 14.sp,
-              ))
+              )),
         ],
       ),
       body: RefreshIndicator(
@@ -82,6 +138,7 @@ class _OrderViewPageState extends State<OrderViewPage> {
               success: (orderDetails) {
                 setState(() {
                   isUrl = orderDetails[0].invoice.toString();
+                  status = orderDetails[0].odrStatus ?? -1;
                 });
               },
             );
@@ -129,8 +186,8 @@ class _OrderViewPageState extends State<OrderViewPage> {
                                     )),
 
                                 const SizedBox(height: 10),
-                                const OrderTimeline(
-                                  index: 2,
+                                OrderTimeline(
+                                  index: (orderDetails[0].odrStatus)! - 1,
                                 ),
                                 const SizedBox(height: 10),
                                 orderDetails[0].totalItems == 1
@@ -553,7 +610,17 @@ class _OrderViewPageState extends State<OrderViewPage> {
                                           width: 1,
                                         ),
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () async {
+                                        var res = await CartRepo()
+                                            .repeatOrder(widget.id);
+                                        res.when(success: (value) {
+                                          CustomSnackbar.loading();
+                                          Get.to(() => const CartPage());
+                                        }, failure: (error) {
+                                          Get.snackbar(
+                                              "Error", error.toString());
+                                        });
+                                      },
                                       child: Text(
                                         'Repeat Order',
                                         style: GoogleFonts.poppins(

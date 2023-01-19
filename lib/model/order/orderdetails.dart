@@ -24,6 +24,7 @@ class OrderDetailsModel {
     required this.discount,
     required this.totalBill,
     required this.invoice,
+    this.odrStatus,
   });
 
   String id;
@@ -38,6 +39,7 @@ class OrderDetailsModel {
   int discount;
   String totalBill;
   String? invoice;
+  int? odrStatus;
 
   factory OrderDetailsModel.fromJson(Map<String, dynamic> json) =>
       OrderDetailsModel(
@@ -53,6 +55,7 @@ class OrderDetailsModel {
         discount: json["discount"],
         totalBill: json["total_bill"],
         invoice: json["invoice"],
+        odrStatus: json["odr_status"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -68,5 +71,6 @@ class OrderDetailsModel {
         "discount": discount,
         "total_bill": totalBill,
         "invoice": invoice,
+        "odr_status": odrStatus,
       };
 }

@@ -40,4 +40,8 @@ class UrlRepo {
   static String orderDetails = "order_bill_details.php";
   static String orderitems = "ordered_items.php";
   static String weightlist = "product_weight.php";
+
+//! cencle api and repeate order apis
+  static String cancelorder = "cancel_order.php";
+  static String repeatorder = "repeat_order.php";
 }

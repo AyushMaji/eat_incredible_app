@@ -36,7 +36,7 @@ class CartRepo {
     }
   }
 
-  // check cart item is available or not
+  //! check cart item is available or not
 
   static Future isAvailable(String pincode) async {
     try {
@@ -102,6 +102,28 @@ class CartRepo {
   Future<ApiResult> orderItem(String orderid) async {
     try {
       var res = await network.orderItem(orderid);
+      Logger().i(res.data);
+      return ApiResult.success(data: res.data);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
+
+  //! cancel order ==>
+  Future<ApiResult> cancelOrder(String orderid, String reason) async {
+    try {
+      var res = await network.cancelOrder(orderid, reason);
+      Logger().i(res.data);
+      return ApiResult.success(data: res.data);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
+
+  //! repeat order ==>
+  Future<ApiResult> repeatOrder(String orderid) async {
+    try {
+      var res = await network.repeatOrder(orderid);
       Logger().i(res.data);
       return ApiResult.success(data: res.data);
     } catch (e) {
