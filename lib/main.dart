@@ -9,10 +9,12 @@ import 'package:eat_incredible_app/controller/cart/cart_iteam/cart_iteams_bloc.d
 import 'package:eat_incredible_app/controller/category/category_bloc.dart';
 import 'package:eat_incredible_app/controller/coupon/coupon_bloc.dart';
 import 'package:eat_incredible_app/controller/inser_name/insername_bloc.dart';
+import 'package:eat_incredible_app/controller/invoice/invoice_bloc.dart';
 import 'package:eat_incredible_app/controller/login/login_bloc.dart';
 import 'package:eat_incredible_app/controller/orderdetails/orderdetails_bloc.dart';
 import 'package:eat_incredible_app/controller/orderitems/orderitems_bloc.dart';
 import 'package:eat_incredible_app/controller/orderlist/orderlist_bloc.dart';
+import 'package:eat_incredible_app/controller/ordertype/ordertype_bloc.dart';
 import 'package:eat_incredible_app/controller/product_details/product_details_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
 import 'package:eat_incredible_app/controller/search/search_bloc.dart';
@@ -68,7 +70,9 @@ class MyApp extends StatelessWidget {
                   create: (context) => OrderitemsBloc()),
               BlocProvider<OrderdetailsBloc>(
                   create: (context) => OrderdetailsBloc()),
-              BlocProvider<WeightBloc>(create: (context) => WeightBloc())
+              BlocProvider<WeightBloc>(create: (context) => WeightBloc()),
+              BlocProvider<OrdertypeBloc>(create: (context) => OrdertypeBloc()),
+              BlocProvider<InvoiceBloc>(create: (context) => InvoiceBloc())
             ],
             child: GetMaterialApp(
               builder: BotToastInit(),

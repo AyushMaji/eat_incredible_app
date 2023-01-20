@@ -116,7 +116,21 @@ class _ProductDetailsState extends State<ProductDetails> {
               },
               builder: (context, state) {
                 return state.maybeWhen(
-                  orElse: () => Container(),
+                  orElse: () {
+                    return Center(
+                      child: TextButton.icon(
+                        onPressed: () {
+                          getData(widget.productId, v_id);
+                        },
+                        icon: const Icon(Icons.refresh_outlined),
+                        label: const Text(
+                          "Retry",
+                          style:
+                              TextStyle(color: Color.fromARGB(138, 17, 16, 16)),
+                        ),
+                      ),
+                    );
+                  },
                   loading: () {
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -583,7 +597,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                             highlightColor: Colors.grey[100]!,
                                             child: Image.asset(
                                               "assets/images/itemList.png",
-                                              fit: BoxFit.cover,
+                                              fit: BoxFit.contain,
                                             ),
                                           ),
                                         ),
@@ -634,13 +648,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                                     productList[
                                                                             index]
                                                                         .variantId) {
-                                                                  context
-                                                                      .read<
-                                                                          ProductListBloc>()
-                                                                      .add(const ProductListEvent
-                                                                              .fetchProductList(
-                                                                          categoryId:
-                                                                              "98989"));
+                                                                  getData(
+                                                                      widget
+                                                                          .productId,
+                                                                      v_id);
                                                                   BotToast
                                                                       .showText(
                                                                           text:

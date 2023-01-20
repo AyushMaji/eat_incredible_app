@@ -13,24 +13,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final ProductListBloc productListOfferBloc;
+  final ProductListBloc productListsugessionBloc;
+
+  const HomePage(
+      {super.key,
+      required this.productListOfferBloc,
+      required this.productListsugessionBloc});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  // ProductListBloc productListOfferBloc = ProductListBloc();
-  // ProductListBloc productListsugessionBloc = ProductListBloc();
-
   void getData() {
     context.read<CategoryBloc>().add(const CategoryEvent.getCategory());
     context.read<AboutBloc>().add(const AboutEvent.aboutUs());
-    context
-        .read<ProductListBloc>()
+
+    widget.productListOfferBloc
         .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
-    // productListOfferBloc
-    //     .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
+    widget.productListsugessionBloc
+        .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
   }
 
   @override
@@ -44,11 +47,31 @@ class _HomePageState extends State<HomePage> {
         },
         child: BlocConsumer<AboutBloc, AboutState>(
           bloc: context.read<AboutBloc>(),
-          listener: (context, state) {},
+          listener: (context, state) {
+            state.when(
+                initial: () {},
+                loading: () {},
+                loaded: (_) {},
+                error: (e) {
+                  CustomSnackbar.flutterSnackbar(e.toString(), context);
+                });
+          },
           builder: (context, state) {
             return state.maybeWhen(
                 orElse: () {
-                  return const Text('somthing went wrong');
+                  return Center(
+                    child: TextButton.icon(
+                      onPressed: () {
+                        getData();
+                      },
+                      icon: const Icon(Icons.refresh_outlined),
+                      label: const Text(
+                        "Retry",
+                        style:
+                            TextStyle(color: Color.fromARGB(138, 17, 16, 16)),
+                      ),
+                    ),
+                  );
                 },
                 loading: () => const LinearProgressIndicator(
                       color: Colors.red,
@@ -156,7 +179,7 @@ class _HomePageState extends State<HomePage> {
                             width: double.infinity,
                             child:
                                 BlocConsumer<ProductListBloc, ProductListState>(
-                              bloc: context.read<ProductListBloc>(),
+                              bloc: widget.productListOfferBloc,
                               listener: (context, state) {},
                               builder: (context, state) {
                                 return state.maybeWhen(
@@ -175,68 +198,84 @@ class _HomePageState extends State<HomePage> {
                                       itemCount: productList.length,
                                       itemBuilder:
                                           (BuildContext context, int index) {
-                                        return Padding(
-                                          padding: EdgeInsets.only(right: 6.w),
-                                          child: ClipPath(
-                                            clipper: ShapeBorderClipper(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10))),
-                                            child: Stack(
-                                              children: [
-                                                Positioned(
-                                                  left: 9.h,
-                                                  child: CustomPic(
-                                                    imageUrl: productList[index]
-                                                        .thumbnail,
-                                                    height: 85.h,
-                                                    width: 60.w,
-                                                    fit: BoxFit.contain,
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  child: Container(
-                                                    height: 100.h,
-                                                    width: 85.w,
-                                                    decoration: BoxDecoration(
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Get.to(() => ProductDetails(
+                                                  productId: productList[index]
+                                                      .id
+                                                      .toString(),
+                                                  catId: productList[index]
+                                                      .categoryId
+                                                      .toString(),
+                                                ));
+                                          },
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 6.w),
+                                            child: ClipPath(
+                                              clipper: ShapeBorderClipper(
+                                                  shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              0),
-                                                      gradient:
-                                                          const LinearGradient(
-                                                        begin: Alignment
-                                                            .bottomCenter,
-                                                        end:
-                                                            Alignment.topCenter,
-                                                        colors: [
-                                                          Color(0xFF040404),
-                                                          Color.fromARGB(
-                                                              56, 0, 0, 0),
-                                                        ],
+                                                              10))),
+                                              child: Stack(
+                                                children: [
+                                                  Positioned(
+                                                    left: 9.h,
+                                                    child: CustomPic(
+                                                      imageUrl:
+                                                          productList[index]
+                                                              .thumbnail,
+                                                      height: 85.h,
+                                                      width: 60.w,
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                    child: Container(
+                                                      height: 100.h,
+                                                      width: 85.w,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(0),
+                                                        gradient:
+                                                            const LinearGradient(
+                                                          begin: Alignment
+                                                              .bottomCenter,
+                                                          end: Alignment
+                                                              .topCenter,
+                                                          colors: [
+                                                            Color(0xFF040404),
+                                                            Color.fromARGB(
+                                                                56, 0, 0, 0),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                                Positioned(
-                                                  bottom: 9.h,
-                                                  left: 10.w,
-                                                  child: Center(
-                                                    child: Text(
-                                                      "${productList[index].discountPercentage}% OFF",
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 13.sp,
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.w600),
+                                                  Positioned(
+                                                    bottom: 9.h,
+                                                    left: 10.w,
+                                                    child: Center(
+                                                      child: Text(
+                                                        "${productList[index].discountPercentage}% OFF",
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontSize: 13.sp,
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
                                                     ),
-                                                  ),
-                                                )
-                                              ],
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         );
@@ -259,26 +298,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         BlocConsumer<ProductListBloc, ProductListState>(
-                          bloc: context.read<ProductListBloc>(),
-                          listener: (context, state) {
-                            state.when(
-                                initial: () {},
-                                loading: () {},
-                                loaded: (_) {},
-                                failure: (e) {
-                                  CustomSnackbar.flutterSnackbarWithAction(
-                                      e, 'Retry', () {
-                                    context.read<ProductListBloc>().add(
-                                        const ProductListEvent.fetchProductList(
-                                            categoryId: "98989"));
-                                  }, context);
-                                });
-                          },
+                          bloc: widget.productListsugessionBloc,
+                          listener: (context, state) {},
                           builder: (context, state) {
                             return state.maybeWhen(
-                                orElse: () => SizedBox(
-                                    height: 165.h,
-                                    child: const Text('something went wrong')),
+                                orElse: () => const SizedBox(),
                                 loading: () {
                                   return SizedBox(
                                     height: 165.h,
@@ -288,7 +312,7 @@ class _HomePageState extends State<HomePage> {
                                       highlightColor: Colors.grey[100]!,
                                       child: Image.asset(
                                         "assets/images/itemList.png",
-                                        fit: BoxFit.cover,
+                                        fit: BoxFit.contain,
                                       ),
                                     ),
                                   );
@@ -334,13 +358,7 @@ class _HomePageState extends State<HomePage> {
                                                                 productList[
                                                                         index]
                                                                     .variantId) {
-                                                              context
-                                                                  .read<
-                                                                      ProductListBloc>()
-                                                                  .add(const ProductListEvent
-                                                                          .fetchProductList(
-                                                                      categoryId:
-                                                                          "98989"));
+                                                              getData();
                                                               BotToast.showText(
                                                                   text: msg);
                                                             }

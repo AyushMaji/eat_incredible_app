@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:eat_incredible_app/api/api_result.dart';
 import 'package:eat_incredible_app/api/network.dart';
 import 'package:eat_incredible_app/api/network_exception.dart';
@@ -124,6 +126,75 @@ class CartRepo {
   Future<ApiResult> repeatOrder(String orderid) async {
     try {
       var res = await network.repeatOrder(orderid);
+      Logger().i(res.data);
+      return ApiResult.success(data: res.data);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
+
+  //! orderType ==>
+  Future<ApiResult> orderType(String paymentType) async {
+    try {
+      var res = await network.orderType(paymentType);
+      Logger().i(res.data);
+      return ApiResult.success(data: res.data);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
+
+  //! order confirm ==>
+  Future<ApiResult> orderConfirm(
+      String oid, String status, String odrNumber) async {
+    try {
+      var res = await network.paymentConfirm(oid, status, odrNumber);
+      Logger().i(res.data);
+      return ApiResult.success(data: res.data);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
+
+  //! invoice =>
+  Future<ApiResult> invoice() async {
+    try {
+      var res = await network.invoiceOrder();
+      Logger().i(res.data);
+      return ApiResult.success(data: res.data);
+    } catch (e) {
+      Logger().e(e);
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
+
+  //! order confirm ==>
+  Future<ApiResult> orderConfirmmsg() async {
+    log("step -2 ");
+    try {
+      var res = await network.orderMessage();
+      Logger().i('success');
+      return ApiResult.success(data: res.data);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
+
+  //! apply coupon ==>
+  Future<ApiResult> applyCoupon(String couponCode) async {
+    try {
+      var res = await network.applycoupon(couponCode);
+      Logger().i(res.data);
+      return ApiResult.success(data: res.data);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
+
+  //! remove coupon ===>
+  Future<ApiResult> removeCoupon() async {
+    try {
+      var res = await network.removeCoupon();
       Logger().i(res.data);
       return ApiResult.success(data: res.data);
     } catch (e) {

@@ -100,7 +100,7 @@ class OrderCard extends StatelessWidget {
                           left: 1.5.w,
                           right: 1.5.w,
                         ),
-                        height: 23.4.h,
+                        height: 28.h,
                         decoration: BoxDecoration(
                           color: orderStatus == 'Delivered'
                               ? const Color.fromRGBO(2, 160, 8, 0.25)

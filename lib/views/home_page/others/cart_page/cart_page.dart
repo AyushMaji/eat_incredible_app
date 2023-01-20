@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bot_toast/bot_toast.dart';
-import 'package:crypto/crypto.dart';
 import 'package:eat_incredible_app/controller/address/view_address_list/view_addresslist_bloc.dart';
 import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
 import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
 import 'package:eat_incredible_app/controller/cart/cart_iteam/cart_iteams_bloc.dart';
+import 'package:eat_incredible_app/controller/ordertype/ordertype_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
 import 'package:eat_incredible_app/repo/cart_repo.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
@@ -14,6 +14,7 @@ import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/others/add_address/add_address_page.dart';
 import 'package:eat_incredible_app/views/home_page/others/coupon_code/coupon_code.dart';
 import 'package:eat_incredible_app/views/home_page/others/edit_address/edit_address_page.dart';
+import 'package:eat_incredible_app/views/home_page/others/order_confirm/order_confirm.dart';
 import 'package:eat_incredible_app/views/home_page/others/product_details/product_details.dart';
 import 'package:eat_incredible_app/views/signup_page/signup_page_phone.dart';
 import 'package:eat_incredible_app/widgets/addtocart/cart_product.dart';
@@ -36,10 +37,15 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  String? pincode;
+  String pincode = '';
   ProductListBloc productListBloc = ProductListBloc();
   bool isGuest = true;
-  int addressIndex = 0;
+  int addressIndex = -1;
+  int _radioValue = 0;
+  String razorpayOdrId = '';
+  String orderName = '';
+  OrdertypeBloc ordertypeBloc = OrdertypeBloc();
+
   late Razorpay razorpay;
   CartIteamsBloc isAvailableIteamsBloc = CartIteamsBloc();
 
@@ -84,16 +90,19 @@ class _CartPageState extends State<CartPage> {
 
   //* create order #######################################################################################################
 
-  void createOrder() async {
-    String username = 'rzp_live_vqdCt0dXhP4PHg'; // razorpay pay key
-    String password = "NgDLPyiDRPuQpcXy1E3GKTDv"; // razoepay secret key
+  void createOrder(String totalbill, String oid, String name, String email,
+      String phone) async {
+    log('payment ');
+    String username = 'rzp_live_KT9EC0PjxISbWA'; // razorpay pay key
+    String password = "iVisBkDpGBlekxZcQrU7SOjg"; // razoepay secret key
     String basicAuth =
         'Basic ${base64Encode(utf8.encode('$username:$password'))}';
 
     Map<String, dynamic> body = {
-      "amount": 870 * 100,
+      // "amount": int.parse(totalbill) * 100,
+      "amount": int.parse(totalbill) * 100,
       "currency": "INR",
-      "receipt": "rcptid_11",
+      "receipt": oid,
       "payment_capture": 1,
       // "notes": {
       //   "address": "Hello World",
@@ -110,23 +119,28 @@ class _CartPageState extends State<CartPage> {
     );
 
     if (res.statusCode == 200) {
-      openCheckout(jsonDecode(res.body)['id']); // 😎🔥
+      openCheckout(jsonDecode(res.body)['id'], phone, email, name); // 😎🔥
     }
-    print(res.body);
+    log(res.body);
+    setState(() {
+      orderName = oid;
+      razorpayOdrId = jsonDecode(res.body)['id'];
+    });
   }
   //*#######################################################################################################
 
   //!=======================================================================================================
-  void openCheckout(String orderId) async {
+  void openCheckout(
+      String orderId, String phone, String email, String name) async {
     var options = {
-      'key': 'rzp_live_vqdCt0dXhP4PHg',
+      'key': 'rzp_live_KT9EC0PjxISbWA',
       "amount": 1 * 100,
       'order_id': orderId,
       'name': 'Eatincredible.co.in',
-      // 'prefill': {'contact': '', 'email': 'test@razorpay.com'},
       'external': {
-        'wallets': ['paytm']
-      }
+        'wallets': ['paytm', 'phonepe', 'gpay', 'amazonpay', 'upi', 'payzapp']
+      },
+      "prefill": {"contact": phone, "email": email, "name": name},
     };
 
     try {
@@ -136,78 +150,40 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
+  confirmorder(String status) async {
+    Logger().e(razorpayOdrId);
+    Logger().e(status);
+    Logger().e(orderName);
+
+    var res = await CartRepo().orderConfirm(razorpayOdrId, status, orderName);
+    res.when(success: (value) {}, failure: (error) {});
+  }
+
   //!========================================= Handeling Payments Events ==============================================================
   handlerPaymentSuccess(PaymentSuccessResponse response) {
-    final key = utf8.encode('NgDLPyiDRPuQpcXy1E3GKTDv');
-    final bytes = utf8.encode('${response.orderId}|${response.paymentId}');
-    final hmacSha256 = Hmac(sha256, key);
-    final generatedSignature = hmacSha256.convert(bytes);
-    if (generatedSignature.toString() == response.signature) {
-      // log("Payment was successful!");
-      //Handle what to do after a successful payment.
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Success : payment successful"),
-            // content: const Text("Are you sure you wish to delete this item?"),
-            actions: <Widget>[
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                    // PlaceOrderPrepaid();
-                  },
-                  child: const Text("OK"))
-              // ),
-            ],
-          );
-        },
-      );
-    } else {
-      log("The payment was unauthentic!");
-    }
+    //  final key = utf8.encode('NgDLPyiDRPuQpcXy1E3GKTDv');
+    // final bytes = utf8.encode('${response.orderId}|${response.paymentId}');
+    // final hmacSha256 = Hmac(sha256, key);
+    // final generatedSignature = hmacSha256.convert(bytes);
+
+    CustomSnackbar.successSnackbar("Payment Success! ",
+        "We are delighted to inform you that we received your payment.");
+    confirmorder('200');
+    Get.offAll(() => const OrderConfirmPage());
   }
 
   handlerErrorFailure(PaymentFailureResponse response) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Error : Something went wrong"),
-          // content: const Text("Are you sure you wish to delete this item?"),
-          actions: <Widget>[
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                  // PlaceOrderPrepaid();
-                },
-                child: const Text("OK"))
-            // ),
-          ],
-        );
-      },
-    );
+    confirmorder('400');
+    CustomSnackbar.errorSnackbar("Payment Failed! ",
+        "We are sorry to inform you that we did not receive your payment.");
   }
 
   handlerExternalWallet(ExternalWalletResponse response) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Success : payment successful"),
-          // content: const Text("Are you sure you wish to delete this item?"),
-          actions: <Widget>[
-            ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text("OK")),
-            // FlatButton(
-            //   onPressed: () => Navigator.of(context).pop(false),
-            //   child: const Text("CANCEL"),
-            // ),
-          ],
-        );
-      },
-    );
+    confirmorder('200');
+    CustomSnackbar.successSnackbar("Payment Success! ",
+        "We are delighted to inform you that we received your payment.");
+
+    Get.offAll(() => const OrderConfirmPage());
   }
 
   @override
@@ -256,10 +232,35 @@ class _CartPageState extends State<CartPage> {
         child: SingleChildScrollView(
           child: BlocConsumer<CartDetailsBloc, CartDetailsState>(
             bloc: context.read<CartDetailsBloc>(),
-            listener: (context, state) {},
+            listener: (context, state) {
+              state.when(
+                  initial: () {},
+                  loading: () {},
+                  loaded: (_) {},
+                  error: (e) {
+                    CustomSnackbar.flutterSnackbar(e.toString(), context);
+                  });
+            },
             builder: (context, state) {
               return state.maybeWhen(
-                orElse: () => const SizedBox(),
+                orElse: () {
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height / 1.4,
+                    child: Center(
+                      child: TextButton.icon(
+                        onPressed: () {
+                          getData();
+                        },
+                        icon: const Icon(Icons.refresh_outlined),
+                        label: const Text(
+                          "Retry",
+                          style:
+                              TextStyle(color: Color.fromARGB(138, 17, 16, 16)),
+                        ),
+                      ),
+                    ),
+                  );
+                },
                 loading: (() {
                   return const LinearProgressIndicator(
                     backgroundColor: Color.fromARGB(80, 76, 175, 79),
@@ -313,31 +314,18 @@ class _CartPageState extends State<CartPage> {
                         ),
                       ),
                       SizedBox(height: 13.h),
-                      // ListTile(
-                      //   title: const Text("Delivery in 1-2 days",
-                      //       style: TextStyle(
-                      //         fontSize: 14,
-                      //         fontWeight: FontWeight.w700,
-                      //         color: Colors.black,
-                      //       )),
-                      //   subtitle: const Text("4 items",
-                      //       style: TextStyle(
-                      //         fontSize: 12,
-                      //         fontWeight: FontWeight.w400,
-                      //         color: Colors.black,
-                      //       )),
-                      //   leading: Icon(
-                      //     Icons.delivery_dining,
-                      //     color: Colors.black,
-                      //     size: 33.sp,
-                      //   ),
-                      // ),
                       BlocConsumer<CartIteamsBloc, CartIteamsState>(
                         bloc: context.read<CartIteamsBloc>(),
                         listener: (context, state) {},
                         builder: (context, state) {
                           return state.maybeWhen(
                             orElse: () {
+                              return const SizedBox();
+                            },
+                            error: (error) {
+                              return Text(error);
+                            },
+                            loading: () {
                               return Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10.w),
                                 child: SizedBox(
@@ -355,7 +343,7 @@ class _CartPageState extends State<CartPage> {
                             },
                             loaded: (cartIteamsList) {
                               return cartIteamsList.isEmpty
-                                  ? Text("No items in cart",
+                                  ? Text("",
                                       style: GoogleFonts.poppins(
                                         fontSize: 13.sp,
                                         fontWeight: FontWeight.w600,
@@ -482,18 +470,18 @@ class _CartPageState extends State<CartPage> {
                       BlocConsumer<ProductListBloc, ProductListState>(
                         bloc: productListBloc,
                         listener: (context, state) {
-                          state.when(
-                              initial: () {},
-                              loading: () {},
-                              loaded: (_) {},
-                              failure: (e) {
-                                CustomSnackbar.flutterSnackbarWithAction(
-                                    e, 'Retry', () {
-                                  context.read<ProductListBloc>().add(
-                                      const ProductListEvent.fetchProductList(
-                                          categoryId: "98989"));
-                                }, context);
-                              });
+                          // state.when(
+                          //     initial: () {},
+                          //     loading: () {},
+                          //     loaded: (_) {},
+                          //     failure: (e) {
+                          //       CustomSnackbar.flutterSnackbarWithAction(
+                          //           e, 'Retry', () {
+                          //         context.read<ProductListBloc>().add(
+                          //             const ProductListEvent.fetchProductList(
+                          //                 categoryId: "98989"));
+                          //       }, context);
+                          //     });
                         },
                         builder: (context, state) {
                           return state.maybeWhen(
@@ -511,7 +499,7 @@ class _CartPageState extends State<CartPage> {
                                       highlightColor: Colors.grey[100]!,
                                       child: Image.asset(
                                         "assets/images/itemList.png",
-                                        fit: BoxFit.cover,
+                                        fit: BoxFit.contain,
                                       ),
                                     ),
                                   ),
@@ -636,9 +624,20 @@ class _CartPageState extends State<CartPage> {
                             Get.to(() => const CouponsCode());
                           },
                           isApplyCoupon: cartDetailModel.applyCopunCode,
-                          onTapremove: () {
+                          onTapremove: () async {
                             HapticFeedback.lightImpact();
-                            getData();
+                            var res = await CartRepo().removeCoupon();
+                            res.when(success: (data) {
+                              BotToast.showText(text: data["message"]);
+                              getData();
+                            }, failure: (e) {
+                              BotToast.showText(text: e.toString());
+                              getData();
+                            });
+
+                            // final SharedPreferences prefs =
+                            //     await SharedPreferences.getInstance();
+                            // prefs.remove('coupon');
                           },
                           couponCode: cartDetailModel.couponCode.toString(),
                         ),
@@ -799,8 +798,8 @@ class _CartPageState extends State<CartPage> {
                                   orElse: () {},
                                   loaded: (addressList) {
                                     setState(() {
-                                      pincode =
-                                          addressList[0].pincode.toString();
+                                      // pincode =
+                                      //     addressList[0].pincode.toString();
                                     });
                                   },
                                 );
@@ -975,9 +974,9 @@ class _CartPageState extends State<CartPage> {
                                   orElse: () {},
                                   loaded: (cartIteamList) async {
                                     if (cartIteamList.isEmpty) {
-                                      createOrder();
-                                       Logger().e(pincode);
-                                      // another api
+                                      Navigator.pop(context);
+                                      _showPaymentTypeBottomSheet();
+                                      // createOrder();
                                     } else {
                                       dialogbox(context);
                                     }
@@ -998,19 +997,21 @@ class _CartPageState extends State<CartPage> {
                                         width: double.infinity,
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            isAvailableIteamsBloc.add(
-                                                CartIteamsEvent.isAvailable(
-                                                    pincode.toString()));
-                                            // dialogbox(context);
-
-                                            //  createOrder();
-                                            // Get.offAll(() => const OrderConfirmPage());
+                                            log(pincode.toString());
+                                            // ignore: unrelated_type_equality_checks
+                                            pincode != ""
+                                                ? isAvailableIteamsBloc.add(
+                                                    CartIteamsEvent.isAvailable(
+                                                        pincode.toString()))
+                                                : CustomSnackbar.errorSnackbar(
+                                                    'Select Address',
+                                                    'Please Select Address');
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor:
                                                 const Color(0xff02A008),
                                           ),
-                                          child: Text("Next Step",
+                                          child: Text("Select Address",
                                               style: GoogleFonts.poppins(
                                                 fontSize: 13.sp,
                                                 fontWeight: FontWeight.w600,
@@ -1091,7 +1092,16 @@ class _CartPageState extends State<CartPage> {
             height: 200.h,
             child: BlocConsumer<CartIteamsBloc, CartIteamsState>(
               bloc: isAvailableIteamsBloc,
-              listener: (context, state) {},
+              listener: (context, state) {
+                state.maybeWhen(
+                    orElse: () {},
+                    loaded: (cartIteamList) {
+                      if (cartIteamList.isEmpty) {
+                        Navigator.pop(context);
+                        _showPaymentTypeBottomSheet();
+                      }
+                    });
+              },
               builder: (context, state) {
                 return state.maybeWhen(
                   orElse: () {
@@ -1170,5 +1180,131 @@ class _CartPageState extends State<CartPage> {
         );
       },
     );
+  }
+
+  // crate payment type showbottomsheet
+  void _showPaymentTypeBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return SizedBox(
+                height: 180.h,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        RadioListTile(
+                          value: 1,
+                          groupValue: _radioValue,
+                          onChanged: (value) {
+                            setState(() {
+                              _radioValue = value!;
+                            });
+                          },
+                          title: Text(
+                            "Cash on Delivery",
+                            style: GoogleFonts.poppins(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        RadioListTile(
+                          value: 2,
+                          groupValue: _radioValue,
+                          onChanged: (value) {
+                            setState(() {
+                              _radioValue = value!;
+                            });
+                          },
+                          title: Text(
+                            "Online Payment",
+                            style: GoogleFonts.poppins(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        BlocConsumer<OrdertypeBloc, OrdertypeState>(
+                          bloc: ordertypeBloc,
+                          listener: (context, state) {
+                            state.maybeWhen(
+                              orElse: () {},
+                              loaded: (ordertype) {
+                                if (ordertype.orderType == "Cash on Delivery") {
+                                  Get.offAll(() => const OrderConfirmPage());
+                                } else {
+                                  // Navigator.pop(context);
+                                  // CustomSnackbar.loading();
+                                  createOrder(
+                                    ordertype.totalBill,
+                                    ordertype.orderNumber,
+                                    ordertype.orderName,
+                                    ordertype.orderEmail,
+                                    ordertype.number,
+                                  );
+                                }
+                              },
+                            );
+                          },
+                          builder: (context, state) {
+                            return state.maybeWhen(
+                              orElse: () {
+                                return Center(
+                                  child: SizedBox(
+                                    height: 40.h,
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        if (_radioValue == 1) {
+                                          ordertypeBloc.add(
+                                              const OrdertypeEvent.getOrdertype(
+                                                  "Cash on Delivery"));
+                                          // Navigator.pop(context);
+                                        } else {
+                                          ordertypeBloc.add(
+                                              const OrdertypeEvent.getOrdertype(
+                                                  "Online Payment"));
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            const Color(0xff02A008),
+                                      ),
+                                      child: Text("Select Payment Type",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 13.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          )),
+                                    ),
+                                  ),
+                                );
+                              },
+                              loading: () {
+                                return const Center(
+                                  child: CircularProgressIndicator(
+                                      color: Colors.green),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ]),
+                ));
+          });
+        });
   }
 }

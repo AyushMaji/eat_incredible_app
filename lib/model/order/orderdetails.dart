@@ -36,7 +36,7 @@ class OrderDetailsModel {
   String address;
   String itemTotal;
   int deliveryFee;
-  int discount;
+  String? discount;
   String totalBill;
   String? invoice;
   int? odrStatus;

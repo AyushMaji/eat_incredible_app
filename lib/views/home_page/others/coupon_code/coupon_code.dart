@@ -1,11 +1,14 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:eat_incredible_app/api/network_exception.dart';
 import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
+import 'package:eat_incredible_app/controller/cart/cart_iteam/cart_iteams_bloc.dart';
 import 'package:eat_incredible_app/controller/coupon/coupon_bloc.dart';
+import 'package:eat_incredible_app/repo/cart_repo.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
+import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CouponsCode extends StatefulWidget {
   const CouponsCode({super.key});
@@ -62,7 +65,9 @@ class _CouponsCodeState extends State<CouponsCode> {
                   Icons.search,
                   color: Colors.black,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  //   Get.off(() => const CartPage());
+                },
               ),
             ),
           ],
@@ -95,14 +100,30 @@ class _CouponsCodeState extends State<CouponsCode> {
                   fillColor: const Color.fromARGB(255, 235, 234, 234),
                   suffix: InkWell(
                     onTap: () async {
-                      BlocProvider.of<CartDetailsBloc>(context).add(
-                          CartDetailsEvent.getCartDetails(
-                              coupon: cupponcodeController.text));
-                      final SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      prefs.setString('coupon', cupponcodeController.text);
+                      var res = await CartRepo()
+                          .applyCoupon(cupponcodeController.text);
+                      res.when(success: (value) {
+                        Get.back();
 
-                      Get.back();
+                        if (value["status"] == 200) {
+                          CustomSnackbar.successSnackbar(
+                              "success", value["message"]);
+
+                          context
+                              .read<CartIteamsBloc>()
+                              .add(const CartIteamsEvent.getCartIteams());
+                          BlocProvider.of<CartDetailsBloc>(context).add(
+                              const CartDetailsEvent.getCartDetails(
+                                  coupon: ''));
+                        } else {
+                          CustomSnackbar.errorSnackbar(
+                              "error", value["message"]);
+                        }
+                        // Logger().e(value["status"]);
+                      }, failure: (error) {
+                        CustomSnackbar.errorSnackbar(
+                            "error", NetworkExceptions.getErrorMessage(error));
+                      });
                     },
                     child: Text(
                       'Apply',

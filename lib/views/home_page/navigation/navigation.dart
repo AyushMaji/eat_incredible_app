@@ -14,6 +14,9 @@ import 'package:eat_incredible_app/views/home_page/navigation/orders_page.dart';
 import 'package:eat_incredible_app/widgets/appbar/custom_appbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+ProductListBloc _productListOfferBloc = ProductListBloc();
+ProductListBloc _productListsugessionBloc = ProductListBloc();
+
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
   @override
@@ -39,11 +42,18 @@ class _NavigationState extends State<Navigation> {
     context.read<AboutBloc>().add(const AboutEvent.aboutUs());
     context.read<CouponBloc>().add(const CouponEvent.getCouponList());
     context.read<SearchBloc>().add(const SearchEvent.trendingSearch());
+    _productListOfferBloc
+        .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
+    _productListsugessionBloc
+        .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
   }
 
   int pageIndex = 0;
   final pages = [
-    const HomePage(),
+    HomePage(
+      productListOfferBloc: _productListOfferBloc,
+      productListsugessionBloc: _productListsugessionBloc,
+    ),
     const OfferPage(),
     const OrderPage(),
     const AcountPage(),
@@ -93,7 +103,7 @@ class _NavigationState extends State<Navigation> {
                     backgroundColor: Colors.white,
                     title: Center(
                       child: Text(
-                        "Hi Bolder",
+                        "account",
                         style: GoogleFonts.poppins(
                           color: Colors.black,
                           fontSize: 13.sp,

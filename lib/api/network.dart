@@ -100,11 +100,11 @@ class Network {
     return token != ''
         ? await client.postRequest(UrlRepo.cartDetails, data: {
             "token": token,
-            "coupon": couponCode,
+            "coupon": '',
           })
         : await client.postRequest(UrlRepo.cartDetails, data: {
             "guest_id": guestId,
-            "coupon": couponCode,
+            "coupon": '',
           });
   }
 
@@ -125,9 +125,8 @@ class Network {
   Future<Response> checkProduct(String pincode) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token') ?? '';
-    String coupon = prefs.getString('coupon') ?? '';
     return await client.postRequest(UrlRepo.isAvailable,
-        data: {"token": token, "pincode": pincode, "coupon": coupon});
+        data: {"token": token, "pincode": pincode, "coupon": ''});
   }
 
   Future<Response> deleteCartIteam(String pid) async {
@@ -168,7 +167,7 @@ class Network {
       "name": name,
     });
   }
-  //! address ===================>
+  //! address ==================>
 
   Future<Response> getaddress() async {
     return await client.postRequest(UrlRepo.addressList, data: {});
@@ -307,5 +306,73 @@ class Network {
       "token": prefs.getString('token') ?? '',
       "oid": orderId,
     });
+  }
+
+//! order Type
+  Future<Response> orderType(String pymentType) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await client.postRequest(UrlRepo.orderType, data: {
+      "token": prefs.getString('token') ?? '',
+      "order_type": pymentType,
+    });
+  }
+
+//! payment confirm ==>
+  Future<Response> paymentConfirm(
+      String oid, String status, String odrNumber) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await client.postRequest(UrlRepo.orderConfirm, data: {
+      "token": prefs.getString('token') ?? '',
+      "id": oid,
+      "status": status,
+      "odr_number": odrNumber
+    });
+  }
+
+//! invoice order ===>
+  Future<Response> invoiceOrder() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await client.postRequest(UrlRepo.invoice, data: {
+      "token": prefs.getString('token') ?? '',
+    });
+  }
+
+//! order message ===>
+  Future<Response> orderMessage() async {
+    log("step -3 ");
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await client.postRequest(UrlRepo.addOrderMessage, data: {
+      "token": prefs.getString('token') ?? '',
+    });
+  }
+
+  //! apply coupon ======>
+  Future<Response> applycoupon(String coupon) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+    String guestId = prefs.getString('guest_id') ?? '';
+    return token != ''
+        ? await client.postRequest(UrlRepo.applyCoupon, data: {
+            "token": token,
+            "coupon": coupon,
+          })
+        : await client.postRequest(UrlRepo.applyCoupon, data: {
+            "guest_id": guestId,
+            "coupon": coupon,
+          });
+  }
+
+  //! remove coupon ======>
+  Future<Response> removeCoupon() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+    String guestId = prefs.getString('guest_id') ?? '';
+    return token != ''
+        ? await client.postRequest(UrlRepo.removeCoupon, data: {
+            "token": token,
+          })
+        : await client.postRequest(UrlRepo.removeCoupon, data: {
+            "guest_id": guestId,
+          });
   }
 }

@@ -115,7 +115,11 @@ class _ProductCardState extends State<ProductCard> {
                       Text(
                         widget.title,
                         style: GoogleFonts.poppins(
-                            fontSize: 10.8.sp, fontWeight: FontWeight.w500),
+                          fontSize: 10.8.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(
                         height: 0.6.h,

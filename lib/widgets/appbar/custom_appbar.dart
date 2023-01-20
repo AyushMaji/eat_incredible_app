@@ -4,6 +4,7 @@ import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dar
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/others/Item_search/item_search.dart';
+import 'package:eat_incredible_app/views/home_page/others/cart_page/cart_page.dart';
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,7 +52,6 @@ class _CustomAppbarState extends State<CustomAppbar> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -216,6 +216,19 @@ class _CustomAppbarState extends State<CustomAppbar> {
                         ),
                       ],
                     ),
+                  ),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => const CartPage());
+                    },
+                    child: const Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
                   ),
                   GestureDetector(
                     onTap: () {

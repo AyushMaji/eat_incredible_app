@@ -1,5 +1,6 @@
 import 'package:eat_incredible_app/controller/about/about_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
+import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/widgets/faq_card/faq_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -55,12 +56,29 @@ class _FaqsPageState extends State<FaqsPage> {
         },
         child: BlocConsumer<AboutBloc, AboutState>(
           bloc: context.read<AboutBloc>(),
-          listener: (context, state) {},
+          listener: (context, state) {
+            state.when(
+                initial: () {},
+                loading: () {},
+                loaded: (_) {},
+                error: (e) {
+                  CustomSnackbar.flutterSnackbar(e.toString(), context);
+                });
+          },
           builder: (context, state) {
             return state.maybeWhen(
               orElse: (() {
-                return const Center(
-                  child: Text('Something went worng'),
+                return Center(
+                  child: TextButton.icon(
+                    onPressed: () {
+                      context.read<AboutBloc>().add(const AboutEvent.aboutUs());
+                    },
+                    icon: const Icon(Icons.refresh_outlined),
+                    label: const Text(
+                      "Retry",
+                      style: TextStyle(color: Color.fromARGB(138, 17, 16, 16)),
+                    ),
+                  ),
                 );
               }),
               loaded: ((aboutModel) {

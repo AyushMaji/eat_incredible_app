@@ -21,9 +21,17 @@ class ItemSearch extends StatefulWidget {
 }
 
 class _ItemSearchState extends State<ItemSearch> {
+  ProductListBloc productlistbloc = ProductListBloc();
   final SearchBloc searchBloc = SearchBloc();
   final TextEditingController _searchController = TextEditingController();
   String searchKey = '';
+  @override
+  void initState() {
+    productlistbloc
+        .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,293 +104,327 @@ class _ItemSearchState extends State<ItemSearch> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            searchKey == ''
-                ? Column(
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsets.only(left: 12.w, top: 0.h, bottom: 15.h),
-                        child: Row(
-                          children: [
-                            Text("Popular In your Area",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600)),
-                          ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          productlistbloc.add(
+            const ProductListEvent.fetchProductList(categoryId: "98989"),
+          );
+          context.read<SearchBloc>().add(const SearchEvent.trendingSearch());
+
+          return Future.value();
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              searchKey == ''
+                  ? Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 12.w, top: 0.h, bottom: 15.h),
+                          child: Row(
+                            children: [
+                              Text("You may also like",
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600)),
+                            ],
+                          ),
                         ),
-                      ),
-                      BlocConsumer<ProductListBloc, ProductListState>(
-                        bloc: context.read<ProductListBloc>(),
-                        listener: (context, state) {
-                          state.when(
-                              initial: () {},
-                              loading: () {},
-                              loaded: (_) {},
-                              failure: (e) {
-                                CustomSnackbar.flutterSnackbarWithAction(
-                                    e, 'Retry', () {
-                                  context.read<ProductListBloc>().add(
-                                      const ProductListEvent.fetchProductList(
-                                          categoryId: "98989"));
-                                }, context);
-                              });
-                        },
-                        builder: (context, state) {
-                          return state.maybeWhen(
-                              orElse: () => SizedBox(
-                                  height: 165.h,
-                                  child: const Text('something went wrong')),
-                              loading: () {
-                                return SizedBox(
-                                  height: 165.h,
-                                  child: Shimmer.fromColors(
-                                    baseColor:
-                                        const Color.fromARGB(44, 222, 220, 220),
-                                    highlightColor: Colors.grey[100]!,
-                                    child: Image.asset(
-                                      "assets/images/itemList.png",
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                );
-                              },
-                              loaded: (productList) {
-                                return productList.isEmpty
-                                    ? Text(
-                                        "No Product Found",
-                                        style: GoogleFonts.poppins(
-                                            fontSize: 14.sp,
-                                            color: const Color.fromARGB(
-                                                30, 0, 0, 0),
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    : SizedBox(
-                                        height: 165.h,
-                                        child: ListView.builder(
-                                            physics:
-                                                const BouncingScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemCount: productList.length,
-                                            scrollDirection: Axis.horizontal,
-                                            itemBuilder: (context, index) {
-                                              return Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 15.w),
-                                                child: BlocConsumer<CartBloc,
-                                                    CartState>(
-                                                  listener: (context, state) {
-                                                    state.when(
-                                                        initial: () {},
-                                                        loading: (pid) {
-                                                          if (pid ==
-                                                              productList[index]
-                                                                  .variantId) {
-                                                            CustomSnackbar
-                                                                .loading();
-                                                          }
-                                                        },
-                                                        success: (msg, pid) {
-                                                          if (pid ==
-                                                              productList[index]
-                                                                  .variantId) {
-                                                            context
-                                                                .read<
-                                                                    ProductListBloc>()
-                                                                .add(const ProductListEvent
-                                                                        .fetchProductList(
-                                                                    categoryId:
-                                                                        "98989"));
-                                                            BotToast.showText(
-                                                                text: msg);
-                                                          }
-                                                        },
-                                                        failure: (e) {});
-                                                  },
-                                                  builder: (context, state) {
-                                                    return ProductCard(
-                                                      isCart: productList[index]
-                                                          .iscart,
-                                                      imageUrl:
-                                                          productList[index]
-                                                              .thumbnail
-                                                              .toString(),
-                                                      title: productList[index]
-                                                          .productName
-                                                          .toString(),
-                                                      disprice:
-                                                          productList[index]
-                                                              .originalPrice
-                                                              .toString(),
-                                                      price: productList[index]
-                                                          .salePrice
-                                                          .toString(),
-                                                      quantity:
-                                                          productList[index]
-                                                              .weight
-                                                              .toString(),
-                                                      percentage: productList[
-                                                              index]
-                                                          .discountPercentage
-                                                          .toString(),
-                                                      productId:
-                                                          productList[index]
-                                                              .id
-                                                              .toString(),
-                                                      cartId: productList[index]
-                                                          .categoryId
-                                                          .toString(),
-                                                      ontap: () {
-                                                        Get.to(() =>
-                                                            ProductDetails(
-                                                              productId:
-                                                                  productList[
-                                                                          index]
-                                                                      .id
-                                                                      .toString(),
-                                                              catId: productList[
-                                                                      index]
-                                                                  .categoryId
-                                                                  .toString(),
-                                                            ));
-                                                      },
-                                                      addtocartTap: () {
-                                                        context.read<CartBloc>().add(
-                                                            CartEvent.addToCart(
-                                                                productid: productList[
-                                                                        index]
-                                                                    .variantId
-                                                                    .toString()));
-                                                      },
-                                                    );
-                                                  },
-                                                ),
-                                              );
-                                            }),
-                                      );
-                              });
-                        },
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsets.only(left: 13.w, top: 20.h, bottom: 6.h),
-                        child: Row(
-                          children: [
-                            Text("Trending Searchs",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 50.h,
-                        child: BlocConsumer<SearchBloc, SearchState>(
-                          bloc: context.read<SearchBloc>(),
-                          listener: (context, state) {},
+                        BlocConsumer<ProductListBloc, ProductListState>(
+                          bloc: productlistbloc,
+                          listener: (context, state) {
+                            state.when(
+                                initial: () {},
+                                loading: () {},
+                                loaded: (_) {},
+                                failure: (e) {
+                                  CustomSnackbar.flutterSnackbar(
+                                      e.toString(), context);
+                                });
+                          },
                           builder: (context, state) {
                             return state.maybeWhen(
-                              orElse: () {
-                                return Container();
-                              },
-                              success: (search) {
-                                return ListView.builder(
-                                    physics: const BouncingScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: search.length,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 8.w, top: 1.h),
-                                        child: FilterChip(
-                                          side: const BorderSide(
-                                              color: Colors.grey),
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(20),
-                                            ),
-                                          ),
-                                          backgroundColor: Colors.transparent,
-                                          label: Text(search[index],
-                                              style: GoogleFonts.poppins(
-                                                  color: const Color.fromRGBO(
-                                                      120, 120, 120, 1),
-                                                  fontSize: 10.sp,
-                                                  fontWeight: FontWeight.w400)),
-                                          onSelected: (bool value) {
-                                            HapticFeedback.lightImpact();
-                                            _searchController.text =
-                                                search[index];
-                                            searchKey = search[index];
-                                            searchBloc.add(
-                                              SearchEvent.searchKey(
-                                                  search: searchKey),
-                                            );
-                                            setState(() {});
-                                          },
+                                orElse: () => SizedBox(
+                                    height: 165.h,
+                                    child: Center(
+                                      child: TextButton.icon(
+                                        onPressed: () {
+                                          productlistbloc.add(
+                                            const ProductListEvent
+                                                    .fetchProductList(
+                                                categoryId: "98989"),
+                                          );
+                                          context.read<SearchBloc>().add(
+                                              const SearchEvent
+                                                  .trendingSearch());
+                                        },
+                                        icon:
+                                            const Icon(Icons.refresh_outlined),
+                                        label: const Text(
+                                          "Retry",
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  138, 17, 16, 16)),
                                         ),
-                                      );
-                                    });
-                              },
-                            );
+                                      ),
+                                    )),
+                                loading: () {
+                                  return SizedBox(
+                                    height: 165.h,
+                                    child: Shimmer.fromColors(
+                                      baseColor: const Color.fromARGB(
+                                          44, 222, 220, 220),
+                                      highlightColor: Colors.grey[100]!,
+                                      child: Image.asset(
+                                        "assets/images/itemList.png",
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                loaded: (productList) {
+                                  return productList.isEmpty
+                                      ? Text(
+                                          "No Product Found",
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 14.sp,
+                                              color: const Color.fromARGB(
+                                                  30, 0, 0, 0),
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      : SizedBox(
+                                          height: 165.h,
+                                          child: ListView.builder(
+                                              physics:
+                                                  const BouncingScrollPhysics(),
+                                              shrinkWrap: true,
+                                              itemCount: productList.length,
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 15.w),
+                                                  child: BlocConsumer<CartBloc,
+                                                      CartState>(
+                                                    listener: (context, state) {
+                                                      state.when(
+                                                          initial: () {},
+                                                          loading: (pid) {
+                                                            if (pid ==
+                                                                productList[
+                                                                        index]
+                                                                    .variantId) {
+                                                              CustomSnackbar
+                                                                  .loading();
+                                                            }
+                                                          },
+                                                          success: (msg, pid) {
+                                                            if (pid ==
+                                                                productList[
+                                                                        index]
+                                                                    .variantId) {
+                                                              productlistbloc.add(
+                                                                  const ProductListEvent
+                                                                          .fetchProductList(
+                                                                      categoryId:
+                                                                          "98989"));
+                                                              BotToast.showText(
+                                                                  text: msg);
+                                                            }
+                                                          },
+                                                          failure: (e) {});
+                                                    },
+                                                    builder: (context, state) {
+                                                      return ProductCard(
+                                                        isCart:
+                                                            productList[index]
+                                                                .iscart,
+                                                        imageUrl:
+                                                            productList[index]
+                                                                .thumbnail
+                                                                .toString(),
+                                                        title:
+                                                            productList[index]
+                                                                .productName
+                                                                .toString(),
+                                                        disprice:
+                                                            productList[index]
+                                                                .originalPrice
+                                                                .toString(),
+                                                        price:
+                                                            productList[index]
+                                                                .salePrice
+                                                                .toString(),
+                                                        quantity:
+                                                            productList[index]
+                                                                .weight
+                                                                .toString(),
+                                                        percentage: productList[
+                                                                index]
+                                                            .discountPercentage
+                                                            .toString(),
+                                                        productId:
+                                                            productList[index]
+                                                                .id
+                                                                .toString(),
+                                                        cartId:
+                                                            productList[index]
+                                                                .categoryId
+                                                                .toString(),
+                                                        ontap: () {
+                                                          Get.to(() =>
+                                                              ProductDetails(
+                                                                productId:
+                                                                    productList[
+                                                                            index]
+                                                                        .id
+                                                                        .toString(),
+                                                                catId: productList[
+                                                                        index]
+                                                                    .categoryId
+                                                                    .toString(),
+                                                              ));
+                                                        },
+                                                        addtocartTap: () {
+                                                          context
+                                                              .read<CartBloc>()
+                                                              .add(CartEvent.addToCart(
+                                                                  productid: productList[
+                                                                          index]
+                                                                      .variantId
+                                                                      .toString()));
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
+                                                );
+                                              }),
+                                        );
+                                });
                           },
                         ),
-                      ),
-                    ],
-                  )
-                : BlocConsumer<SearchBloc, SearchState>(
-                    bloc: searchBloc,
-                    listener: (context, state) {
-                      state.maybeWhen(
-                        orElse: () {},
-                        success: (search) {},
-                      );
-                    },
-                    builder: (context, state) {
-                      return state.when(
-                        loading: () {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                        success: ((search) {
-                          return search.isEmpty
-                              ? const Center(child: Text("No Data Found"))
-                              : ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: search.length,
-                                  itemBuilder: ((context, index) {
-                                    return ListTile(
-                                      onTap: () {
-                                        _searchController.text =
-                                            search[index].toString();
-                                        Get.to(() => SearchProductList(
-                                              search: search[index].toString(),
-                                            ));
-                                      },
-                                      leading: const Icon(Icons.search),
-                                      title: Text(search[index].toString()),
-                                    );
-                                  }));
-                        }),
-                        failure: (String message) {
-                          return Center(
-                            child: Text(message),
-                          );
-                        },
-                        initial: () {
-                          return const Center(
-                            child: Text("initial"),
-                          );
-                        },
-                      );
-                    },
-                  ),
-          ],
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 13.w, top: 20.h, bottom: 6.h),
+                          child: Row(
+                            children: [
+                              Text("Trending Searchs",
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600)),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 50.h,
+                          child: BlocConsumer<SearchBloc, SearchState>(
+                            bloc: context.read<SearchBloc>(),
+                            listener: (context, state) {},
+                            builder: (context, state) {
+                              return state.maybeWhen(
+                                orElse: () {
+                                  return Container();
+                                },
+                                success: (search) {
+                                  return ListView.builder(
+                                      physics: const BouncingScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: search.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 8.w, top: 1.h),
+                                          child: FilterChip(
+                                            side: const BorderSide(
+                                                color: Colors.grey),
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(20),
+                                              ),
+                                            ),
+                                            backgroundColor: Colors.transparent,
+                                            label: Text(search[index],
+                                                style: GoogleFonts.poppins(
+                                                    color: const Color.fromRGBO(
+                                                        120, 120, 120, 1),
+                                                    fontSize: 10.sp,
+                                                    fontWeight:
+                                                        FontWeight.w400)),
+                                            onSelected: (bool value) {
+                                              HapticFeedback.lightImpact();
+                                              _searchController.text =
+                                                  search[index];
+                                              searchKey = search[index];
+                                              searchBloc.add(
+                                                SearchEvent.searchKey(
+                                                    search: searchKey),
+                                              );
+                                              setState(() {});
+                                            },
+                                          ),
+                                        );
+                                      });
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  : BlocConsumer<SearchBloc, SearchState>(
+                      bloc: searchBloc,
+                      listener: (context, state) {
+                        state.maybeWhen(
+                          orElse: () {},
+                          success: (search) {},
+                        );
+                      },
+                      builder: (context, state) {
+                        return state.when(
+                          loading: () {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                          success: ((search) {
+                            return search.isEmpty
+                                ? const Center(child: Text("No Data Found"))
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: search.length,
+                                    itemBuilder: ((context, index) {
+                                      return ListTile(
+                                        onTap: () {
+                                          _searchController.text =
+                                              search[index].toString();
+                                          Get.to(() => SearchProductList(
+                                                search:
+                                                    search[index].toString(),
+                                              ));
+                                        },
+                                        leading: const Icon(Icons.search),
+                                        title: Text(search[index].toString()),
+                                      );
+                                    }));
+                          }),
+                          failure: (String message) {
+                            return Center(
+                              child: Text(message),
+                            );
+                          },
+                          initial: () {
+                            return const Center(
+                              child: Text("initial"),
+                            );
+                          },
+                        );
+                      },
+                    ),
+            ],
+          ),
         ),
       ),
     );

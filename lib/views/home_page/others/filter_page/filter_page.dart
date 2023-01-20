@@ -123,12 +123,32 @@ class _FilterPageState extends State<FilterPage> {
                       },
                       child: BlocConsumer<ProductListBloc, ProductListState>(
                         bloc: context.read<ProductListBloc>(),
-                        listener: (context, state) {},
+                        listener: (context, state) {
+                          state.when(
+                              initial: () {},
+                              loading: () {},
+                              loaded: (_) {},
+                              failure: (e) {
+                                CustomSnackbar.flutterSnackbar(
+                                    e.toString(), context);
+                              });
+                        },
                         builder: (context, state) {
                           return state.maybeWhen(
                             orElse: () {
-                              return const Center(
-                                  child: Text("somthing went wrong"));
+                              return Center(
+                                child: TextButton.icon(
+                                  onPressed: () {
+                                    getdata();
+                                  },
+                                  icon: const Icon(Icons.refresh_outlined),
+                                  label: const Text(
+                                    "Retry",
+                                    style: TextStyle(
+                                        color: Color.fromARGB(138, 17, 16, 16)),
+                                  ),
+                                ),
+                              );
                             },
                             loading: () {
                               return Padding(

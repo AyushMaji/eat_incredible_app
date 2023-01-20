@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:eat_incredible_app/controller/about/about_bloc.dart';
 import 'package:eat_incredible_app/controller/coupon/coupon_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
+import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,10 +21,34 @@ class OfferPage extends StatelessWidget {
         },
         child: BlocConsumer<AboutBloc, AboutState>(
           bloc: context.read<AboutBloc>(),
-          listener: (context, state) {},
+          listener: (context, state) {
+            state.when(
+                initial: () {},
+                loading: () {},
+                loaded: (_) {},
+                error: (e) {
+                  CustomSnackbar.flutterSnackbar(e.toString(), context);
+                });
+          },
           builder: (context, state) {
             return state.maybeWhen(
-              orElse: () => Container(),
+              orElse: () {
+                return Center(
+                  child: TextButton.icon(
+                    onPressed: () {
+                      context
+                          .read<CouponBloc>()
+                          .add(const CouponEvent.getCouponList());
+                      context.read<AboutBloc>().add(const AboutEvent.aboutUs());
+                    },
+                    icon: const Icon(Icons.refresh_outlined),
+                    label: const Text(
+                      "Retry",
+                      style: TextStyle(color: Color.fromARGB(138, 17, 16, 16)),
+                    ),
+                  ),
+                );
+              },
               loading: () => const LinearProgressIndicator(
                 color: Colors.red,
                 backgroundColor: Color.fromARGB(73, 244, 67, 54),
@@ -35,7 +60,24 @@ class OfferPage extends StatelessWidget {
                   builder: (context, state) {
                     return state.maybeWhen(
                       orElse: () {
-                        return const Text("Something went wrong");
+                        return Center(
+                          child: TextButton.icon(
+                            onPressed: () {
+                              context
+                                  .read<CouponBloc>()
+                                  .add(const CouponEvent.getCouponList());
+                              context
+                                  .read<AboutBloc>()
+                                  .add(const AboutEvent.aboutUs());
+                            },
+                            icon: const Icon(Icons.refresh_outlined),
+                            label: const Text(
+                              "Retry",
+                              style: TextStyle(
+                                  color: Color.fromARGB(138, 17, 16, 16)),
+                            ),
+                          ),
+                        );
                       },
                       loading: () {
                         return const LinearProgressIndicator(
@@ -149,9 +191,6 @@ class OfferPage extends StatelessWidget {
                   },
                 );
               },
-              error: (message) => Center(
-                child: Text(message),
-              ),
             );
           },
         ),

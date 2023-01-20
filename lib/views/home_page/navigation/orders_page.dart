@@ -1,5 +1,6 @@
 import 'package:eat_incredible_app/controller/orderlist/orderlist_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
+import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/others/order_view/order_view.dart';
 import 'package:eat_incredible_app/widgets/order/order_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,12 +20,32 @@ class OrderPage extends StatelessWidget {
         },
         child: BlocConsumer<OrderlistBloc, OrderlistState>(
           bloc: BlocProvider.of<OrderlistBloc>(context),
-          listener: (context, state) {},
+          listener: (context, state) {
+            state.when(
+                initial: () {},
+                loading: () {},
+                loaded: (_) {},
+                failure: (e) {
+                  CustomSnackbar.flutterSnackbar(e.toString(), context);
+                });
+          },
           builder: (context, state) {
             return state.maybeWhen(
                 orElse: () {
-                  return const Center(
-                    child: Text("No orders yet"),
+                  return Center(
+                    child: TextButton.icon(
+                      onPressed: () {
+                        context
+                            .read<OrderlistBloc>()
+                            .add(const OrderlistEvent.orderList());
+                      },
+                      icon: const Icon(Icons.refresh_outlined),
+                      label: const Text(
+                        "Retry",
+                        style:
+                            TextStyle(color: Color.fromARGB(138, 17, 16, 16)),
+                      ),
+                    ),
                   );
                 },
                 loading: (() => const LinearProgressIndicator(
@@ -41,6 +62,7 @@ class OrderPage extends StatelessWidget {
                                   fontWeight: FontWeight.w500)))
                       : AnimationLimiter(
                           child: ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
                             itemCount: orderlist.length,
                             itemBuilder: (context, index) {
                               return AnimationConfiguration.staggeredList(

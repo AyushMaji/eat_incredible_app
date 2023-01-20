@@ -58,174 +58,205 @@ class _SearchProductListState extends State<SearchProductList> {
           ),
         ],
       ),
-      body: SizedBox(
-        height: double.infinity,
-        width: double.infinity,
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            SizedBox(
-              height: double.infinity,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: BlocConsumer<SearchBloc, SearchState>(
-                      bloc: searchBloc,
-                      listener: (context, state) {
-                        state.maybeWhen(
-                          orElse: () {},
-                          success: (productList) {
-                            Logger().e(productList.length);
-                          },
-                        );
-                      },
-                      builder: (context, state) {
-                        return state.maybeWhen(
-                          orElse: () {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10.w),
-                              child: SizedBox(
-                                height: double.infinity,
-                                width: double.infinity,
-                                child: Shimmer.fromColors(
-                                  baseColor:
-                                      const Color.fromARGB(255, 242, 240, 240),
-                                  highlightColor: Colors.grey[100]!,
-                                  child: Image.asset(
-                                    "assets/images/grid_loading.png",
-                                    fit: BoxFit.cover,
+      body: RefreshIndicator(
+        onRefresh: () {
+          getData();
+          return Future.value();
+        },
+        child: SizedBox(
+          height: double.infinity,
+          width: double.infinity,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              SizedBox(
+                height: double.infinity,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: BlocConsumer<SearchBloc, SearchState>(
+                        bloc: searchBloc,
+                        listener: (context, state) {
+                          state.maybeWhen(
+                            orElse: () {},
+                            failure: (e) {
+                              CustomSnackbar.flutterSnackbar(
+                                  "Somthing went worng", context);
+                            },
+                            success: (productList) {
+                              Logger().e(productList.length);
+                            },
+                          );
+                        },
+                        builder: (context, state) {
+                          return state.maybeWhen(
+                            orElse: () => SizedBox(
+                                height: 165.h,
+                                child: Center(
+                                  child: TextButton.icon(
+                                    onPressed: () {
+                                      getData();
+                                    },
+                                    icon: const Icon(Icons.refresh_outlined),
+                                    label: const Text(
+                                      "Retry",
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromARGB(138, 17, 16, 16)),
+                                    ),
+                                  ),
+                                )),
+                            loading: () {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                child: SizedBox(
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  child: Shimmer.fromColors(
+                                    baseColor: const Color.fromARGB(
+                                        255, 242, 240, 240),
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Image.asset(
+                                      "assets/images/grid_loading.png",
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                          success: (productList) {
-                            return productList.isEmpty
-                                ? const Center(child: Text("No Data"))
-                                : GridView.builder(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10.w, vertical: 10.h),
-                                    itemCount: productList.length,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      mainAxisExtent: 165.h,
-                                      crossAxisCount: 2,
-                                    ),
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return FadeInUp(
-                                          from: 3,
-                                          child:
-                                              BlocConsumer<CartBloc, CartState>(
-                                            listener: (context, state) {
-                                              state.when(
-                                                  initial: () {},
-                                                  loading: (pid) {
-                                                    if (pid ==
+                              );
+                            },
+                            success: (productList) {
+                              return productList.isEmpty
+                                  ? const Center(child: Text("No Data"))
+                                  : GridView.builder(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w, vertical: 10.h),
+                                      itemCount: productList.length,
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                        mainAxisExtent: 165.h,
+                                        crossAxisCount: 2,
+                                      ),
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return FadeInUp(
+                                            from: 3,
+                                            child: BlocConsumer<CartBloc,
+                                                CartState>(
+                                              listener: (context, state) {
+                                                state.when(
+                                                    initial: () {},
+                                                    loading: (pid) {
+                                                      if (pid ==
+                                                          productList[index]
+                                                              .variantId) {
+                                                        CustomSnackbar
+                                                            .loading();
+                                                      }
+                                                    },
+                                                    success: (msg, pid) {
+                                                      if (pid ==
+                                                          productList[index]
+                                                              .variantId) {
+                                                        getData();
+                                                        BotToast.showText(
+                                                            text: msg);
+                                                      }
+                                                    },
+                                                    failure: (e) {});
+                                              },
+                                              builder: (context, state) {
+                                                return Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 8.w,
+                                                      vertical: 5.h),
+                                                  child: ProductCard(
+                                                    isCart: productList[index]
+                                                        .iscart,
+                                                    imageUrl: productList[index]
+                                                        .thumbnail
+                                                        .toString(),
+                                                    title: productList[index]
+                                                        .productName
+                                                        .toString(),
+                                                    disprice: productList[index]
+                                                        .originalPrice
+                                                        .toString(),
+                                                    price: productList[index]
+                                                        .salePrice
+                                                        .toString(),
+                                                    quantity: productList[index]
+                                                        .weight
+                                                        .toString(),
+                                                    percentage:
                                                         productList[index]
-                                                            .variantId) {
-                                                      CustomSnackbar.loading();
-                                                    }
-                                                  },
-                                                  success: (msg, pid) {
-                                                    if (pid ==
+                                                            .discountPercentage
+                                                            .toString(),
+                                                    productId:
                                                         productList[index]
-                                                            .variantId) {
-                                                      getData();
-                                                      BotToast.showText(
-                                                          text: msg);
-                                                    }
-                                                  },
-                                                  failure: (e) {});
-                                            },
-                                            builder: (context, state) {
-                                              return Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 8.w,
-                                                    vertical: 5.h),
-                                                child: ProductCard(
-                                                  isCart:
-                                                      productList[index].iscart,
-                                                  imageUrl: productList[index]
-                                                      .thumbnail
-                                                      .toString(),
-                                                  title: productList[index]
-                                                      .productName
-                                                      .toString(),
-                                                  disprice: productList[index]
-                                                      .originalPrice
-                                                      .toString(),
-                                                  price: productList[index]
-                                                      .salePrice
-                                                      .toString(),
-                                                  quantity: productList[index]
-                                                      .weight
-                                                      .toString(),
-                                                  percentage: productList[index]
-                                                      .discountPercentage
-                                                      .toString(),
-                                                  productId: productList[index]
-                                                      .id
-                                                      .toString(),
-                                                  ontap: () {
-                                                    Get.to(() => ProductDetails(
-                                                          productId:
-                                                              productList[index]
-                                                                  .id
-                                                                  .toString(),
-                                                          catId:
-                                                              productList[index]
-                                                                  .categoryId
-                                                                  .toString(),
-                                                        ));
-                                                  },
-                                                  addtocartTap: () {
-                                                    context.read<CartBloc>().add(
-                                                        CartEvent.addToCart(
-                                                            productid:
-                                                                productList[
+                                                            .id
+                                                            .toString(),
+                                                    ontap: () {
+                                                      Get.to(
+                                                          () => ProductDetails(
+                                                                productId:
+                                                                    productList[
+                                                                            index]
+                                                                        .id
+                                                                        .toString(),
+                                                                catId: productList[
                                                                         index]
-                                                                    .variantId
-                                                                    .toString()));
-                                                  },
-                                                  cartId: productList[index]
-                                                      .categoryId
-                                                      .toString(),
-                                                ),
-                                              );
-                                            },
-                                          ));
-                                    });
-                          },
-                        );
-                      },
+                                                                    .categoryId
+                                                                    .toString(),
+                                                              ));
+                                                    },
+                                                    addtocartTap: () {
+                                                      context.read<CartBloc>().add(
+                                                          CartEvent.addToCart(
+                                                              productid:
+                                                                  productList[
+                                                                          index]
+                                                                      .variantId
+                                                                      .toString()));
+                                                    },
+                                                    cartId: productList[index]
+                                                        .categoryId
+                                                        .toString(),
+                                                  ),
+                                                );
+                                              },
+                                            ));
+                                      });
+                            },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            BlocConsumer<CartDetailsBloc, CartDetailsState>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                return state.maybeWhen(orElse: () {
-                  return const SizedBox();
-                }, loaded: (cartDetails) {
-                  return Positioned(
-                      bottom: 10.h,
-                      child: SlideInUp(
-                        child: AddtocartBar(
-                          iteamCount: cartDetails.totalItem,
-                          onTap: () {
-                            Get.to(() => const CartPage());
-                          },
-                          totalAmount: cartDetails.totalPrice,
-                        ),
-                      ));
-                });
-              },
-            )
-          ],
+              BlocConsumer<CartDetailsBloc, CartDetailsState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  return state.maybeWhen(orElse: () {
+                    return const SizedBox();
+                  }, loaded: (cartDetails) {
+                    return Positioned(
+                        bottom: 10.h,
+                        child: SlideInUp(
+                          child: AddtocartBar(
+                            iteamCount: cartDetails.totalItem,
+                            onTap: () {
+                              Get.to(() => const CartPage());
+                            },
+                            totalAmount: cartDetails.totalPrice,
+                          ),
+                        ));
+                  });
+                },
+              )
+            ],
+          ),
         ),
       ),
     );

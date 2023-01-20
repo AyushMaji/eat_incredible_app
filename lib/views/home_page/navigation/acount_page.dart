@@ -120,7 +120,7 @@ class _AcountPageState extends State<AcountPage> {
               thickness: 1.5,
             ),
             ListTile(
-              title: Text('chats',
+              title: Text('Chats',
                   style: GoogleFonts.poppins(
                     fontSize: 13.sp,
                   )),

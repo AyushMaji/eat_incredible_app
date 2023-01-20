@@ -44,4 +44,18 @@ class UrlRepo {
 //! cencle api and repeate order apis
   static String cancelorder = "cancel_order.php";
   static String repeatorder = "repeat_order.php";
+
+//! order Type
+  static String orderType = "order_type.php";
+
+//! order confirm == >
+  static String orderConfirm = "payment_response.php";
+//! INVOICE == >
+  static String invoice = "invoice.php";
+//! add order message == >
+  static String addOrderMessage = "order_message.php";
+// aply coupon ==== >
+  static String applyCoupon = "coupon_apply.php";
+// remove coupon ==== >
+  static String removeCoupon = "remove_coupon.php";
 }
