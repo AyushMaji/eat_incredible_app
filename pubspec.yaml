@@ -84,6 +84,9 @@ dependencies:
   timeline_tile: ^2.0.0
   url_launcher: ^6.1.7
   video_player: ^2.4.7
+  badges: ^3.0.2
+  flutter_widget_from_html: ^0.9.1
+  telephony: ^0.2.0
   
 
 dev_dependencies:

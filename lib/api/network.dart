@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:eat_incredible_app/api/api_helper.dart';
 import 'package:eat_incredible_app/repo/url_repo.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Network {
@@ -177,6 +178,12 @@ class Network {
       String city, String pincode, String location) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token') ?? '';
+    Logger().i(token);
+    Logger().i(city);
+    Logger().i(pincode);
+    Logger().i(location);
+    Logger().i(locality);
+    Logger().i(landmark);
     return await client.postRequest(UrlRepo.addaddress, data: {
       "token": token,
       "city": city,
@@ -197,6 +204,12 @@ class Network {
       String pincode,
       String location) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    Logger().i(pincode);
+    Logger().i(location);
+    Logger().i(locality);
+    Logger().i(landmark);
+    Logger().i(city);
+    Logger().i(address);
     return await client.postRequest(UrlRepo.updateaddress(addressId), data: {
       "city": city,
       "landmark": landmark,

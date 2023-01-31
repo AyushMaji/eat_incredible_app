@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
 import 'package:eat_incredible_app/controller/category/category_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
@@ -6,9 +7,12 @@ import 'package:eat_incredible_app/utils/messsenger.dart';
 import 'package:eat_incredible_app/views/home_page/others/Item_search/item_search.dart';
 import 'package:eat_incredible_app/views/home_page/others/cart_page/cart_page.dart';
 import 'package:find_dropdown/find_dropdown.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:badges/badges.dart' as badges;
 
 class CustomAppbar extends StatefulWidget {
   const CustomAppbar({super.key});
@@ -25,8 +29,26 @@ class _CustomAppbarState extends State<CustomAppbar> {
 
   @override
   void initState() {
+    checkLocation();
     getData();
     super.initState();
+  }
+
+  checkLocation() async {
+    //  get permition of location
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    } else if (permission == LocationPermission.deniedForever) {
+      permission = await Geolocator.requestPermission();
+    } else {
+      // Position position = await Geolocator.getCurrentPosition(
+      //     desiredAccuracy: LocationAccuracy.high);
+      // final List<Placemark> placemarks =
+      //     await placemarkFromCoordinates(position.latitude, position.longitude);
+      // final Placemark place = placemarks[0];
+    }
   }
 
   getData() async {
@@ -218,17 +240,58 @@ class _CustomAppbarState extends State<CustomAppbar> {
                     ),
                   ),
                   const Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => const CartPage());
+                  BlocConsumer<CartDetailsBloc, CartDetailsState>(
+                    bloc: context.read<CartDetailsBloc>(),
+                    listener: (context, state) {},
+                    builder: (context, state) {
+                      return state.maybeWhen(
+                        orElse: () {
+                          return GestureDetector(
+                            onTap: () {
+                              Get.to(() => const CartPage());
+                            },
+                            child: const badges.Badge(
+                              showBadge: false,
+                              badgeContent: Text(
+                                '',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              child: Icon(Icons.shopping_cart,
+                                  color: Colors.white),
+                            ),
+                          );
+                        },
+                        loaded: (cartDetailModel) {
+                          return GestureDetector(
+                            onTap: () {
+                              Get.to(() => const CartPage());
+                            },
+                            child: badges.Badge(
+                              showBadge:
+                                  cartDetailModel.totalItem == 0 ? false : true,
+                              badgeStyle: const badges.BadgeStyle(
+                                badgeColor: Colors.green,
+                                padding: EdgeInsets.all(4.5),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                              ),
+                              badgeContent: Text(
+                                cartDetailModel.totalItem.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10.sp,
+                                ),
+                              ),
+                              child: const Icon(Icons.shopping_cart,
+                                  color: Colors.white),
+                            ),
+                          );
+                        },
+                      );
                     },
-                    child: const Icon(
-                      Icons.shopping_cart,
-                      color: Colors.white,
-                    ),
                   ),
                   const SizedBox(
-                    width: 10,
+                    width: 20,
                   ),
                   GestureDetector(
                     onTap: () {
@@ -236,7 +299,7 @@ class _CustomAppbarState extends State<CustomAppbar> {
                       launch('https://wa.me/9433990099');
                     },
                     child: const Icon(
-                      Icons.whatsapp,
+                      Icons.chat_bubble_outline,
                       color: Colors.white,
                     ),
                   ),

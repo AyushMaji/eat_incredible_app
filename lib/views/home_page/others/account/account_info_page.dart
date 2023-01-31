@@ -2,7 +2,6 @@ import 'package:eat_incredible_app/controller/update_user_data/update_user_data_
 import 'package:eat_incredible_app/controller/user_info/user_info_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/utils/messsenger.dart';
-import 'package:eat_incredible_app/views/home_page/others/my_address/my_address_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -282,34 +281,34 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 10.h),
-                            TextField(
-                              readOnly: true,
-                              onTap: () => Get.to(() => const MyAddressPage()),
-                              controller: addressController,
-                              decoration: InputDecoration(
-                                hintStyle: GoogleFonts.poppins(
-                                  color: const Color.fromRGBO(97, 97, 97, 1),
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                suffixIcon: Icon(
-                                  Icons.edit,
-                                  color: const Color(0xffE20A13),
-                                  size: 15.sp,
-                                ),
-                                enabledBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xffCFCFCF),
-                                  ),
-                                ),
-                                focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xffCFCFCF),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // SizedBox(height: 10.h),
+                            // TextField(
+                            //   readOnly: true,
+                            //   onTap: () => Get.to(() => const MyAddressPage()),
+                            //   controller: addressController,
+                            //   decoration: InputDecoration(
+                            //     hintStyle: GoogleFonts.poppins(
+                            //       color: const Color.fromRGBO(97, 97, 97, 1),
+                            //       fontSize: 12.sp,
+                            //       fontWeight: FontWeight.w500,
+                            //     ),
+                            //     suffixIcon: Icon(
+                            //       Icons.edit,
+                            //       color: const Color(0xffE20A13),
+                            //       size: 15.sp,
+                            //     ),
+                            //     enabledBorder: const UnderlineInputBorder(
+                            //       borderSide: BorderSide(
+                            //         color: Color(0xffCFCFCF),
+                            //       ),
+                            //     ),
+                            //     focusedBorder: const UnderlineInputBorder(
+                            //       borderSide: BorderSide(
+                            //         color: Color(0xffCFCFCF),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                             SizedBox(height: 10.h),
                           ],
                         ),

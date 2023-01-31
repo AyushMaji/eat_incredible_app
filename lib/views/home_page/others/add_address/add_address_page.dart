@@ -53,9 +53,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
     final List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     final Placemark place = placemarks[0];
-    localityController.text = " ${place.name}, ${place.street!} ";
+    localityController.text = "";
     cityController.text = place.locality!;
-    landmarkController.text = place.subLocality!;
+    landmarkController.text = "";
     pincodeController.text = place.postalCode!;
     locationController.text = place.administrativeArea!;
     Logger().i(place);

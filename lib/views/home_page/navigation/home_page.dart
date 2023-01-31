@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:eat_incredible_app/controller/about/about_bloc.dart';
 import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
+import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
 import 'package:eat_incredible_app/controller/category/category_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
@@ -29,7 +30,9 @@ class _HomePageState extends State<HomePage> {
   void getData() {
     context.read<CategoryBloc>().add(const CategoryEvent.getCategory());
     context.read<AboutBloc>().add(const AboutEvent.aboutUs());
-
+    context
+        .read<CartDetailsBloc>()
+        .add(const CartDetailsEvent.getCartDetails(coupon: ''));
     widget.productListOfferBloc
         .add(const ProductListEvent.fetchProductList(categoryId: "98989"));
     widget.productListsugessionBloc

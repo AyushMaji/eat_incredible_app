@@ -129,7 +129,7 @@ class _EditAddressPageState extends State<EditAddressPage> {
                             locationController.text.isNotEmpty &&
                             landmarkController.text.isNotEmpty) {
                           addressController.text =
-                              "${localityController.text}, ${landmarkController.text}, ${locationController.text},  ${cityController.text}, ${pincodeController.text}, ${administrativeAreaController.text}, ${countryController.text}";
+                              "${localityController.text}, ${landmarkController.text}, ${cityController.text}, ${pincodeController.text}, ${locationController.text} ";
 
                           context
                               .read<AddaddressBloc>()

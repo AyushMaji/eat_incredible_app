@@ -1,5 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:eat_incredible_app/controller/cart/cart_bloc.dart';
+import 'package:eat_incredible_app/controller/cart/cart_details/cart_details_bloc.dart';
 import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dart';
 import 'package:eat_incredible_app/controller/search/search_bloc.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
@@ -232,6 +233,13 @@ class _ItemSearchState extends State<ItemSearch> {
                                                                           "98989"));
                                                               BotToast.showText(
                                                                   text: msg);
+                                                              context
+                                                                  .read<
+                                                                      CartDetailsBloc>()
+                                                                  .add(const CartDetailsEvent
+                                                                          .getCartDetails(
+                                                                      coupon:
+                                                                          ''));
                                                             }
                                                           },
                                                           failure: (e) {});
@@ -310,7 +318,7 @@ class _ItemSearchState extends State<ItemSearch> {
                               left: 13.w, top: 20.h, bottom: 6.h),
                           child: Row(
                             children: [
-                              Text("Trending Searchs",
+                              Text("Trending Searches",
                                   style: GoogleFonts.poppins(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w600)),

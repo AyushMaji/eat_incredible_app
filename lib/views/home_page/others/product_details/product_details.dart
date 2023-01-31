@@ -14,8 +14,8 @@ import 'package:eat_incredible_app/widgets/banner/custom_banner.dart';
 import 'package:eat_incredible_app/widgets/product_card/product_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:logger/logger.dart';
-import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:swipeable_page_route/swipeable_page_route.dart';
@@ -504,7 +504,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             ),
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 13.w, vertical: 12.h),
+                                  horizontal: 13.w, vertical: 5.h),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -516,37 +516,47 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         fontSize: 14.sp,
                                         fontWeight: FontWeight.w600),
                                   ),
-                                  Text(
-                                    'Description',
-                                    style: GoogleFonts.poppins(
-                                        color:
-                                            const Color.fromRGBO(44, 44, 44, 1),
-                                        fontSize: 10.sp,
-                                        fontWeight: FontWeight.w500),
-                                  ),
+                                  // Text(
+                                  //   'Description',
+                                  //   style: GoogleFonts.poppins(
+                                  //       color:
+                                  //           const Color.fromRGBO(44, 44, 44, 1),
+                                  //       fontSize: 10.sp,
+                                  //       fontWeight: FontWeight.w500),
+                                  // ),
                                   SizedBox(
-                                    height: 5.h,
+                                    height: 9.h,
                                   ),
-                                  ReadMoreText(
-                                    productdetails[0].description.toString(),
-                                    trimLines: 4,
-                                    colorClickableText:
-                                        const Color.fromARGB(192, 226, 10, 17),
-                                    trimMode: TrimMode.Line,
-                                    trimCollapsedText: 'Show more',
-                                    trimExpandedText: ' Show less',
-                                    moreStyle: TextStyle(
-                                      fontSize: 9.sp,
-                                      fontWeight: FontWeight.normal,
-                                      color:
-                                          const Color.fromRGBO(226, 10, 19, 1),
-                                    ),
-                                    style: GoogleFonts.poppins(
+                                  HtmlWidget(
+                                    productdetails[0].description,
+                                    textStyle: GoogleFonts.poppins(
                                         color: const Color.fromRGBO(
                                             148, 148, 148, 1),
                                         fontSize: 10.5.sp,
-                                        fontWeight: FontWeight.w500),
+                                        fontWeight: FontWeight.w400),
                                   ),
+
+                                  // ReadMoreText(
+                                  //   productdetails[0].description,
+                                  //   trimLines: 4,
+                                  //   colorClickableText:
+                                  //       const Color.fromARGB(192, 226, 10, 17),
+                                  //   trimMode: TrimMode.Line,
+                                  //   trimCollapsedText: 'Show more',
+                                  //   trimExpandedText: ' Show less',
+                                  //   moreStyle: TextStyle(
+                                  //     fontSize: 9.sp,
+                                  //     fontWeight: FontWeight.normal,
+                                  //     color:
+                                  //         const Color.fromRGBO(226, 10, 19, 1),
+                                  //   ),
+                                  //   style: GoogleFonts.poppins(
+                                  //       color: const Color.fromRGBO(
+                                  //           148, 148, 148, 1),
+                                  //       fontSize: 10.5.sp,
+                                  //       fontWeight: FontWeight.w500),
+                                  // ),
+
                                   SizedBox(
                                     height: 15.h,
                                   ),

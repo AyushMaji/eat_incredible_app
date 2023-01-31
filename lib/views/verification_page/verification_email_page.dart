@@ -27,7 +27,7 @@ class VerificationWithPage extends StatefulWidget {
 class _VerificationWithPageState extends State<VerificationWithPage> {
   final TextEditingController _codeController = TextEditingController();
   bool isResendOtp = false;
-  int timeCount = 30;
+  int timeCount = 15;
 
   @override
   void initState() {
@@ -87,6 +87,10 @@ class _VerificationWithPageState extends State<VerificationWithPage> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 39.w),
                     child: PinCodeTextField(
+                      enablePinAutofill: true,
+                      useExternalAutoFillGroup: true,
+                      hapticFeedbackTypes: HapticFeedbackTypes.light,
+                      useHapticFeedback: true,
                       controller: _codeController,
                       keyboardType: TextInputType.number,
                       appContext: context,

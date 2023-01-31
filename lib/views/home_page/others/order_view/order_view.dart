@@ -482,7 +482,7 @@ class _OrderViewPageState extends State<OrderViewPage> {
                                     ),
                                   ),
                                   subtitle: Text(
-                                    orderDetails[0].payment,
+                                    orderDetails[0].payment ?? 'undefined',
                                     style: GoogleFonts.poppins(
                                       color: const Color(0xff000000),
                                       fontSize: 12.sp,

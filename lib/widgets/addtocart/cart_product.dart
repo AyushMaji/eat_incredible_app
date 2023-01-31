@@ -80,13 +80,15 @@ class _CartProductState extends State<CartProduct> {
                             color: const Color.fromRGBO(44, 44, 44, 1),
                           )),
                       SizedBox(width: 2.5.w),
-                      Text("₹ ${widget.price}",
-                          style: GoogleFonts.poppins(
-                            fontSize: 9.sp,
-                            fontWeight: FontWeight.w500,
-                            color: const Color.fromRGBO(148, 148, 148, 1),
-                            decoration: TextDecoration.lineThrough,
-                          )),
+                      widget.disprice == widget.price
+                          ? const SizedBox()
+                          : Text("₹ ${widget.price}",
+                              style: GoogleFonts.poppins(
+                                fontSize: 9.sp,
+                                fontWeight: FontWeight.w500,
+                                color: const Color.fromRGBO(148, 148, 148, 1),
+                                decoration: TextDecoration.lineThrough,
+                              )),
                     ],
                   ),
                 ],

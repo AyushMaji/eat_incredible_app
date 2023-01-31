@@ -32,7 +32,7 @@ class OrderDetailsModel {
   int totalItems;
   String placedOn;
   String orderStatus;
-  String payment;
+  String? payment;
   String address;
   String itemTotal;
   int deliveryFee;

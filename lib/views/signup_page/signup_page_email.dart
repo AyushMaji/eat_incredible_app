@@ -95,7 +95,7 @@ class _SignupPageWithEmailState extends State<SignupPageWithEmail> {
               child: Column(
                 children: [
                   Text(
-                    'Get Fresh Fruits and ',
+                    'Cleaned, Chopped ',
                     style: GoogleFonts.poppins(
                       fontSize: 17.sp,
                       fontWeight: FontWeight.bold,
@@ -103,7 +103,7 @@ class _SignupPageWithEmailState extends State<SignupPageWithEmail> {
                     maxLines: 2,
                   ),
                   Text(
-                    ' vegetables at your doresteps',
+                    ' Vegetables at your doorstep',
                     style: GoogleFonts.poppins(
                       fontSize: 17.sp,
                       fontWeight: FontWeight.bold,

@@ -9,6 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:telephony/telephony.dart';
+//import 'package:telephony/telephony.dart';
 
 class VerificationPage extends StatefulWidget {
   final String? phone;
@@ -26,12 +28,29 @@ class VerificationPage extends StatefulWidget {
 
 class _VerificationPageState extends State<VerificationPage> {
   final TextEditingController _codeController = TextEditingController();
+  Telephony telephony = Telephony.instance;
   bool isResendOtp = false;
-  int timeCount = 30;
+  int timeCount = 15;
   bool isNewUser = true;
 
   @override
   void initState() {
+    // listen background sms and auto fill otp
+    telephony.listenIncomingSms(
+      listenInBackground: false,
+      onNewMessage: (SmsMessage message) {
+        String sms = message.body.toString();
+        log(message.address.toString());
+
+        String otpcode = sms.replaceAll(RegExp(r'[^0-9]'), '');
+        log(otpcode);
+        _codeController.text = otpcode;
+        setState(() {});
+        //split otp code to list of number
+        //and populate to otb boxes
+      },
+    );
+
     super.initState();
     checkNewUser();
   }
@@ -99,6 +118,12 @@ class _VerificationPageState extends State<VerificationPage> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 39.w),
                     child: PinCodeTextField(
+                      enablePinAutofill: true,
+                      useExternalAutoFillGroup: true,
+                      hapticFeedbackTypes: HapticFeedbackTypes.light,
+                      useHapticFeedback: true,
+                      // enableActiveFill: true,
+                      autoFocus: true,
                       controller: _codeController,
                       keyboardType: TextInputType.number,
                       appContext: context,
@@ -112,9 +137,8 @@ class _VerificationPageState extends State<VerificationPage> {
                         fieldHeight: 50,
                         fieldWidth: 50,
                       ),
-                      animationDuration: const Duration(milliseconds: 300),
+                      animationDuration: const Duration(milliseconds: 600),
                       backgroundColor: const Color.fromARGB(0, 255, 3, 3),
-                      enableActiveFill: false,
                       onCompleted: (v) {},
                       onChanged: (value) async {
                         if (_codeController.text.length == 4) {

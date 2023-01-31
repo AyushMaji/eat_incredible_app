@@ -109,7 +109,7 @@ class _FaqsPageState extends State<FaqsPage> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 18.w, bottom: 1.h),
-                        child: Text("FAQs",
+                        child: Text("More Info",
                             style: GoogleFonts.poppins(
                                 fontSize: 14.sp, fontWeight: FontWeight.bold)),
                       ),
