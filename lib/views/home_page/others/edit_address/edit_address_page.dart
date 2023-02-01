@@ -82,9 +82,9 @@ class _EditAddressPageState extends State<EditAddressPage> {
     final List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     final Placemark place = placemarks[0];
-    localityController.text = " ${place.name}, ${place.street!} ";
+    localityController.text = "";
     cityController.text = place.locality!;
-    landmarkController.text = place.subLocality!;
+    landmarkController.text = "";
     pincodeController.text = place.postalCode!;
     locationController.text = place.administrativeArea!;
     BotToast.closeAllLoading();
@@ -273,7 +273,7 @@ class _EditAddressPageState extends State<EditAddressPage> {
                   keyboardType: TextInputType.number,
                   controller: pincodeController,
                   decoration: InputDecoration(
-                    hintText: 'pincode',
+                    hintText: 'PINCODE',
                     hintStyle: GoogleFonts.poppins(
                       color: const Color.fromRGBO(97, 97, 97, 1),
                       fontSize: 12.sp,

@@ -151,7 +151,7 @@ class _SignupPageState extends State<SignupPage> {
                   children: [
                     GestureDetector(
                       onTap: (() {
-                        _showCountryPicker();
+                       // _showCountryPicker();
                       }),
                       child: SizedBox(
                         width: 60.w,
@@ -178,7 +178,7 @@ class _SignupPageState extends State<SignupPage> {
                           ),
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return "Email can not be empty";
+                              return "Phone number can't be empty";
                             }
                             return null;
                           },

@@ -103,7 +103,7 @@ class _NavigationState extends State<Navigation> {
                     backgroundColor: Colors.white,
                     title: Center(
                       child: Text(
-                        "account",
+                        "Account",
                         style: GoogleFonts.poppins(
                           color: Colors.black,
                           fontSize: 13.sp,

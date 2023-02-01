@@ -164,9 +164,9 @@ class _UserDetailsState extends State<UserDetails> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 0.h),
               child: SizedBox(
-                height: 46.h,
+               // height: 46.h,
                 child: TextFormField(
                   controller: _nameController,
                   keyboardType: TextInputType.emailAddress,
@@ -188,12 +188,13 @@ class _UserDetailsState extends State<UserDetails> {
                 ),
               ),
             ),
+             SizedBox(height: 20.h,),
             widget.loginType == "email"
                 ? Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+                        EdgeInsets.symmetric(horizontal: 15.w, vertical: 0.h),
                     child: SizedBox(
-                      height: 46.h,
+                     // height: 46.h,
                       child: TextFormField(
                         controller: _valueController,
                         keyboardType: TextInputType.phone,
@@ -217,9 +218,9 @@ class _UserDetailsState extends State<UserDetails> {
                   )
                 : Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+                        EdgeInsets.symmetric(horizontal: 15.w, vertical: 0.h),
                     child: SizedBox(
-                      height: 46.h,
+                     // height: 46.h,
                       child: TextFormField(
                         controller: _valueController,
                         keyboardType: TextInputType.emailAddress,

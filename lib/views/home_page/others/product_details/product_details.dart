@@ -94,24 +94,24 @@ class _ProductDetailsState extends State<ProductDetails> {
                       });
                     },
                     failure: (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 4.6.h, horizontal: 20.w),
-                          action: SnackBarAction(
-                            label: 'Retry',
-                            onPressed: () {
-                              context.read<ProductDetailsBloc>().add(
-                                  ProductDetailsEvent.getproductdetails(
-                                      widget.productId, v_id));
-                            },
-                          ),
-                          backgroundColor:
-                              const Color.fromARGB(255, 29, 30, 29),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   SnackBar(
+                      //     content: Text(e),
+                      //     padding: EdgeInsets.symmetric(
+                      //         vertical: 4.6.h, horizontal: 20.w),
+                      //     action: SnackBarAction(
+                      //       label: 'Retry',
+                      //       onPressed: () {
+                      //         context.read<ProductDetailsBloc>().add(
+                      //             ProductDetailsEvent.getproductdetails(
+                      //                 widget.productId, v_id));
+                      //       },
+                      //     ),
+                      //     backgroundColor:
+                      //         const Color.fromARGB(255, 29, 30, 29),
+                      //     behavior: SnackBarBehavior.floating,
+                      //   ),
+                      // );
                     });
               },
               builder: (context, state) {

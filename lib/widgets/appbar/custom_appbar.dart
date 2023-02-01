@@ -144,7 +144,7 @@ class _CustomAppbarState extends State<CustomAppbar> {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 15.w, vertical: 10.h),
                                     child: SizedBox(
-                                      height: 43.h,
+                                      //height: 43.h,
                                       child: TextFormField(
                                         controller: zipcontroller,
                                         keyboardType: TextInputType.phone,

@@ -247,7 +247,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                   keyboardType: TextInputType.number,
                   controller: pincodeController,
                   decoration: InputDecoration(
-                    hintText: 'pincode',
+                    hintText: 'PINCODE',
                     hintStyle: GoogleFonts.poppins(
                       color: const Color.fromRGBO(97, 97, 97, 1),
                       fontSize: 12.sp,

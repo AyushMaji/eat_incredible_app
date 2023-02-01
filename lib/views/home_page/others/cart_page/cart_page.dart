@@ -11,6 +11,7 @@ import 'package:eat_incredible_app/controller/product_list/product_list_bloc.dar
 import 'package:eat_incredible_app/repo/cart_repo.dart';
 import 'package:eat_incredible_app/utils/barrel.dart';
 import 'package:eat_incredible_app/utils/messsenger.dart';
+import 'package:eat_incredible_app/views/home_page/navigation/navigation.dart';
 import 'package:eat_incredible_app/views/home_page/others/add_address/add_address_page.dart';
 import 'package:eat_incredible_app/views/home_page/others/coupon_code/coupon_code.dart';
 import 'package:eat_incredible_app/views/home_page/others/edit_address/edit_address_page.dart';
@@ -212,15 +213,14 @@ class _CartPageState extends State<CartPage> {
               )),
         ),
         actions: [
-          Opacity(
-            opacity: 0,
-            child: IconButton(
-              icon: const Icon(
-                Icons.filter_list,
-                color: Colors.black,
-              ),
-              onPressed: () {},
+          IconButton(
+            icon: const Icon(
+              Icons.home_outlined,
+              color: Color.fromARGB(124, 0, 0, 0),
             ),
+            onPressed: () {
+              Get.offAll(() => const Navigation());
+            },
           ),
         ],
       ),

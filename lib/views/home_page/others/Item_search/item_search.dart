@@ -318,7 +318,7 @@ class _ItemSearchState extends State<ItemSearch> {
                               left: 13.w, top: 20.h, bottom: 6.h),
                           child: Row(
                             children: [
-                              Text("Trending Searches",
+                              Text("Trending",
                                   style: GoogleFonts.poppins(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w600)),
