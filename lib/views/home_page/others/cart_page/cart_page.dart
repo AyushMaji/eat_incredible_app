@@ -93,14 +93,14 @@ class _CartPageState extends State<CartPage> {
 
   void createOrder(String totalbill, String oid, String name, String email,
       String phone) async {
-    log('payment ');
     String username = 'rzp_live_KT9EC0PjxISbWA'; // razorpay pay key
     String password = "iVisBkDpGBlekxZcQrU7SOjg"; // razoepay secret key
+    // String username = 'rzp_test_TNA4KRfP4B3xtQ'; // razorpay pay key
+    // String password = 'N5rebWf2mmPcYAR9hxqAuJ2O';
     String basicAuth =
         'Basic ${base64Encode(utf8.encode('$username:$password'))}';
 
     Map<String, dynamic> body = {
-      // "amount": int.parse(totalbill) * 100,
       "amount": int.parse(totalbill) * 100,
       "currency": "INR",
       "receipt": oid,
@@ -151,12 +151,11 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
-  confirmorder(String status) async {
+  confirmorder(String status, String tid) async {
     Logger().e(razorpayOdrId);
     Logger().e(status);
     Logger().e(orderName);
-
-    var res = await CartRepo().orderConfirm(razorpayOdrId, status, orderName);
+    var res = await CartRepo().orderConfirm(tid, status, orderName);
     res.when(success: (value) {}, failure: (error) {});
   }
 
@@ -166,21 +165,20 @@ class _CartPageState extends State<CartPage> {
     // final bytes = utf8.encode('${response.orderId}|${response.paymentId}');
     // final hmacSha256 = Hmac(sha256, key);
     // final generatedSignature = hmacSha256.convert(bytes);
-
-    CustomSnackbar.successSnackbar("Payment Success! ",
+    CustomSnackbar.successSnackbar("${response.paymentId}",
         "We are delighted to inform you that we received your payment.");
-    confirmorder('200');
+    confirmorder('200', '${response.paymentId}');
     Get.offAll(() => const OrderConfirmPage());
   }
 
   handlerErrorFailure(PaymentFailureResponse response) {
-    confirmorder('400');
+    confirmorder('400', razorpayOdrId);
     CustomSnackbar.errorSnackbar("Payment Failed! ",
         "We are sorry to inform you that we did not receive your payment.");
   }
 
   handlerExternalWallet(ExternalWalletResponse response) {
-    confirmorder('200');
+    confirmorder('200', razorpayOdrId);
     CustomSnackbar.successSnackbar("Payment Success! ",
         "We are delighted to inform you that we received your payment.");
 

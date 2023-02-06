@@ -144,13 +144,16 @@ class _ProductCardState extends State<ProductCard> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                     int.parse(widget.disprice) !=   int.parse(widget.price)? Text("₹ ${widget.disprice}",
-                          style: GoogleFonts.poppins(
-                              fontSize: 8.5.sp,
-                              decoration: TextDecoration.lineThrough,
-                              color: const Color.fromRGBO(148, 148, 148, 1))) :  Text(""),
+                      int.parse(widget.disprice) != int.parse(widget.price)
+                          ? Text("₹ ${widget.disprice}",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 8.5.sp,
+                                  decoration: TextDecoration.lineThrough,
+                                  color:
+                                      const Color.fromRGBO(148, 148, 148, 1)))
+                          : const Text(""),
                       Padding(
-                        padding: EdgeInsets.only(bottom: 0.1.h),  
+                        padding: EdgeInsets.only(bottom: 0.1.h),
                         child: Text(
                           "₹ ${widget.price}",
                           style: GoogleFonts.poppins(

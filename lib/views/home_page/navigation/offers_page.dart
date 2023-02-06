@@ -118,7 +118,10 @@ class OfferPage extends StatelessWidget {
                               couponList.isEmpty
                                   ? SizedBox(
                                       height: 70.h,
-                                      child: Center(child: const Text("No Coupons Available", style: TextStyle(color: Colors.grey))))
+                                      child: const Center(
+                                          child: Text("No Coupons Available",
+                                              style: TextStyle(
+                                                  color: Colors.grey))))
                                   : SizedBox(
                                       height: 80.h,
                                       child: ListView.builder(
